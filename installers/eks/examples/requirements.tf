@@ -1,13 +1,13 @@
 terraform {
   required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.14"
+    }
+
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "~> 1.13"
-    }
-
-    kustomization = {
-      source = "kbst/kustomization"
-      version = "~> 0.2.2"
     }
   }
 }

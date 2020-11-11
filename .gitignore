@@ -155,7 +155,8 @@ override.tf.json
 # !example_override.tf
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
-# example: *tfplan*
+plan
+*.plan
 
 ### vscode ###
 .vscode/*
@@ -192,3 +193,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/terraform,vscode,intellij+iml,macos,windows,linux
+
+# Chart dependencies
+**/charts/*.tgz
