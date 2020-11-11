@@ -5,6 +5,9 @@ type: application
 version: 0.1.0
 
 dependencies:
+  - name: calico
+    version: 0.1.0
+    repository: file://calico
   - name: cert-manager
     version: 1.4.0
     repository: file://cert-manager
