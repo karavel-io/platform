@@ -6,7 +6,7 @@ metadata:
   namespace: kube-system
 data:
   # Typha is disabled.
-  typha_service_name: {{if .Values.haSetup}}"calico-typha"{{else}}"none"{{end}}
+  typha_service_name: {{if .Values.typha.enable}}"calico-typha"{{else}}"none"{{end}}
   # Configure the backend to use.
   calico_backend: "bird"
   # Configure the MTU to use for workload interfaces and tunnels.

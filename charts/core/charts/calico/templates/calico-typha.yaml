@@ -1,4 +1,4 @@
-{{if .Values.haSetup}}
+{{if .Values.typha.enable}}
 # This manifest creates a Service, which will be backed by Calico's Typha daemon.
 # Typha sits in between Felix and the API server, reducing Calico's load on the API server.
 
@@ -63,7 +63,7 @@ spec:
       securityContext:
         fsGroup: 65534
       containers:
-        - image: calico/typha:v3.16.5
+        - image: calico/typha:v{{ .Chart.AppVersion }}
           name: calico-typha
           ports:
             - containerPort: 5473

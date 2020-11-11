@@ -38,12 +38,13 @@ spec:
       # deletion": https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods.
       terminationGracePeriodSeconds: 0
       priorityClassName: system-node-critical
+      {{if .Values.cni.enable}}
       initContainers:
         # This container performs upgrade from host-local IPAM to calico-ipam.
         # It can be deleted if this is a fresh installation, or if you have already
         # upgraded to use calico-ipam.
         - name: upgrade-ipam
-          image: calico/cni:v3.16.5
+          image: quay.io/calico/cni:v{{ .Chart.AppVersion }}
           command: ["/opt/cni/bin/calico-ipam", "-upgrade"]
           envFrom:
             - configMapRef:
@@ -70,7 +71,7 @@ spec:
         # This container installs the CNI binaries
         # and CNI network config file on each node.
         - name: install-cni
-          image: calico/cni:v3.16.5
+          image: quay.io/calico/cni:v{{ .Chart.AppVersion }}
           command: ["/opt/cni/bin/install"]
           envFrom:
             - configMapRef:
@@ -111,18 +112,19 @@ spec:
         # Adds a Flex Volume Driver that creates a per-pod Unix Domain Socket to allow Dikastes
         # to communicate with Felix over the Policy Sync API.
         - name: flexvol-driver
-          image: calico/pod2daemon-flexvol:v3.16.5
+          image: quay.io/calico/pod2daemon-flexvol:v{{ .Chart.AppVersion }}
           volumeMounts:
             - name: flexvol-driver-host
               mountPath: /host/driver
           securityContext:
             privileged: true
+      {{end}}
       containers:
         # Runs calico-node container on each Kubernetes node. This
         # container programs network policy and routes on each
         # host.
         - name: calico-node
-          image: calico/node:v3.16.5
+          image: quay.io/calico/node:v{{ .Chart.AppVersion }}
           envFrom:
             - configMapRef:
                 # Allow KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT to be overridden for eBPF mode.
@@ -140,15 +142,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            # Choose the backend to use.
-            - name: CALICO_NETWORKING_BACKEND
-              valueFrom:
-                configMapKeyRef:
-                  name: calico-config
-                  key: calico_backend
-            # Cluster type to identify the deployment type
-            - name: CLUSTER_TYPE
-              value: "k8s,bgp"
             # Auto-detect the BGP IP address.
             - name: IP
               value: "autodetect"
@@ -176,11 +169,6 @@ spec:
                 configMapKeyRef:
                   name: calico-config
                   key: veth_mtu
-            # The default IPv4 pool to create on startup if none exists. Pod IPs will be
-            # chosen from this range. Changing this value after installation will have
-            # no effect. This should fall within `--cluster-cidr`.
-            # - name: CALICO_IPV4POOL_CIDR
-            #   value: "192.168.0.0/16"
             # Disable file logging so `kubectl logs` works.
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
@@ -190,11 +178,49 @@ spec:
             # Disable IPv6 on Kubernetes.
             - name: FELIX_IPV6SUPPORT
               value: "false"
-            # Set Felix logging to "info"
+            # Set Felix logging to "error"
             - name: FELIX_LOGSEVERITYSCREEN
-              value: "info"
+              value: "error"
             - name: FELIX_HEALTHENABLED
               value: "true"
+            - name: FELIX_PROMETHEUSMETRICSENABLED
+              value: "true"
+            {{if .Values.cni.enable}}
+            # Cluster type to identify the deployment type
+            - name: CLUSTER_TYPE
+              value: "k8s,bgp"
+            # Choose the backend to use.
+            - name: CALICO_NETWORKING_BACKEND
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: calico_backend
+            # The default IPv4 pool to create on startup if none exists. Pod IPs will be
+            # chosen from this range. Changing this value after installation will have
+            # no effect. This should fall within `--cluster-cidr`.
+            - name: CALICO_IPV4POOL_CIDR
+              value: "10.0.0.0/16"
+            {{else}}
+            # Cluster type to identify the deployment type
+            - name: CLUSTER_TYPE
+              value: "k8s,ecs"
+            # Use eni not cali for interface prefix
+            - name: FELIX_INTERFACEPREFIX
+              value: "eni"
+            # Don't enable BGP.
+            - name: CALICO_NETWORKING_BACKEND
+              value: "none"
+            # This will make Felix honor AWS VPC CNI's mangle table rules.
+            - name: FELIX_IPTABLESMANGLEALLOWACTION
+              value: Return
+            - name: FELIX_ROUTESOURCE
+              value: "WorkloadIPs"
+            - name: NO_DEFAULT_POOLS
+              value: "true"
+            # No IP address needed.
+            - name: IP
+              value: ""
+            {{end}}
           securityContext:
             privileged: true
           resources:
