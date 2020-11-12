@@ -12,8 +12,10 @@ It can be installed on any Kubernetes cluster and once bootstrapped is self-heal
 capable of managing itself.
 
 > :warning: MKP charts are highly opinionated software bundles
-> that are designed to be installed in a certain way. For instance, they do not honor 
+> that are designed to be installed in a certain way. For instance, they do not always honor
 > Helm's release namespace and instead manage their own Kubernetes namespaces.
+> Also they provide a very small set of configurable values compared to the upstream charts they are
+> based of.
 > If you need more flexibility regarding how each component is installed you should
 > manage it separately using the recommended upstream installation method.
 
@@ -21,7 +23,7 @@ capable of managing itself.
 
 Since MKP is distributed in the form of Helm Charts it can be installed by
 simply running `helm install` for each module. However we recommend the use of Helmfile
-to declaratively install all the required packages in one command.   
+to declaratively install all the required packages in one command.
 The following CLI tools are required:
 
 - [helm] to install the charts
@@ -58,21 +60,14 @@ releases:
   - name: core
     chart: mkp/core
     version: 0.1.0
-  - name: nginx
+    - name: nginx
     chart: mkp/ingress-nginx
     version: 0.1.0
+    namespace: ingress-nginx
   - name: argocd
     chart: mkp/argocd
     version: 0.1.0
-  - name: metrics
-    chart: mkp/metrics-prometheus
-    version: 0.1.0
-  - name: logging
-    chart: mkp/logging-loki
-    version: 0.1.0
-  - name: tracing
-    chart: mkp/tracing-tempo
-    version: 0.1.0
+    namespace: argocd
 ```
 
 To install them, first lock the chart versions then apply the stack.
@@ -83,13 +78,9 @@ helmfile apply
 ```
 
 Finally, check that everything installed correctly.
+
 ```bash
 kubectl get pods --all-namespaces
-```
-
-You can also run chart tests if you want.
-```bash
-helmfile test --cleanup
 ```
 
 [Helm Charts]: https://helm.sh

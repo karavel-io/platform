@@ -1,7 +1,7 @@
 annotations:
   artifacthub.io/changes: |
     - Add Default backend HPA autoscaling
-apiVersion: v1
+apiVersion: v2
 appVersion: 0.41.0
 description: Ingress controller for Kubernetes using NGINX as a reverse proxy and
   load balancer
@@ -10,7 +10,6 @@ icon: https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nginx_logo.svg/5
 keywords:
 - ingress
 - nginx
-kubeVersion: '>=1.16.0-0'
 maintainers:
 - name: ChiefAlexander
 name: ingress-nginx

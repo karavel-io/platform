@@ -35,6 +35,9 @@ users:
 EOT
 }
 
+output "update-config-command" {
+  value = "aws eks update-kubeconfig --name ${var.cluster_name}"
+}
 // Uncomment when the EKS module stops using `aws-iam-authenticator` instead of the aws-cli
 //output "kubeconfig" {
 //  description = "Generated Kubeconfig to connect to the cluster"

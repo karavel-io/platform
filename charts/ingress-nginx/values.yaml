@@ -93,7 +93,7 @@ controller:
   ##
   scope:
     enabled: false
-    namespace: ""   # defaults to .Release.Namespace
+    namespace: "ingress-nginx"   # defaults to .Release.Namespace
 
   ## Allows customization of the configmap / nginx-configmap namespace
   ##
@@ -470,7 +470,7 @@ controller:
     serviceMonitor:
       enabled: false
       additionalLabels: {}
-      namespace: ""
+      namespace: "ingress-nginx"
       namespaceSelector: {}
       # Default: scrape .Release.Namespace only
       # To scrape all, use the following:
@@ -484,7 +484,7 @@ controller:
     prometheusRule:
       enabled: false
       additionalLabels: {}
-      # namespace: ""
+      # namespace: "ingress-nginx"
       rules: []
         # # These are just examples rules, please adapt them to your needs
         # - alert: NGINXConfigFailed

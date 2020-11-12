@@ -1,5 +1,8 @@
 version: ""
 dependencies:
+- name: argocd
+  repository: https://charts.mikamai.com/mkp
+  version: 0.1.0
 - name: calico
   repository: https://charts.mikamai.com/mkp
   version: 0.1.0
@@ -8,6 +11,6 @@ dependencies:
   version: 0.1.0
 - name: ingress-nginx
   repository: https://charts.mikamai.com/mkp
-  version: 3.9.0
-digest: sha256:015634beab1b5dd1383d4693c4b8856b2192c13f5be5106af134e93a66039c2b
-generated: "2020-11-12T14:05:00.120483248+01:00"
+  version: 0.1.0
+digest: sha256:0093f3f8d427084c4dc7e21d00da7fcff3d96597d118324f8bca2fda44a3ccbc
+generated: "2020-11-12T14:47:20.02504932+01:00"

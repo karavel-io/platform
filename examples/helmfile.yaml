@@ -11,4 +11,9 @@ releases:
     version: 0.1.0
   - name: nginx
     chart: mkp/ingress-nginx
-    version: 3.9.0
+    version: 0.1.0
+    namespace: ingress-nginx
+  - name: argocd
+    chart: mkp/argocd
+    version: 0.1.0
+    namespace: argocd

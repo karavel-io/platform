@@ -17,7 +17,7 @@ locals {
   }
   wp = concat(var.worker_pools, [local.core_pool])
   worker_pools = [
-    for worker in local.wp :
+    for worker in var.worker_pools :
     {
       name : worker.name,
       ami_id : lookup(worker, "ami_id", null) != null ? worker.ami_id : element(data.aws_ami.worker.*.image_id, index(var.worker_pools.*.name, worker.name)),
@@ -77,8 +77,8 @@ module "cluster" {
 
   cluster_create_timeout                         = "30m"
   cluster_delete_timeout                         = "30m"
-  cluster_endpoint_private_access                = true
-  cluster_endpoint_private_access_cidrs          = var.control_plane_cidrs
+  cluster_endpoint_private_access                = false
+//  cluster_endpoint_private_access_cidrs          = var.control_plane_cidrs
   cluster_create_endpoint_private_access_sg_rule = true
   cluster_endpoint_public_access                 = true
   cluster_log_retention_in_days                  = 90
@@ -99,6 +99,14 @@ module "cluster" {
   tags            = var.tags
   vpc_id          = var.vpc
   worker_additional_security_group_ids           = [aws_security_group.workers.id]
+  node_groups = {
+//    eks_nodes = {
+//      desired_capacity = 3
+//      max_capacity = 6
+//      min_capacity = 3
+//      instance_type = "t3a.small"
+//    }
+  }
   worker_groups = [
     for worker_pool in local.worker_pools :
     {
@@ -106,16 +114,16 @@ module "cluster" {
       ami_id               = worker_pool.ami_id
       asg_max_size         = worker_pool.max_size
       asg_min_size         = worker_pool.min_size
+      asg_desired_capacity = worker_pool.min_size
       instance_type        = worker_pool.instance_type
       root_volume_size     = worker_pool.volume_size
       additional_security_group_ids = [aws_security_group.workers.id]
       public_ip            = false
       subnets              = var.subnets
-      kubelet_extra_args   = replace(replace(chomp(worker_pool.kubelet_extra_args), ", ", " "), "\n", " ")
+      kubelet_extra_args   = trimsuffix(replace(replace(chomp(worker_pool.kubelet_extra_args), ", ", " "),"\n", " "), ",")
       tags                 = worker_pool.tags
       bootstrap_extra_args = worker_pool.bootstrap_extra_args
     }
   ]
-  worker_sg_ingress_from_port = 22
   write_kubeconfig            = false
 }
