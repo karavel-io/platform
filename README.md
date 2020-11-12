@@ -26,6 +26,7 @@ The following CLI tools are required:
 
 - [helm] to install the charts
 - [helmfile] to orchestrate chart installation
+- [helm-diff] plugin, used by `helmfile`
 - [kubectl], used by helm to communicate with the Kubernetes cluster.
 
 ## Quickstart
@@ -42,12 +43,18 @@ Create a `helmfile.yaml` to list the desired modules.
 MKP is designed to be modular, so that some components can be replaced or omitted altogether.
 Core components are always required.
 
+Note: Calico should be deployed first since it provides fundamental network
+capabilities for the entire cluster.
+
 ```yaml
 repositories:
   - name: mkp
-    url: https://mkp.charts.mikamai.com
+    url: https://charts.mikamai.com/mkp
 
 releases:
+  - name: calico
+    chart: mkp/calico
+    version: 0.1.0
   - name: core
     chart: mkp/core
     version: 0.1.0
@@ -88,6 +95,7 @@ helmfile test --cleanup
 [Helm Charts]: https://helm.sh
 [helm]: https://helm.sh/docs/intro/install/
 [helmfile]: https://github.com/roboll/helmfile
+[helm-diff]: https://github.com/databus23/helm-diff
 [kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl
 [GitOps]: https://www.weave.works/blog/what-is-gitops-really
 

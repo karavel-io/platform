@@ -31,7 +31,7 @@ spec:
       conversionReviewVersions: ["v1", "v1beta1"]
       clientConfig:
         service:
-          namespace: '{{ .Release.Namespace }}'
+          namespace: 'cert-manager'
           name: '{{ template "webhook.fullname" . }}'
           path: /convert
   versions:
@@ -645,7 +645,7 @@ spec:
       conversionReviewVersions: ["v1", "v1beta1"]
       clientConfig:
         service:
-          namespace: '{{ .Release.Namespace }}'
+          namespace: 'cert-manager'
           name: '{{ template "webhook.fullname" . }}'
           path: /convert
   versions:
@@ -1864,7 +1864,7 @@ spec:
       conversionReviewVersions: ["v1", "v1beta1"]
       clientConfig:
         service:
-          namespace: '{{ .Release.Namespace }}'
+          namespace: 'cert-manager'
           name: '{{ template "webhook.fullname" . }}'
           path: /convert
   versions:
@@ -5205,7 +5205,7 @@ spec:
       conversionReviewVersions: ["v1", "v1beta1"]
       clientConfig:
         service:
-          namespace: '{{ .Release.Namespace }}'
+          namespace: 'cert-manager'
           name: '{{ template "webhook.fullname" . }}'
           path: /convert
   versions:
@@ -9352,7 +9352,7 @@ spec:
       conversionReviewVersions: ["v1", "v1beta1"]
       clientConfig:
         service:
-          namespace: '{{ .Release.Namespace }}'
+          namespace: 'cert-manager'
           name: '{{ template "webhook.fullname" . }}'
           path: /convert
   versions:
@@ -13499,7 +13499,7 @@ spec:
       conversionReviewVersions: ["v1", "v1beta1"]
       clientConfig:
         service:
-          namespace: '{{ .Release.Namespace }}'
+          namespace: 'cert-manager'
           name: '{{ template "webhook.fullname" . }}'
           path: /convert
   versions:

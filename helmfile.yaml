@@ -1,8 +1,0 @@
-repositories:
-  - name: mkp
-    url: https://mkp.charts.mikamai.com
-
-releases:
-  - name: core
-    chart: mkp/core
-    version: 0.1.0

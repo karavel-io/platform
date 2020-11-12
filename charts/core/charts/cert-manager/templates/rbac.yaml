@@ -46,7 +46,7 @@ subjects:
   - apiGroup: ""
     kind: ServiceAccount
     name: {{ template "cert-manager.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+    namespace: cert-manager
 
 ---
 

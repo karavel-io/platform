@@ -28,7 +28,7 @@ spec:
       app.kubernetes.io/component: "controller"
   namespaceSelector:
     matchNames:
-      - {{ .Release.Namespace }}
+      - cert-manager
   endpoints:
   - targetPort: {{ .Values.prometheus.servicemonitor.targetPort }}
     path: {{ .Values.prometheus.servicemonitor.path }}

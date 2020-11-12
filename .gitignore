@@ -196,3 +196,6 @@ $RECYCLE.BIN/
 
 # Chart dependencies
 **/charts/*.tgz
+
+# Chart packaging directory
+dist/

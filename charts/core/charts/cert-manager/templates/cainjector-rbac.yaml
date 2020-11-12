@@ -104,7 +104,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ template "cainjector.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+    namespace: cert-manager
 
 
 {{- end -}}

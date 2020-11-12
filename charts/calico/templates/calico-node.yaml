@@ -142,33 +142,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            # Auto-detect the BGP IP address.
-            - name: IP
-              value: "autodetect"
-            # Enable IPIP
-            - name: CALICO_IPV4POOL_IPIP
-              value: "Always"
-            # Enable or Disable VXLAN on the default IP pool.
-            - name: CALICO_IPV4POOL_VXLAN
-              value: "Never"
-            # Set MTU for tunnel device used if ipip is enabled
-            - name: FELIX_IPINIPMTU
-              valueFrom:
-                configMapKeyRef:
-                  name: calico-config
-                  key: veth_mtu
-            # Set MTU for the VXLAN tunnel device.
-            - name: FELIX_VXLANMTU
-              valueFrom:
-                configMapKeyRef:
-                  name: calico-config
-                  key: veth_mtu
-            # Set MTU for the Wireguard tunnel device.
-            - name: FELIX_WIREGUARDMTU
-              valueFrom:
-                configMapKeyRef:
-                  name: calico-config
-                  key: veth_mtu
             # Disable file logging so `kubectl logs` works.
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
@@ -200,10 +173,37 @@ spec:
             # no effect. This should fall within `--cluster-cidr`.
             - name: CALICO_IPV4POOL_CIDR
               value: "10.0.0.0/16"
+              # Auto-detect the BGP IP address.
+            - name: IP
+              value: "autodetect"
+              # Enable IPIP
+            - name: CALICO_IPV4POOL_IPIP
+              value: "Always"
+            # Enable or Disable VXLAN on the default IP pool.
+            - name: CALICO_IPV4POOL_VXLAN
+              value: "Never"
+            # Set MTU for tunnel device used if ipip is enabled
+            - name: FELIX_IPINIPMTU
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: veth_mtu
+            # Set MTU for the VXLAN tunnel device.
+            - name: FELIX_VXLANMTU
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: veth_mtu
+            # Set MTU for the Wireguard tunnel device.
+            - name: FELIX_WIREGUARDMTU
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: veth_mtu
             {{else}}
             # Cluster type to identify the deployment type
             - name: CLUSTER_TYPE
-              value: "k8s,ecs"
+              value: "k8s"
             # Use eni not cali for interface prefix
             - name: FELIX_INTERFACEPREFIX
               value: "eni"
@@ -231,7 +231,9 @@ spec:
               command:
                 - /bin/calico-node
                 - -felix-live
+                {{if .Values.cni.enable}}
                 - -bird-live
+                {{end}}
             periodSeconds: 10
             initialDelaySeconds: 10
             failureThreshold: 6
@@ -240,7 +242,9 @@ spec:
               command:
                 - /bin/calico-node
                 - -felix-ready
+                {{if .Values.cni.enable}}
                 - -bird-ready
+                {{end}}
             periodSeconds: 10
           volumeMounts:
             - mountPath: /lib/modules

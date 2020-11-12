@@ -4,3 +4,4 @@ description: Calico chart
 type: application
 version: 0.1.0
 appVersion: 3.16.5
+kubeVersion: '>=1.16.0 <1.20'

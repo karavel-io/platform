@@ -44,6 +44,6 @@ subjects:
 - apiGroup: ""
   kind: ServiceAccount
   name: {{ template "webhook.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: cert-manager
 
 {{- end -}}

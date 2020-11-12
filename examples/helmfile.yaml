@@ -1,0 +1,14 @@
+repositories:
+  - name: mkp
+    url: https://charts.mikamai.com/mkp
+
+releases:
+  - name: calico
+    chart: mkp/calico
+    version: 0.1.0
+  - name: core
+    chart: mkp/core
+    version: 0.1.0
+  - name: nginx
+    chart: mkp/ingress-nginx
+    version: 3.9.0

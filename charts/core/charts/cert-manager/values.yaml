@@ -22,7 +22,7 @@ global:
 
   leaderElection:
     # Override the namespace used to store the ConfigMap for leader election
-    namespace: "kube-system"
+    namespace: "cert-manager"
 
 installCRDs: true
 
@@ -67,12 +67,12 @@ serviceAccount:
   # annotations: {}
 
 # Optional additional arguments
-extraArgs: []
+extraArgs:
   # Use this flag to set a namespace that cert-manager will use to store
   # supporting resources required for each ClusterIssuer (default is kube-system)
-  # - --cluster-resource-namespace=kube-system
+   - --cluster-resource-namespace=cert-manager
   # When this flag is enabled, secrets will be automatically removed when the certificate resource is deleted
-  # - --enable-certificate-owner-ref=true
+   - --enable-certificate-owner-ref=true
 
 extraEnv: []
 # - name: SOME_VAR
