@@ -5,3 +5,10 @@ cni:
   # Install Calico CNI plugin. Disable to only use Calico for network policies
   # (e.g. when using AWS VPC CNI plugin)
   enable: true
+
+argocd:
+  namespace: argocd
+  git:
+    repo: git@github.com:example/example.git
+    path: "manifests/calico"
+    rev: HEAD

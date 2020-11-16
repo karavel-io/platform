@@ -19,6 +19,16 @@ capable of managing itself.
 > If you need more flexibility regarding how each component is installed you should
 > manage it separately using the recommended upstream installation method.
 
+## Available modules
+
+- [ArgoCD]
+- [Calico]
+- [cert-manager]
+- [ExternalDNS]
+- [External Secrets]
+- [Goldpinger]
+- [NGINX Ingress Controller]
+
 ## Requirements
 
 Since MKP is distributed in the form of Helm Charts it can be installed by
@@ -27,66 +37,28 @@ to declaratively install all the required packages in one command.
 The following CLI tools are required:
 
 - [helm] to install the charts
-- [helmfile] to orchestrate chart installation
-- [helm-diff] plugin, used by `helmfile`
-- [kubectl], used by helm to communicate with the Kubernetes cluster.
+- [helmfile] to orchestrate chart installation and generate the GitOps solution
+- [kubectl] used to interact with the cluster
 
 ## Quickstart
 
 MKP is built on the principles of [GitOps], and as such is designed to
 keep the desired state of the platform in a git repository.
 
-```bash
-mkdir mkp && cd mkp
-git init
-```
+Check the following examples for more information about setting up your MKP cluster:
 
-Create a `helmfile.yaml` to list the desired modules.
-MKP is designed to be modular, so that some components can be replaced or omitted altogether.
-Core components are always required.
-
-Note: Calico should be deployed first since it provides fundamental network
-capabilities for the entire cluster.
-
-```yaml
-repositories:
-  - name: mkp
-    url: https://charts.mikamai.com/mkp
-
-releases:
-  - name: calico
-    chart: mkp/calico
-    version: 0.1.0
-  - name: core
-    chart: mkp/core
-    version: 0.1.0
-    - name: nginx
-    chart: mkp/ingress-nginx
-    version: 0.1.0
-    namespace: ingress-nginx
-  - name: argocd
-    chart: mkp/argocd
-    version: 0.1.0
-    namespace: argocd
-```
-
-To install them, first lock the chart versions then apply the stack.
-
-```bash
-helmfile deps
-helmfile apply
-```
-
-Finally, check that everything installed correctly.
-
-```bash
-kubectl get pods --all-namespaces
-```
+- [EKS Quickstart]
 
 [Helm Charts]: https://helm.sh
+[ArgoCD]: https://argoproj.github.io/argo-cd
+[Calico]: https://projectcalico.org
+[cert-manager]: https://cert-manager.io
+[ExternalDNS]: https://github.com/kubernetes-sigs/external-dns
+[External Secrets]: https://github.com/godaddy/kubernetes-external-secrets
+[Goldpinger]: https://github.com/bloomberg/goldpinger
+[NGINX Ingress Controller]: https://kubernetes.github.io/ingress-nginx/
 [helm]: https://helm.sh/docs/intro/install/
 [helmfile]: https://github.com/roboll/helmfile
-[helm-diff]: https://github.com/databus23/helm-diff
 [kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl
 [GitOps]: https://www.weave.works/blog/what-is-gitops-really
-
+[EKS Quickstart]: ./examples/eks/README.md

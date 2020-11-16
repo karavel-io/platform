@@ -1,0 +1,6 @@
+apiVersion: v2
+name: external-dns
+description: Configure external DNS servers for Kubernetes Ingresses and Services
+type: application
+version: 0.1.0
+appVersion: 0.7.4

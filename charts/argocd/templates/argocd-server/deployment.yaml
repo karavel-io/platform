@@ -1,162 +1,94 @@
-{{- $redisHa := (index .Values "redis-ha") -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "argo-cd.server.fullname" . }}
-  namespace: argocd
+  name: argocd-server
+  namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: argocd-server
+    helm.sh/chart: {{ include "argocd.chart" . }}
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.server.name }}
-    app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
+    app.kubernetes.io/component: server
+    app.kubernetes.io/version: {{ include "argocd.version" . | quote}}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: argocd-server
+      app.kubernetes.io/instance: argocd
+      app.kubernetes.io/component: server
   revisionHistoryLimit: 5
-  {{- if (ne .Values.server.autoscaling.enabled true) }}
-  replicas: {{ .Values.server.replicas }}
-  {{- end }}
   template:
     metadata:
-      {{- if .Values.server.podAnnotations }}
-      annotations:
-      {{- range $key, $value := .Values.server.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
-      {{- end }}
-      {{- end }}
       labels:
-        app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}
-        helm.sh/chart: {{ include "argo-cd.chart" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/name: argocd-server
+        helm.sh/chart: {{ include "argocd.chart" . }}
+        app.kubernetes.io/instance: argocd
         app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/component: {{ .Values.server.name }}
-        app.kubernetes.io/version: {{ default .Values.global.image.tag .Values.server.image.tag | quote }}
-        {{- if .Values.server.podLabels }}
-{{- toYaml .Values.server.podLabels | nindent 8 }}
-        {{- end }}
+        app.kubernetes.io/component: server
+        app.kubernetes.io/version: {{ include "argocd.version" . | quote }}
     spec:
-      {{- with .Values.global.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- if .Values.global.securityContext }}
-      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
-      {{- end }}
       containers:
-      - name: {{ .Values.server.name }}
-        image: {{ default .Values.global.image.repository .Values.server.image.repository }}:{{ default .Values.global.image.tag .Values.server.image.tag }}
-        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.server.image.imagePullPolicy }}
+      - name: server
+        image: "argoproj/argocd:{{ include "argocd.version" . }}"
+        imagePullPolicy: IfNotPresent
         command:
         - argocd-server
         - --staticassets
         - /shared/app
         - --repo-server
-        - {{ template "argo-cd.repoServer.fullname" . }}:{{ .Values.repoServer.service.port }}
-        {{- if .Values.dex.enabled }}
+        - argocd-repo-server:8081
         - --dex-server
-        - http://{{ template "argo-cd.dex.fullname" . }}:{{ .Values.dex.servicePortHttp }}
-        {{- end }}
+        - http://argocd-dex-server:5556
         - --logformat
-        - {{ .Values.server.logFormat }}
+        - text
         - --loglevel
-        - {{ .Values.server.logLevel }}
-        {{- if or (and .Values.redis.enabled (not $redisHa.enabled)) (and $redisHa.enabled $redisHa.haproxy.enabled) }}
+        - info
         - --redis
-        - {{ template "argo-cd.redis.fullname" . }}:{{ .Values.redis.servicePort }}
-        {{- end }}
-        {{- with .Values.server.extraArgs }}
-        {{- . | toYaml | nindent 8 }}
-        {{- end }}
-        {{- if .Values.server.containerSecurityContext }}
-        securityContext: {{- toYaml .Values.server.containerSecurityContext | nindent 10 }}
-        {{- end }}
-        {{- if .Values.server.env }}
-        env:
-{{- toYaml .Values.server.env | nindent 8 }}
-        {{- end }}
+        - argocd-redis:6379
         volumeMounts:
-        {{- if .Values.server.volumeMounts }}
-{{- toYaml .Values.server.volumeMounts | nindent 8}}
-        {{- end }}
-        {{- if .Values.configs.knownHosts }}
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
-        {{- end }}
-        {{- if .Values.configs.tlsCerts }}
-        - mountPath: /app/config/tls
+        - mountPath: /app/config/tls                                                                                                                        │
           name: tls-certs
-        {{- end }}
         ports:
-        - name: {{ .Values.server.name }}
-          containerPort: {{ .Values.server.containerPort }}
+        - name: https
+          containerPort: 443
           protocol: TCP
-        {{ if .Values.server.metrics.enabled }}
+        - name: server
+          containerPort: 8080
+          protocol: TCP
         - name: metrics
           containerPort: 8083
           protocol: TCP
-        {{- end }}
         livenessProbe:
           httpGet:
             path: /healthz
-            port: {{ .Values.server.containerPort }}
-          initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.server.livenessProbe.successThreshold }}
-          failureThreshold: {{ .Values.server.livenessProbe.failureThreshold }}
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /healthz
-            port: {{ .Values.server.containerPort }}
-          initialDelaySeconds: {{ .Values.server.readinessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.server.readinessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.server.readinessProbe.successThreshold }}
-          failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
         resources:
-{{- toYaml .Values.server.resources | nindent 10 }}
-    {{- if .Values.server.extraContainers }}
-{{- toYaml .Values.server.extraContainers | nindent 6 }}
-    {{- end }}
-    {{- if .Values.server.nodeSelector }}
-      nodeSelector:
-{{- toYaml .Values.server.nodeSelector | nindent 8 }}
-    {{- end }}
-    {{- if .Values.server.tolerations }}
-      tolerations:
-{{- toYaml .Values.server.tolerations | nindent 8 }}
-    {{- end }}
-    {{- if .Values.server.affinity }}
-      affinity:
-{{- toYaml .Values.server.affinity | nindent 8 }}
-    {{- end }}
-      serviceAccountName: {{ template "argo-cd.serverServiceAccountName" . }}
-{{- with .Values.global.hostAliases }}
-      hostAliases:
-{{ toYaml . | indent 6 }}
-{{- end }}
+          {}
+      serviceAccountName: argocd-server
       volumes:
-      {{- if .Values.server.volumes }}
-{{- toYaml .Values.server.volumes | nindent 6}}
-      {{- end }}
       - emptyDir: {}
         name: static-files
-      {{- if .Values.configs.knownHosts }}
       - configMap:
+          defaultMode: 420
           name: argocd-ssh-known-hosts-cm
         name: ssh-known-hosts
-      {{- end }}
-      {{- if .Values.configs.tlsCerts }}
       - configMap:
+          defaultMode: 420
           name: argocd-tls-certs-cm
         name: tls-certs
-      {{- end }}
-{{- if .Values.server.priorityClassName }}
-      priorityClassName: {{ .Values.server.priorityClassName }}
-{{- end }}

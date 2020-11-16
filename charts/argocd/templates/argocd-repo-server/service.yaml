@@ -1,27 +1,21 @@
 apiVersion: v1
 kind: Service
 metadata:
-{{- if .Values.repoServer.service.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.repoServer.service.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-{{- end }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.repoServer.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: argocd-repo-server
+    helm.sh/chart: {{ include "argocd.chart" . }}
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.repoServer.name }}
-  name: {{ template "argo-cd.repoServer.fullname" . }}
-  namespace: argocd
+    app.kubernetes.io/component: repo-server
+  name: argocd-repo-server
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   ports:
-  - name: {{ .Values.repoServer.service.portName }}
+  - name: https-repo-server
     protocol: TCP
-    port: {{ .Values.repoServer.service.port }}
+    port: 8081
     targetPort: repo-server
   selector:
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.repoServer.name }}
+    app.kubernetes.io/instance: argocd
+    app.kubernetes.io/name: argocd-repo-server
+    app.kubernetes.io/component: repo-server

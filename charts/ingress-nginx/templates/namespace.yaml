@@ -1,6 +1,4 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ingress-nginx
-  annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
+  name: {{ .Release.Namespace }}

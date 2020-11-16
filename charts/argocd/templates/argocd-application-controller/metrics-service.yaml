@@ -1,32 +1,21 @@
-{{- if .Values.controller.metrics.enabled}}
 apiVersion: v1
 kind: Service
 metadata:
-{{- if .Values.controller.metrics.service.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.controller.metrics.service.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-{{- end }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-metrics
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: argocd-metrics
+    helm.sh/chart: {{ include "argocd.chart" . }}
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.controller.name }}
-{{- if .Values.controller.metrics.service.labels }}
-{{- toYaml .Values.controller.metrics.service.labels | nindent 4 }}
-{{- end }}
-  name: {{ template "argo-cd.controller.fullname" . }}-metrics
-  namespace: argocd
+    app.kubernetes.io/component: application-controller
+  name: argocd-application-controller-metrics
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   ports:
   - name: metrics
     protocol: TCP
-    port: {{ .Values.controller.metrics.service.servicePort }}
+    port: 8082
     targetPort: controller
   selector:
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.controller.name }}
-{{- end }}
+    app.kubernetes.io/instance: argocd
+    app.kubernetes.io/name: argocd-application-controller
+    app.kubernetes.io/component: application-controller

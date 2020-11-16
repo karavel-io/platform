@@ -1,0 +1,27 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    {{- with .Values.letsencrypt.email }}
+    email: {{ . }}
+    {{- end }}
+    privateKeySecretRef:
+      name: letsencrypt-prod-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+      {{- if .Values.letsencrypt.cloudflare.enabled }}
+      - dns01:
+          cloudflare:
+            email: {{ .Values.letsencrypt.cloudflare.email }}
+            apiTokenSecretRef:
+              name: {{ include "cert-manager.name" . }}-cloudflare-secret
+              key: cf-api-token
+        selector:
+          matchLabels:
+            "use-cloudflare-solver": "true"
+      {{- end }}

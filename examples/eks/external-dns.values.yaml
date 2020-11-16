@@ -1,0 +1,15 @@
+domainFilter: "mikamai.com"
+
+provider: cloudflare
+
+cloudflare:
+  proxied: true
+  zoneId: "bc4d0d7a1306a0ca31b830bfb137f16e"
+  secret:
+    backend: secretsManager
+    key: "mkp-test-cluster/cloudflare"
+    property: "api_token"
+
+argocd:
+  git:
+    repo: https://github.com/example/example.git

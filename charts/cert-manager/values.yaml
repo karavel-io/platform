@@ -1,0 +1,16 @@
+letsencrypt:
+  email: ""
+  cloudflare:
+    enabled: true
+    email: "tech@mikamai.com"
+    secret:
+      backend: secretsManager
+      key: ""
+      property: ""
+
+argocd:
+  namespace: argocd
+  git:
+    repo: git@github.com:example/example.git
+    path: "manifests/cert-manager"
+    rev: HEAD

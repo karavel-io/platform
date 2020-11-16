@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-dns
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: external-dns
+    helm.sh/chart: {{ include "external-dns.chart" . }}
+    app.kubernetes.io/part-of: external-dns
+    app.kubernetes.io/version: "v{{ .Chart.AppVersion }}"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: external-dns
+      helm.sh/chart: {{ include "external-dns.chart" . }}
+      app.kubernetes.io/part-of: external-dns
+      app.kubernetes.io/version: "v{{ .Chart.AppVersion }}"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: external-dns
+        helm.sh/chart: {{ include "external-dns.chart" . }}
+        app.kubernetes.io/part-of: external-dns
+        app.kubernetes.io/version: "v{{ .Chart.AppVersion }}"
+    spec:
+      serviceAccountName: external-dns
+      containers:
+        - name: external-dns
+          image: k8s.gcr.io/external-dns/external-dns:v{{.Chart.AppVersion}}
+          args:
+            - --source=service
+            - --source=ingress
+            {{- with .Values.domainFilter }}
+            - --domain-filter={{ . }} # will make ExternalDNS see only the hosted zones matching provided domain, omit to process all available hosted zones
+            {{- end }}
+
+            {{- if eq .Values.provider "cloudflare" }}
+            - --provider=cloudflare
+              {{- if .Values.cloudflare.proxied }}
+            - --cloudflare-proxied
+              {{- end }}
+              {{- with .Values.cloudflare.zoneId }}
+            - --zone-id-filter={{ . }}
+              {{- end }}
+            {{- end }}
+          {{- if eq .Values.provider "cloudflare" }}
+          env:
+            - name: CF_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "external-dns.name" . }}-cloudflare-secret
+                  key: cf-api-token
+          {{- end}}
+      securityContext:
+        fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes and AWS token files

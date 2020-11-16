@@ -10,7 +10,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
   name: {{ include "ingress-nginx.controller.fullname" . }}
-  namespace: ingress-nginx
+  namespace: {{ .Release.Namespace }}
   {{- if .Values.controller.annotations }}
   annotations: {{ toYaml .Values.controller.annotations | nindent 4 }}
   {{- end }}
@@ -109,6 +109,7 @@ spec:
           {{- if not (eq .Values.controller.healthCheckPath "/healthz") }}
             - --health-check-path={{ .Values.controller.healthCheckPath }}
           {{- end }}
+            - --enable-ssl-passthrough
           {{- range $key, $value := .Values.controller.extraArgs }}
             {{- /* Accept keys without values or with false as value */}}
             {{- if eq ($value | quote | len) 2 }}

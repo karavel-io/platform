@@ -1,0 +1,11 @@
+apiVersion: v2
+name: goldpinger
+description: Goldpinger deployment
+
+type: application
+version: 0.1.0
+appVersion: 3.0.0
+
+keywords:
+  - core
+  - networking

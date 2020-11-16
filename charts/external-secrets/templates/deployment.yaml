@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "external-secrets.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "external-secrets.name" . }}
+    helm.sh/chart: {{ include "external-secrets.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+  {{ with .Values.aws.iamRole }}
+  annotations:
+    iam.amazonaws.com/role: {{ . }}
+  {{ end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "external-secrets.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/version: {{ .Chart.AppVersion }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "external-secrets.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    spec:
+      serviceAccountName: external-secrets
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "godaddy/kubernetes-external-secrets:{{ .Chart.AppVersion }}"
+          ports:
+            - name: prometheus
+              containerPort: 3001
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DISABLE_CUSTOM_RESOURCE_MANAGER
+              value: "true"
+            - name: LOG_LEVEL
+              value: info
+            - name: LOG_MESSAGE_KEY
+              value: 'msg'
+            - name: METRICS_PORT
+              value: '3001'
+            - name: POLLER_INTERVAL_MILLISECONDS
+              value: {{ .Values.pollingIntervalMs | quote }}
+
+            {{- if .Values.aws.enable }}
+            - name: AWS_REGION
+              value: {{ .Values.aws.region | default .Values.aws.defaultRegion | quote }}
+            - name: AWS_DEFAULT_REGION
+              value: {{ .Values.aws.defaultRegion }}
+            {{- end }}
+            {{- if .Values.vault.enable }}
+            - name: VAULT_ADDR
+              value: {{ .Values.vault.address }}
+            - name: DEFAULT_VAULT_MOUNT_POINT
+              value: {{ .Values.vault.defaultMountPoint }}
+            - name: DEFAULT_VAULT_ROLE
+              value: {{ .Values.vault.defaultRole }}
+            {{- end }}
+            {{- if .Values.vault.enable }}
+            - name: NODE_EXTRA_CA_CERTS
+              value: "/usr/local/share/ca-certificates/{{ .Values.vault.extraCertsSecret.key }}"
+            {{- end }}
+          volumeMounts:
+            {{- if .Values.vault.enable }}
+            - name: {{ .Values.vault.extraCertsSecret.name }}
+              mountPath: /usr/local/share/ca-certificates
+              subPath: {{ .Values.vault.extraCertsSecret.key }}
+            {{- else }}
+            []
+            {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 65534

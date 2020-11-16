@@ -1,0 +1,13 @@
+letsencrypt:
+  email: "tech+mkp-test@mikamai.com"
+  cloudflare:
+    enabled: true
+    email: "tech@mikamai.com"
+    secret:
+      backend: secretsManager
+      key: "mkp-test-cluster/cloudflare"
+      property: "api_token"
+
+argocd:
+  git:
+    repo: https://github.com/example/example.git

@@ -1,0 +1,3 @@
+argocd:
+  git:
+    repo: https://github.com/example/example.git

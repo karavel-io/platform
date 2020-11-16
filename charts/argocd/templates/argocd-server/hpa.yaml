@@ -1,34 +1,27 @@
-{{- if .Values.server.autoscaling.enabled }}
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.server.name }}-hpa
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: argocd-server-hpa
+    helm.sh/chart: {{ include "argocd.chart" . }}
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.server.name }}
-  name: {{ template "argo-cd.server.fullname" . }}-hpa
-  namespace: argocd
+    app.kubernetes.io/component: server
+  name: argocd-server-hpa
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "argo-cd.server.fullname" . }}
-  minReplicas: {{ .Values.server.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.server.autoscaling.maxReplicas }}
+    name: argocd-server
+  minReplicas: 1
+  maxReplicas: 5
   metrics:
-{{- with .Values.server.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
-        targetAverageUtilization: {{ . }}
-{{- end }}
-{{- with .Values.server.autoscaling.targetCPUUtilizationPercentage }}
+        targetAverageUtilization: 50
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: {{ . }}
-{{- end }}
-{{- end }}
+        targetAverageUtilization: 50

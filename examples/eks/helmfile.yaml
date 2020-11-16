@@ -1,0 +1,43 @@
+repositories:
+  - name: mkp
+    url: https://charts.mikamai.com/mkp
+
+releases:
+  - name: calico
+    chart: mkp/calico
+    version: 0.1.0
+    values:
+      - calico.values.yaml
+  - name: cert-manager
+    chart: mkp/cert-manager
+    namespace: cert-manager
+    values:
+      - cert-manager.values.yaml
+  - name: ingress-nginx
+    chart: mkp/ingress-nginx
+    namespace: ingress-nginx
+  - name: external-secrets
+    chart: mkp/external-secrets
+    namespace: external-secrets
+    values:
+      - external-secrets.values.yaml
+  - name: external-dns
+    chart: mkp/external-dns
+    namespace: external-dns
+    values:
+      - external-dns.values.yaml
+  - name: argocd
+    chart: mkp/argocd
+    version: 0.1.0
+    namespace: argocd
+    values:
+      - argocd.values.yaml
+  - name: goldpinger
+    chart: mkp/goldpinger
+    version: 0.1.0
+    values:
+      - goldpinger.values.yaml
+
+helmDefaults:
+  args:
+    - "--include-crds"

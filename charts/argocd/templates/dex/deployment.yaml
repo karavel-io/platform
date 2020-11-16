@@ -1,58 +1,36 @@
-{{- if .Values.dex.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "argo-cd.dex.fullname" . }}
-  namespace: argocd
+  name: argocd-dex-server
+  namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
-    helm.sh/chart: {{ include "argo-cd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: argocd-dex-server
+    helm.sh/chart: {{ include "argocd.chart" . }}
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: {{ .Values.dex.name }}
-    app.kubernetes.io/version: {{ .Values.dex.image.tag }}
+    app.kubernetes.io/component: dex-server
+    app.kubernetes.io/version: v2.22.0
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: argocd-dex-server
+      app.kubernetes.io/instance: argocd
   template:
     metadata:
-      {{- if .Values.dex.podAnnotations }}
-      annotations:
-      {{- range $key, $value := .Values.dex.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
-      {{- end }}
-      {{- end }}
       labels:
-        app.kubernetes.io/name: {{ include "argo-cd.name" . }}-{{ .Values.dex.name }}
-        helm.sh/chart: {{ include "argo-cd.chart" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/name: argocd-dex-server
+        helm.sh/chart: {{ include "argocd.chart" . }}
+        app.kubernetes.io/instance: argocd
         app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/component: {{ .Values.dex.name }}
-        app.kubernetes.io/version: {{ .Values.dex.image.tag }}
-        {{- if .Values.dex.podLabels }}
-{{- toYaml .Values.dex.podLabels | nindent 8 }}
-        {{- end }}
+        app.kubernetes.io/component: dex-server
+        app.kubernetes.io/version: v2.22.0
     spec:
-      {{- with .Values.global.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- if .Values.global.securityContext }}
-      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
-      {{- end }}
       initContainers:
       - name: copyutil
-        image: {{ default .Values.global.image.repository .Values.dex.initImage.repository }}:{{ default .Values.global.image.tag .Values.dex.initImage.tag }}
-        imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.dex.initImage.imagePullPolicy }}
+        image: argoproj/argocd:v1.7.6
+        imagePullPolicy: IfNotPresent
         resources:
-{{- toYaml .Values.dex.resources | nindent 10 }}
-        {{- if .Values.dex.containerSecurityContext }}
-        securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
-        {{- end }}
+          {}
         command:
         - cp
         - -n
@@ -62,55 +40,28 @@ spec:
         - mountPath: /shared
           name: static-files
       containers:
-      - name: {{ .Values.dex.name }}
-        image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
-        imagePullPolicy: {{ .Values.dex.image.imagePullPolicy }}
+      - name: dex-server
+        image: quay.io/dexidp/dex:v2.22.0
+        imagePullPolicy: IfNotPresent
         command:
         - /shared/argocd-util
         - rundex
-        {{- if .Values.dex.containerSecurityContext }}
-        securityContext: {{- toYaml .Values.dex.containerSecurityContext | nindent 10 }}
-        {{- end }}
-        {{- if .Values.dex.env }}
-        env:
-{{- toYaml .Values.dex.env | nindent 8 }}
-        {{- end }}
         ports:
         - name: http
-          containerPort: {{ .Values.dex.containerPortHttp }}
+          containerPort: 5556
           protocol: TCP
         - name: grpc
-          containerPort: {{ .Values.dex.containerPortGrpc }}
+          containerPort: 5557
           protocol: TCP
-        {{- if .Values.dex.metrics.enabled }}
         - name: metrics
-          containerPort: {{ .Values.dex.containerPortMetrics }}
+          containerPort: 5558
           protocol: TCP
-        {{- end }}
-{{- if .Values.dex.volumeMounts }}
         volumeMounts:
-{{- toYaml .Values.dex.volumeMounts | nindent 10 }}
-{{- end }}
+          - mountPath: /shared
+            name: static-files
         resources:
-{{- toYaml .Values.dex.resources | nindent 10 }}
-    {{- if .Values.dex.nodeSelector }}
-      nodeSelector:
-{{- toYaml .Values.dex.nodeSelector | nindent 8 }}
-    {{- end }}
-    {{- if .Values.dex.tolerations }}
-      tolerations:
-{{- toYaml .Values.dex.tolerations | nindent 8 }}
-    {{- end }}
-    {{- if .Values.dex.affinity }}
-      affinity:
-{{- toYaml .Values.dex.affinity | nindent 8 }}
-    {{- end }}
-      serviceAccountName: {{ template "argo-cd.dexServiceAccountName" . }}
-{{- if .Values.dex.volumes }}
+          {}
+      serviceAccountName: argocd-dex-server
       volumes:
-{{- toYaml .Values.dex.volumes | nindent 8}}
-{{- end }}
-{{- if .Values.dex.priorityClassName }}
-      priorityClassName: {{ .Values.dex.priorityClassName }}
-{{- end }}
-{{- end }}
+        - emptyDir: {}
+          name: static-files

@@ -1,0 +1,24 @@
+pollingIntervalMs: 300000
+
+aws:
+  enable: false
+  region: ""
+  defaultRegion: eu-west-1
+  eksRole: ""
+  iamRole: ""
+
+vault:
+  enable: false
+  address: ""
+  defaultMountPoint: ""
+  defaultRole: ""
+  extraCertsSecret:
+    name: "vault-ca"
+    key: "ca.pem"
+
+argocd:
+  namespace: argocd
+  git:
+    repo: git@github.com:example/example.git
+    path: "manifests/external-secrets"
+    rev: HEAD
