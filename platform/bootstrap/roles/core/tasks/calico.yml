@@ -1,0 +1,9 @@
+- include_role:
+    name: install_package
+  vars:
+    package_name: calico
+    package_version: 0.1.0
+    package_namespace: kube-system
+    package_values:
+      cni:
+        enable: '{{ enable_calico_cni }}'

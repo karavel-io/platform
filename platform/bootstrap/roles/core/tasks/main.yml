@@ -1,0 +1,10 @@
+- name: Add MKP chart repo
+  kubernetes.core.helm_repository:
+    name: karavel
+    repo_url: "https://charts.mikamai.com/karavel"
+
+- import_tasks: calico.yml
+- import_tasks: external-secrets.yml
+- import_tasks: cert-manager.yml
+- import_tasks: goldpinger.yml
+

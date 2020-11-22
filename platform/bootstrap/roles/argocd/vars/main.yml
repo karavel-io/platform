@@ -1,0 +1,26 @@
+---
+argo_values:
+  publicHost: argocd.test.mikamai.com
+  secret:
+    backend: secretsManager
+    key: karavel-test-cluster/argocd-secret
+  credentialsSecret:
+    backend: secretsManager
+    key: karavel-test-cluster/argocd-pull-creds
+
+  oidc:
+    config:
+      name: Mikamai
+      issuer: https://sso.mikamai.com/auth/realms/mikamai
+      clientID: argocd
+      requestedScopes: ["openid", "profile", "email", "groups"]
+
+  git:
+    repo: https://github.com/MatteoJoliveau/karavel-test-infra.git
+    credentialsSecret:
+      usernameSecret:
+        name: infrastructure-repo-secret
+        key: username
+      passwordSecret:
+        name: infrastructure-repo-secret
+        key: password

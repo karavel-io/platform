@@ -1,0 +1,41 @@
+- name: Ensure local applications directory exist
+  delegate_to: localhost
+  file:
+    path: '{{ playbook_dir }}/{{ applications_dir }}'
+    recurse: yes
+    state: directory
+
+- name: Generate ArgoCD application for {{ item.key }}
+  include_tasks: generate.yml
+  loop: '{{ packages | dict2items }}'
+  vars:
+    package_name: '{{ item.key }}'
+    package_namespace: '{{ item.value }}'
+
+- name: Generate bootstrap ArgoCD application
+  delegate_to: localhost
+  vars:
+    name: bootstrap
+    namespace: argocd
+    repo: '{{ infrastructure_repo_url }}'
+    path: '{{ applications_dir }}'
+  template:
+    src: application.yml.j2
+    dest: '{{ playbook_dir }}/{{ applications_dir }}/bootstrap.yml'
+
+- debug:
+    var: packages | dict2items | map(attribute="key") | list
+
+- name: Generate kustomization stack for boostrap ArgoCD application
+  delegate_to: localhost
+  vars:
+    apps: '{{ packages | dict2items | map(attribute="key") | list }}'
+  template:
+    src: kustomization.yml.j2
+    dest: '{{ playbook_dir }}/{{ applications_dir }}/kustomization.yml'
+
+- name: Generate ArgoCD infrastructure project
+  delegate_to: localhost
+  copy:
+    src: project.yml
+    dest: '{{ playbook_dir }}/{{ applications_dir }}/project.yml'

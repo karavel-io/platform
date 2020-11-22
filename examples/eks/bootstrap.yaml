@@ -1,0 +1,4 @@
+- hosts: localhost
+  tasks:
+    - import_role:
+        name: mikamai.kubernetes_platform.core

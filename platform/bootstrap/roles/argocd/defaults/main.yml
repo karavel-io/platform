@@ -1,0 +1,2 @@
+init_namespaces: true
+output_dir: distribution
