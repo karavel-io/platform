@@ -1,7 +1,7 @@
 # Karavel <img align="right" width=384 src="https://via.placeholder.com/384x200.png?text=Karavel%20Logo%20Here">
 
 Karavel is an pure-upstream Kubernetes distribution
-that combines best-in-breed components to deliver
+that combines best-in-breed open source components to deliver
 a production ready platform for enterprises.
 
 Karavel is packaged as a collection of modules
