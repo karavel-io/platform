@@ -1,0 +1,15 @@
+- name: Ensure cert-manager namespace
+  kubernetes.core.k8s:
+    state: present
+    api_version: v1
+    kind: Namespace
+    name: cert-manager
+  when: init_namespaces
+
+- include_role:
+    name: install_package
+  vars:
+    package_name: cert-manager
+    package_version: 0.1.0
+    package_namespace: cert-manager
+    package_values: '{{ cert_manager_values }}'

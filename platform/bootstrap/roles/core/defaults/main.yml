@@ -1,0 +1,2 @@
+init_namespaces: true
+enable_calico_cni: true

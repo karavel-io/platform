@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+{% for item in resources %}
+- {{ item.metadata.name }}-{{ item.kind | lower }}.yml
+{% endfor %}

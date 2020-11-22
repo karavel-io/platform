@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  namespace: {{ .Release.Namespace }}
+  namespace: argocd
   name: infrastructure
 spec:
   description: Platform infrastructure components
@@ -13,5 +13,3 @@ spec:
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
-
-

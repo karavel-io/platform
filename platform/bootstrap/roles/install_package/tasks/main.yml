@@ -1,0 +1,30 @@
+- name: Render manifests for {{ package_name }}
+  helm_template:
+    name: '{{ package_name }}'
+    chart_ref: 'karavel/{{ package_name }}'
+    chart_version: '{{ package_version }}'
+    release_namespace: '{{ package_namespace }}'
+    release_values: '{{ package_values }}'
+  register: package
+
+- name: Ensure local manifests directory exist for {{ package_name }}
+  delegate_to: localhost
+  file:
+    path: '{{ playbook_dir }}/{{ output_dir }}/{{ package_name }}'
+    recurse: yes
+    state: directory
+
+- name: Generate manifests for {{ package_name }}
+  delegate_to: localhost
+  with_items: '{{ package.manifests }}'
+  copy:
+    dest: '{{ playbook_dir }}/{{ output_dir }}/{{ package_name }}/{{ item.metadata.name }}-{{ item.kind | lower }}.yml'
+    content: '{{ item | to_nice_yaml }}'
+
+- name: Generate kustomization stack for {{ package_name }}
+  delegate_to: localhost
+  vars:
+    resources: '{{ package.manifests }}'
+  template:
+    src: kustomization.yml.j2
+    dest: '{{ playbook_dir }}/{{ output_dir }}/{{ package_name }}/kustomization.yml'
