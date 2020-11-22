@@ -1,26 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: calico
-  namespace: {{ .Values.argocd.namespace }}
+  name: {{ name }}
+  namespace: argocd
 spec:
   project: infrastructure
   source:
-    repoURL: {{ .Values.argocd.git.repo | quote }}
-    targetRevision: {{ .Values.argocd.git.rev | quote }}
-    path: {{ .Values.argocd.git.path | quote }}
-    directory:
-      recurse: true
+    repoURL: {{ repo }}
+    path: {{ path }}
   destination:
     server: https://kubernetes.default.svc
-    namespace: kube-system
+    namespace: {{ namespace }}
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+      allowEmpty: false
     syncOptions:
-      - Validate=true
-      - CreateNamespace=false
+    - Validate=false
+    - CreateNamespace=false
     retry:
       limit: 5
       backoff:

@@ -4,5 +4,6 @@ in
 pkgs.mkShell {
     buildInputs = with pkgs; [
       mkdocs
+      ansible_2_10
     ];
 }

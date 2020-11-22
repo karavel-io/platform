@@ -1,0 +1,26 @@
+namespace: karavel
+name: bootstrap
+description: Karavel Bootstrap Tool
+version: 0.1.0
+
+authors:
+- Matteo Joliveau <matteo.joliveau@mikamai.com>
+
+repository: https://github.com/mikamai/karavel
+documentation: https://docs.karavel.io
+homepage: https://karavel.io
+issues: https://github.com/mikamai/karavel/issues
+readme: README.md
+
+license:
+- Apache-2.0
+
+tags:
+  - kubernetes
+  - distribution
+
+dependencies:
+  kubernetes.core: '>=1.1,<2.0'
+
+build_ignore: []
+
