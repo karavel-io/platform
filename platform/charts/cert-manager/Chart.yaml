@@ -1,0 +1,9 @@
+apiVersion: v2
+version: 0.1.0
+appVersion: 1.0.4
+name: cert-manager
+description: Jetstack cert-manager
+home: https://github.com/jetstack/cert-manager
+sources:
+- https://github.com/jetstack/cert-manager
+- https://github.com/mikamai/karavel

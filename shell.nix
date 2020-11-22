@@ -1,6 +1,6 @@
-let 
+let
   pkgs = import <nixpkgs> {};
-in 
+in
 pkgs.mkShell {
     buildInputs = with pkgs; [
       mkdocs

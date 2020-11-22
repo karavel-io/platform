@@ -1,0 +1,11 @@
+domainFilter: ""
+
+provider: cloudflare
+
+cloudflare:
+  proxied: true
+  zoneId: ""
+  secret:
+    backend: secretsManager
+    key: ""
+    property: ""

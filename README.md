@@ -1,28 +1,20 @@
-# Mikamai Kubernetes Platform
+# Karavel <img align="right" width=384 src="https://via.placeholder.com/384x200.png?text=Karavel%20Logo%20Here">
 
-MKP is an pure-upstream Kubernetes distribution
+Karavel is an pure-upstream Kubernetes distribution
 that combines best-in-breed components to deliver
 a production ready platform for enterprises.
 
-MKP is packaged as a collection of [Helm Charts]
+Karavel is packaged as a collection of modules
 that install a curated set of components and services, ranging from networking addons
 to load balancers and observability tools.
 
-It can be installed on any Kubernetes cluster and once bootstrapped is self-healing and
-capable of managing itself.
-
-> :warning: MKP charts are highly opinionated software bundles
-> that are designed to be installed in a certain way. For instance, they do not always honor
-> Helm's release namespace and instead manage their own Kubernetes namespaces.
-> Also they provide a very small set of configurable values compared to the upstream charts they are
-> based of.
-> If you need more flexibility regarding how each component is installed you should
-> manage it separately using the recommended upstream installation method.
+It can be installed on any Kubernetes cluster and once bootstrapped is self-healing and self-hosted, meaning it is capable
+of updating itself.
 
 ## Available modules
 
-- [ArgoCD]
 - [Calico]
+- [ArgoCD]
 - [cert-manager]
 - [ExternalDNS]
 - [External Secrets]
@@ -31,27 +23,14 @@ capable of managing itself.
 
 ## Requirements
 
-Since MKP is distributed in the form of Helm Charts it can be installed by
-simply running `helm install` for each module. However we recommend the use of Helmfile
-to declaratively install all the required packages in one command.
-The following CLI tools are required:
-
-- [helm] to install the charts
-- [helmfile] to orchestrate chart installation and generate the GitOps solution
-- [kubectl] used to interact with the cluster
+TBD
 
 ## Quickstart
 
-MKP is built on the principles of [GitOps], and as such is designed to
-keep the desired state of the platform in a git repository.
+TBD
 
-Check the following examples for more information about setting up your MKP cluster:
-
-- [EKS Quickstart]
-
-[Helm Charts]: https://helm.sh
-[ArgoCD]: https://argoproj.github.io/argo-cd
 [Calico]: https://projectcalico.org
+[ArgoCD]: https://argoproj.github.io/argo-cd
 [cert-manager]: https://cert-manager.io
 [ExternalDNS]: https://github.com/kubernetes-sigs/external-dns
 [External Secrets]: https://github.com/godaddy/kubernetes-external-secrets
@@ -61,4 +40,3 @@ Check the following examples for more information about setting up your MKP clus
 [helmfile]: https://github.com/roboll/helmfile
 [kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl
 [GitOps]: https://www.weave.works/blog/what-is-gitops-really
-[EKS Quickstart]: ./examples/eks/README.md

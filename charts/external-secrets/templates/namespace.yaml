@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Release.Namespace }}
-  {{ with .Values.aws.iamRole }}
-  annotations:
-    iam.amazonaws.com/allowed-roles: |
-      [{{ . | quote }}]
-  {{ end }}

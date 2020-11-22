@@ -1,6 +1,0 @@
-argocd:
-  namespace: argocd
-  git:
-    repo: git@github.com:example/example.git
-    path: "manifests/goldpinger"
-    rev: HEAD

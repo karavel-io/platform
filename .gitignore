@@ -199,3 +199,7 @@ $RECYCLE.BIN/
 
 # Chart packaging directory
 dist/
+
+*.tar.gz
+*.tgz
+*.zip
