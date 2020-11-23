@@ -25,6 +25,7 @@
 
 - name: Ensure local CRD manifests directory exist for {{ component_name }}
   delegate_to: localhost
+  when: component.manifests | selectattr("kind", "equalto", "CustomResourceDefinition") | length > 0
   file:
     path: '{{ playbook_dir }}/{{ output_dir }}/{{ component_name }}/crds'
     recurse: yes
