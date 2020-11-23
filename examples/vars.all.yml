@@ -1,5 +1,7 @@
 # Initialize the required namespaces in advance
-# Requires
+# Requires connectivity to the cluster and the `openshift` Python package installed
+# (`pip install openshift`)
+# Set to `false` to only generate manifests (namespaces will need to be created by hand)
 init_namespaces: true
 
 # ====== #
@@ -88,7 +90,7 @@ dex:
         redirectURI: https://dex.example.com/callback
         org: kubernetes
   secrets:
-    # creates a secret named $name from the secure backend
+    # Provisions a secret named $name from the secure backend
     # Properties in the secret will be mapped as-is to environment variables in Dex's container
     - name: github-creds
       backend: secretsManager
@@ -107,20 +109,13 @@ argocd:
   public_host: argocd.example.com
   git:
     repo: git@github.com:example/example.git
-    credentials_secret_ref:
-      # Basic auth or access token authentication
-      # Used for HTTPS repo URLs
-      username_secret:
-        name: infrastructure-repo-secret
-        key: username
-      password_secret:
-        name: infrastructure-repo-secret
-        key: password
-      # SSH private key authentication
-      # Used for git or git+ssh repo URLs
-      ssh_private_key_secret:
-        name: infrastructure-repo-secret
-        key: sshPrivateKey
+
+  oidc:
+    config:
+      name: "Mikamai"
+      issuer: "https://sso.mikamai.com/auth/realms/mikamai"
+      client_id: argocd
+      requested_scopes: [ "openid", "profile", "email", "groups" ]
 
   # Policy group for admins
   # Maps to the OIDC provider group

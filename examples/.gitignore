@@ -1,3 +1,4 @@
 manifests/
 applications/
-distribution/
+vendor/
+kustomization.yml

@@ -1,5 +1,5 @@
-namespace: karavel
-name: bootstrap
+namespace: mikamai
+name: karavel
 description: Karavel Bootstrap Tool
 version: 0.1.0
 
