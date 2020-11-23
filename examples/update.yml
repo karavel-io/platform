@@ -5,6 +5,4 @@
     - import_role:
         name: mikamai.karavel.core
     - import_role:
-        name: mikamai.karavel.argocd
-    - import_role:
         name: mikamai.karavel.nginx
