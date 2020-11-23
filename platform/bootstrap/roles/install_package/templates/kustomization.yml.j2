@@ -3,5 +3,9 @@ kind: Kustomization
 
 resources:
 {% for item in resources %}
+{% if item.kind == "CustomResourceDefinition" %}
+- crds/{{ item.metadata.name }}.yml
+{% else %}
 - {{ item.metadata.name }}-{{ item.kind | lower }}.yml
+{% endif %}
 {% endfor %}

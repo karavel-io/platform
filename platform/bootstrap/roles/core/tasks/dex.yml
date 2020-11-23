@@ -1,0 +1,19 @@
+- name: Ensure dex namespace
+  kubernetes.core.k8s:
+    state: present
+    api_version: v1
+    kind: Namespace
+    name: dex
+  when: init_namespaces
+
+- include_role:
+    name: install_package
+  vars:
+    package_name: dex
+    package_version: 0.1.0
+    package_namespace: dex
+    package_values:
+      publicHost: '{{ dex.public_host }}'
+      connectors: '{{ dex.connectors | default([]) }}'
+      secrets: '{{ dex.secrets | default([]) }}'
+      clients: '{{ dex.clients | default([]) }}'

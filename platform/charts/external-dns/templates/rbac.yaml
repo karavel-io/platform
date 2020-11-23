@@ -3,6 +3,10 @@ kind: ServiceAccount
 metadata:
   name: external-dns
   namespace: {{ .Release.Namespace }}
+  {{- with .Values.route53.eksRole }}
+  annotations:
+    eks.amazonaws.com/role-arn: {{ . }}
+  {{- end}}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

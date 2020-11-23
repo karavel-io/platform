@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex-metrics
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: dex-metrics
+    helm.sh/chart: {{ include "dex.chart" . }}
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/part-of: dex
+    app.kubernetes.io/version: v{{ .Chart.AppVersion }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 5558
+      protocol: TCP
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/name: dex
+    helm.sh/chart: {{ include "dex.chart" . }}
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/part-of: dex
+    app.kubernetes.io/component: server
+    app.kubernetes.io/version: v{{ .Chart.AppVersion }}

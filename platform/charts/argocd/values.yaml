@@ -1,18 +1,6 @@
 publicHost: argocd.example.com
 git:
   repo: git@github.com:example/example.git
-  path: "manifests/argocd"
-  rev: HEAD
-  credentialsSecret: {}
-#    usernameSecret:
-#      name: infrastructure-repo-secret
-#      key: username
-#    passwordSecret:
-#      name: infrastructure-repo-secret
-#      key: password
-#   sshPrivateKeySecret
-#      name: infrastructure-repo-secret
-#      key: sshPrivateKey
 
 adminGroup: ""
 

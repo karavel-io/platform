@@ -1,0 +1,12 @@
+- hosts: localhost
+  tasks:
+    - import_role:
+        name: karavel.bootstrap.core
+    - import_role:
+        name: karavel.bootstrap.argocd
+    - import_role:
+        name: karavel.bootstrap.nginx
+    - import_role:
+        name: karavel.bootstrap.argo_apps
+    - import_role:
+        name: karavel.bootstrap.bootstrap_kustomization

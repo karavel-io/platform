@@ -1,1 +1,2 @@
-output_dir: distribution
+output_dir: vendor
+package_values: {}

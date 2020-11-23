@@ -1,2 +1,7 @@
 init_namespaces: true
-enable_calico_cni: true
+output_dir: vendor
+
+letsencrypt:
+  provider: '{{ dns.provider }}'
+  email: '{{ dns.email }}'
+  secret_ref: '{{ dns.secret_ref }}'

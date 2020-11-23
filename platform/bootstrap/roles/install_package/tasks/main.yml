@@ -4,7 +4,7 @@
     chart_ref: 'karavel/{{ package_name }}'
     chart_version: '{{ package_version }}'
     release_namespace: '{{ package_namespace }}'
-    release_values: '{{ package_values }}'
+    release_values: '{{ package_values | default(omit) }}'
   register: package
 
 - name: Ensure local manifests directory exist for {{ package_name }}
@@ -17,9 +17,27 @@
 - name: Generate manifests for {{ package_name }}
   delegate_to: localhost
   with_items: '{{ package.manifests }}'
+  when: item.kind != "CustomResourceDefinition"
   copy:
     dest: '{{ playbook_dir }}/{{ output_dir }}/{{ package_name }}/{{ item.metadata.name }}-{{ item.kind | lower }}.yml'
     content: '{{ item | to_nice_yaml }}'
+    mode: 0644
+
+- name: Ensure local CRD manifests directory exist for {{ package_name }}
+  delegate_to: localhost
+  file:
+    path: '{{ playbook_dir }}/{{ output_dir }}/{{ package_name }}/crds'
+    recurse: yes
+    state: directory
+
+- name: Generate CRD manifests for {{ package_name }}
+  delegate_to: localhost
+  with_items: '{{ package.manifests }}'
+  when: item.kind == "CustomResourceDefinition"
+  copy:
+    dest: '{{ playbook_dir }}/{{ output_dir }}/{{ package_name }}/crds/{{ item.metadata.name }}.yml'
+    content: '{{ item | to_nice_yaml }}'
+    mode: 0644
 
 - name: Generate kustomization stack for {{ package_name }}
   delegate_to: localhost
@@ -28,3 +46,8 @@
   template:
     src: kustomization.yml.j2
     dest: '{{ playbook_dir }}/{{ output_dir }}/{{ package_name }}/kustomization.yml'
+    mode: 0644
+
+- name: Register {{ package_name }} module
+  ansible.builtin.set_fact:
+    karavel_modules: "{{ karavel_modules | default([]) | union([{'name': package_name, 'namespace': package_namespace}])}}"

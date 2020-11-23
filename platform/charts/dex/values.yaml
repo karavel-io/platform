@@ -1,0 +1,4 @@
+publicHost: dex.example.com
+connectors: []
+secrets: []
+clients: []

@@ -14,6 +14,6 @@ spec:
   dnsNames:
     - {{ .Values.publicHost }}
   issuerRef:
-    kind: Issuer
+    kind: ClusterIssuer
     name: letsencrypt-prod
   secretName: argocd-secret

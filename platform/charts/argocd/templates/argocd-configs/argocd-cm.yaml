@@ -18,7 +18,15 @@ data:
         type: helm
         url: https://charts.mikamai.com/karavel
       - url: {{ .Values.git.repo }}
-        {{- .Values.git.credentialsSecret | toYaml | nindent 8 }}
+        usernameSecret:
+          name: infrastructure-repo-secret
+          key: username
+        passwordSecret:
+          name: infrastructure-repo-secret
+          key: password
+        sshPrivateKeySecret:
+          name: infrastructure-repo-secret
+          key: sshPrivateKey
     {{- with .Values.oidc.config }}
     oidc.config: |
       name: {{ .name }}

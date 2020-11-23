@@ -1,0 +1,7 @@
+apiVersion: dex.coreos.com/v1
+kind: OAuth2Client
+metadata:
+  name: mfzgo33dmtf7fhheqqrcgji
+id: argocd
+name: argocd
+{{/*secret*/}}

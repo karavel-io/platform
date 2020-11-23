@@ -12,4 +12,10 @@
     package_name: cert-manager
     package_version: 0.1.0
     package_namespace: cert-manager
-    package_values: '{{ cert_manager_values }}'
+    package_values:
+      letsencrypt:
+        email: '{{ letsencrypt.email }}'
+        cloudflare:
+          enabled: '{{ letsencrypt.provider == "cloudflare" }}'
+          email: '{{ letsencrypt.email if secrets.provider == "cloudflare" else "" }}'
+          secret: '{{ letsencrypt.secret_ref }}'
