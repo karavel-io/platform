@@ -1,0 +1,26 @@
+- name: Ensure external-dns namespace
+  kubernetes.core.k8s:
+    state: present
+    api_version: v1
+    kind: Namespace
+    name: external-dns
+  when: init_namespaces
+
+- include_role:
+    name: install_package
+  vars:
+    package_name: external-dns
+    package_version: 0.1.0
+    package_namespace: external-dns
+    package_values:
+      domainFilter: '{{ dns.domain_filter | default(omit) }}'
+      provider: '{{ dns.provider }}'
+      cloudflare:
+        proxied: '{{ dns.proxied | default(True) }}'
+        zoneId: '{{ dns.hosted_zone_id | default(omit)}}'
+        secret: '{{ dns.secret_ref }}'
+      route53:
+        zoneType: '{{ dns.hosted_zone_type | default(omit)}}'
+        zoneId: '{{ dns.hosted_zone_id | default(omit)}}'
+        eksRole: '{{ dns.eks_role | default(omit)}}'
+        iamRole: '{{ dns.iam_role | default(omit) }}'

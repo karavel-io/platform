@@ -6,4 +6,6 @@
     package_namespace: kube-system
     package_values:
       cni:
-        enable: '{{ enable_calico_cni }}'
+        enable: '{{ calico.enable_cni | default(True) }}'
+      typha:
+        enable: '{{ calico.ha_setup | default(False) }}'

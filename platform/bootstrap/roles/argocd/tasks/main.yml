@@ -1,4 +1,4 @@
-- name: Add MKP chart repo
+- name: Add Karavel chart repo
   kubernetes.core.helm_repository:
     name: karavel
     repo_url: "https://charts.mikamai.com/karavel"
@@ -17,4 +17,17 @@
     package_name: argocd
     package_version: 0.1.0
     package_namespace: argocd
-    package_values: '{{ argo_values }}'
+    package_values:
+      publicHost: '{{ argocd.public_host }}'
+      secret: '{{ argocd.secret }}'
+      credentialsSecret: '{{ argocd.credentials_secret }}'
+
+      oidc:
+        config:
+          name: '{{ argocd.oidc.config.name }}'
+          issuer: '{{ argocd.oidc.config.issuer }}'
+          clientID: '{{ argocd.oidc.config.client_id }}'
+          requestedScopes: '{{ argocd.oidc.config.requested_scopes }}'
+
+      git:
+        repo: '{{ argocd.git.repo }}'

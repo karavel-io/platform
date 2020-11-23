@@ -9,3 +9,9 @@ cloudflare:
     backend: secretsManager
     key: ""
     property: ""
+
+route53:
+  zoneType: ""
+  zoneId: ""
+  eksRole: ""
+  iamRole: ""

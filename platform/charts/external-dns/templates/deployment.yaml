@@ -25,6 +25,10 @@ spec:
         helm.sh/chart: {{ include "external-dns.chart" . }}
         app.kubernetes.io/part-of: external-dns
         app.kubernetes.io/version: "v{{ .Chart.AppVersion }}"
+      {{- with .Values.route53.iamRole }}
+      annotations:
+        iam.amazonaws.com/role: {{ . }}
+      {{- end}}
     spec:
       serviceAccountName: external-dns
       containers:
@@ -44,6 +48,14 @@ spec:
               {{- end }}
               {{- with .Values.cloudflare.zoneId }}
             - --zone-id-filter={{ . }}
+              {{- end }}
+            {{- else if eq .Values.provider "route53" }}
+            - --provider=aws
+              {{- with .Values.route53.zoneType }}
+            - --aws-zone-type={{ . }}
+              {{- end }}
+              {{- with .Values.route53.zoneId }}
+            - --txt-owner-id={{ . }}
               {{- end }}
             {{- end }}
           {{- if eq .Values.provider "cloudflare" }}

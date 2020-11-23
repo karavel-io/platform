@@ -3,7 +3,7 @@
   vars:
     name: '{{ package_name }}'
     namespace: '{{ package_namespace }}'
-    repo: '{{ infrastructure_repo_url }}'
+    repo: '{{ argocd.git.repo }}'
     path: '{{ output_dir }}/{{ package_name }}'
   template:
     src: application.yml.j2

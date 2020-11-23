@@ -1,0 +1,6 @@
+apiVersion: v2
+name: dex
+description: Dex OIDC provider
+type: application
+version: 0.1.0
+appVersion: 2.26.0

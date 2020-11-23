@@ -1,0 +1,1 @@
+packages: "{{ ansible_facts['karavel_modules'] }}"

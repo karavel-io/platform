@@ -1,0 +1,90 @@
+# Initialize the required namespaces in advance
+# Requires
+init_namespaces: true
+
+# ====== #
+# Calico #
+# ====== #
+calico:
+  enable_cni: true
+  ha_setup: false
+
+# ================ #
+# External Secrets #
+# ================ #
+secrets:
+  polling_interval_ms: 300000
+  provider: aws
+  region: eu-west-1
+  eks_role: arn:aws:iam::198643062514:role/MkpTestSecretsManager
+
+
+# ============ #
+# External DNS
+# ============ #
+dns:
+  provider: cloudflare
+  email: tech@mikamai.com
+  proxied: true
+  hosted_zone_id: bc4d0d7a1306a0ca31b830bfb137f16e
+  secret_ref:
+    backend: secretsManager
+    key: mkp-test-cluster/cloudflare
+    property: api-token
+
+
+# ======== #
+# Dex OIDC #
+# ======== #
+dex:
+  public_host: dex.karavel-test.mikamai.com
+  # Dex connectors
+  # See https://dexidp.io/docs/connectors/ for information about how to configure them
+  connectors:
+    - type: github
+      id: github
+      name: GitHub
+      config:
+        clientID: $GITHUB_CLIENT_ID
+        clientSecret: $GITHUB_CLIENT_SECRET
+        redirectURI: https://dex.karavel-test.mikamai.com/callback
+        org: kubernetes
+  secrets:
+    # creates a secret named $name from the secure backend
+    # Properties in the secret will be mapped as-is to environment variables in Dex's container
+    - name: github-creds
+      backend: secretsManager
+      key: mkp-test-cluster/dex-github-creds
+  clients: []
+
+# ====== #
+# ArgoCD #
+# ====== #
+argocd:
+  public_host: argocd.karavel-test.mikamai.com
+  git:
+    repo: https://github.com/matteojoliveau/mkp-test-infra
+
+  oidc:
+    config:
+      name: "Mikamai"
+      issuer: "https://sso.mikamai.com/auth/realms/mikamai"
+      client_id: argocd
+      requested_scopes: [ "openid", "profile", "email", "groups" ]
+
+  # Policy group for admins
+  # Maps to the OIDC provider group
+  adminGroup: ""
+
+  # creates the infrastructure-repo-secret from the secure backend
+  # Must contain the keys defined in argocd.git.repo.credentials_secret_ref
+  credentials_secret:
+    backend: secretsManager
+    key: mkp-test-cluster/argocd-pull-creds
+
+  # creates the argocd-secret manifest from the secure backend
+  # Can contain all the keys defined in argocd-secrets
+  # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-secret.yaml#L10
+  secret:
+    backend: secretsManager
+    key: mkp-test-cluster/argocd-secret
