@@ -15,6 +15,7 @@ of updating itself.
 
 - [Calico]
 - [ArgoCD]
+- [Dex]
 - [cert-manager]
 - [ExternalDNS]
 - [External Secrets]
@@ -27,10 +28,12 @@ TBD
 
 ## Quickstart
 
-TBD
+Karavel uses [Ansible] as its bootstrapping tool. A quickstart guide for setting
+up a new Karavel repository can be found in the [examples folder].
 
 [Calico]: https://projectcalico.org
 [ArgoCD]: https://argoproj.github.io/argo-cd
+[Dex]: https://dexidp.io
 [cert-manager]: https://cert-manager.io
 [ExternalDNS]: https://github.com/kubernetes-sigs/external-dns
 [External Secrets]: https://github.com/godaddy/kubernetes-external-secrets
@@ -40,3 +43,5 @@ TBD
 [helmfile]: https://github.com/roboll/helmfile
 [kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl
 [GitOps]: https://www.weave.works/blog/what-is-gitops-really
+[Ansible]: https://ansible.com
+[examples folder]: ./examples/README.md

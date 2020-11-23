@@ -1,3 +1,3 @@
-# Ansible Collection - karavel.bootstrap
+# Ansible Collection - mikamai.karavel
 
 Documentation for the collection.
