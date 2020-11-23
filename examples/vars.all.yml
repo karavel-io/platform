@@ -8,7 +8,10 @@ init_namespaces: true
 # Calico #
 # ====== #
 calico:
+  # Use Calico as the CNI plugin (default true)
+  # Disable to only use Calico for Network Policies
   enable_cni: true
+  # Deploy Calico in HA mode with Typha
   ha_setup: false
 
 # ================ #
@@ -17,12 +20,12 @@ calico:
 secrets:
   polling_interval_ms: 300000
 
-  #  provider: aws
+  provider: aws
   region: eu-west-1
   eks_role: ""  # When running on EKS
   iam_role: ""  # When running on EC2
 
-  # provider: vault
+  provider: vault
   address: http://127.0.0.1:8200
   default_mount_point: my-cluster
   default_role: my-k8s-role
@@ -108,8 +111,11 @@ dex:
 argocd:
   public_host: argocd.example.com
   git:
+    # Git repository that holds the platform manifests
+    # A.K.A. this repo
     repo: git@github.com:example/example.git
 
+  # OIDC provider for authentication
   oidc:
     config:
       name: "Mikamai"
@@ -122,7 +128,9 @@ argocd:
   adminGroup: ""
 
   # creates the infrastructure-repo-secret from the secure backend
-  # Must contain the keys defined in argocd.git.repo.credentials_secret_ref
+  # Must contain the keys `username` and `password` for Git basic auth/token based auth
+  # OR
+  # Must contain the key `sshPrivateKey` for Git SSH auth
   credentials_secret:
     backend: secretsManager
     key: my-cluster/argocd-pull-creds

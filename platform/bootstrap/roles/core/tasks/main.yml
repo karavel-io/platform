@@ -9,4 +9,5 @@
 - import_tasks: cert-manager.yml
 - import_tasks: goldpinger.yml
 - import_tasks: dex.yml
+- import_tasks: argocd.yml
 
