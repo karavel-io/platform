@@ -7,12 +7,12 @@
   when: init_namespaces
 
 - include_role:
-    name: install_package
+    name: install_component
   vars:
-    package_name: external-dns
-    package_version: 0.1.0
-    package_namespace: external-dns
-    package_values:
+    component_name: external-dns
+    component_version: 0.1.0
+    component_namespace: external-dns
+    component_values:
       domainFilter: '{{ dns.domain_filter | default(omit) }}'
       provider: '{{ dns.provider }}'
       cloudflare:

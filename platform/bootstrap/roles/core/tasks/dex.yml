@@ -7,12 +7,12 @@
   when: init_namespaces
 
 - include_role:
-    name: install_package
+    name: install_component
   vars:
-    package_name: dex
-    package_version: 0.1.0
-    package_namespace: dex
-    package_values:
+    component_name: dex
+    component_version: 0.1.0
+    component_namespace: dex
+    component_values:
       publicHost: '{{ dex.public_host }}'
       connectors: '{{ dex.connectors | default([]) }}'
       secrets: '{{ dex.secrets | default([]) }}'

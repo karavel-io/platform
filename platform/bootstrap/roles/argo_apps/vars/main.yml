@@ -1,1 +1,1 @@
-packages: "{{ ansible_facts['karavel_modules'] }}"
+components: "{{ ansible_facts['karavel_components'] }}"

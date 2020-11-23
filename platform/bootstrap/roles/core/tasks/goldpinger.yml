@@ -7,8 +7,8 @@
   when: init_namespaces
 
 - include_role:
-    name: install_package
+    name: install_component
   vars:
-    package_name: goldpinger
-    package_version: 0.1.0
-    package_namespace: monitoring
+    component_name: goldpinger
+    component_version: 0.1.0
+    component_namespace: monitoring

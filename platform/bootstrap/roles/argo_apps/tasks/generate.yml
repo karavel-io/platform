@@ -1,10 +1,10 @@
-- name: Generate ArgoCD application for {{ package_name }}
+- name: Generate ArgoCD application for {{ component_name }}
   delegate_to: localhost
   vars:
-    name: '{{ package_name }}'
-    namespace: '{{ package_namespace }}'
+    name: '{{ component_name }}'
+    namespace: '{{ component_namespace }}'
     repo: '{{ argocd.git.repo }}'
-    path: '{{ output_dir }}/{{ package_name }}'
+    path: '{{ output_dir }}/{{ component_name }}'
   template:
     src: application.yml.j2
-    dest: '{{ playbook_dir }}/{{ applications_dir }}/{{ package_name }}.yml'
+    dest: '{{ playbook_dir }}/{{ applications_dir }}/{{ component_name }}.yml'
