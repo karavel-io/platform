@@ -7,10 +7,10 @@
 
 - name: Generate ArgoCD application for {{ item.name }}
   include_tasks: generate.yml
-  loop: '{{ packages }}'
+  loop: '{{ components }}'
   vars:
-    package_name: '{{ item.name }}'
-    package_namespace: '{{ item.namespace }}'
+    component_name: '{{ item.name }}'
+    component_namespace: '{{ item.namespace }}'
 
 - name: Generate bootstrap ArgoCD application
   delegate_to: localhost
@@ -34,7 +34,7 @@
 - name: Generate kustomization stack for boostrap ArgoCD application
   delegate_to: localhost
   vars:
-    apps: '{{ packages | map(attribute="name") | list }}'
+    apps: '{{ components | map(attribute="name") | list }}'
   template:
     src: kustomization.yml.j2
     dest: '{{ playbook_dir }}/{{ applications_dir }}/kustomization.yml'

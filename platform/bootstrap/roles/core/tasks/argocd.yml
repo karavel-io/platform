@@ -12,12 +12,12 @@
   when: init_namespaces
 
 - include_role:
-    name: install_package
+    name: install_component
   vars:
-    package_name: argocd
-    package_version: 0.1.0
-    package_namespace: argocd
-    package_values:
+    component_name: argocd
+    component_version: 0.1.0
+    component_namespace: argocd
+    component_values:
       publicHost: '{{ argocd.public_host }}'
       secret: '{{ argocd.secret }}'
       credentialsSecret: '{{ argocd.credentials_secret }}'

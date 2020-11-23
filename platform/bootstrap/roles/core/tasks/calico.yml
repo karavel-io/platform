@@ -1,10 +1,10 @@
 - include_role:
-    name: install_package
+    name: install_component
   vars:
-    package_name: calico
-    package_version: 0.1.0
-    package_namespace: kube-system
-    package_values:
+    component_name: calico
+    component_version: 0.1.0
+    component_namespace: kube-system
+    component_values:
       cni:
         enable: '{{ calico.enable_cni | default(True) }}'
       typha:

@@ -12,8 +12,8 @@
   when: init_namespaces
 
 - include_role:
-    name: install_package
+    name: install_component
   vars:
-    package_name: ingress-nginx
-    package_version: 0.1.0
-    package_namespace: ingress-nginx
+    component_name: ingress-nginx
+    component_version: 0.1.0
+    component_namespace: ingress-nginx

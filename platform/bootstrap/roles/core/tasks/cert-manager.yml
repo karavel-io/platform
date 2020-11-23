@@ -7,12 +7,12 @@
   when: init_namespaces
 
 - include_role:
-    name: install_package
+    name: install_component
   vars:
-    package_name: cert-manager
-    package_version: 0.1.0
-    package_namespace: cert-manager
-    package_values:
+    component_name: cert-manager
+    component_version: 0.1.0
+    component_namespace: cert-manager
+    component_values:
       letsencrypt:
         email: '{{ letsencrypt.email }}'
         cloudflare:

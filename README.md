@@ -4,14 +4,13 @@ Karavel is an pure-upstream Kubernetes distribution
 that combines best-in-breed open source components to deliver
 a production ready platform for enterprises.
 
-Karavel is packaged as a collection of modules
-that install a curated set of components and services, ranging from networking addons
+Karavel is packaged as a curated set of components and services, ranging from networking addons
 to load balancers and observability tools.
 
 It can be installed on any Kubernetes cluster and once bootstrapped is self-healing and self-hosted, meaning it is capable
 of updating itself.
 
-## Available modules
+## Available components
 
 - [Calico]
 - [ArgoCD]
