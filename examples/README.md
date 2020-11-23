@@ -55,7 +55,7 @@ git push origin master
 # ArgoCD will take over from now on. `kubectl apply` is no longer needed
 ```
 
-## Update components
+## Updating components
 
 Before updating Karavel it is recommended to read the Changelog and Update Guides
 to ensure a smooth upgrade process.
