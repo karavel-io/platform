@@ -10,7 +10,7 @@
 - name: Ensure local manifests directory exist for {{ component_name }}
   delegate_to: localhost
   file:
-    path: '{{ playbook_dir }}/{{ output_dir }}/{{ component_name }}'
+    path: '{{ playbook_dir }}/{{ vendor_dir }}/{{ component_name }}'
     recurse: yes
     state: directory
 
@@ -19,7 +19,7 @@
   with_items: '{{ component.manifests }}'
   when: item.kind != "CustomResourceDefinition"
   copy:
-    dest: '{{ playbook_dir }}/{{ output_dir }}/{{ component_name }}/{{ item.metadata.name }}-{{ item.kind | lower }}.yml'
+    dest: '{{ playbook_dir }}/{{ vendor_dir }}/{{ component_name }}/{{ item.metadata.name }}-{{ item.kind | lower }}.yml'
     content: '{{ item | to_nice_yaml }}'
     mode: 0644
 
@@ -27,7 +27,7 @@
   delegate_to: localhost
   when: component.manifests | selectattr("kind", "equalto", "CustomResourceDefinition") | length > 0
   file:
-    path: '{{ playbook_dir }}/{{ output_dir }}/{{ component_name }}/crds'
+    path: '{{ playbook_dir }}/{{ vendor_dir }}/{{ component_name }}/crds'
     recurse: yes
     state: directory
 
@@ -36,7 +36,7 @@
   with_items: '{{ component.manifests }}'
   when: item.kind == "CustomResourceDefinition"
   copy:
-    dest: '{{ playbook_dir }}/{{ output_dir }}/{{ component_name }}/crds/{{ item.metadata.name }}.yml'
+    dest: '{{ playbook_dir }}/{{ vendor_dir }}/{{ component_name }}/crds/{{ item.metadata.name }}.yml'
     content: '{{ item | to_nice_yaml }}'
     mode: 0644
 
@@ -46,7 +46,7 @@
     resources: '{{ component.manifests }}'
   template:
     src: kustomization.yml.j2
-    dest: '{{ playbook_dir }}/{{ output_dir }}/{{ component_name }}/kustomization.yml'
+    dest: '{{ playbook_dir }}/{{ vendor_dir }}/{{ component_name }}/kustomization.yml'
     mode: 0644
 
 - name: Register {{ component_name }} component

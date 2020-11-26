@@ -1,0 +1,3 @@
+# Customizing Karavel manifests
+
+TODO

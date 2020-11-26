@@ -1,17 +1,21 @@
-# Welcome to MkDocs
+## What is Karavel?
+Karavel is an pure-upstream [Kubernetes] distribution
+that combines best-in-breed open source components to deliver
+a production ready platform for enterprises.
 
-For full documentation visit [mkdocs.org](https://mkdocs.org).
+Karavel is packaged as a curated set of components and services, ranging from networking addons
+to load balancers and observability tools.
 
-## Commands
+## Features
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs help` - Print this help message.
+- Run on any [conformant Kubernetes cluster]
+- 100% open source stack based on community and CNCF projects
+- GitOps first workflow, enabling the platform to be self-hosted and updating itself
+- Built-in security tools for secrets management, policy enforcement and access control
 
-## Project layout
+## Architecture
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+TODO
+
+[Kubernetes]: https://kubernetes.io
+[conformant Kubernetes cluster]: https://www.cncf.io/certification/software-conformance/

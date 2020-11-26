@@ -22,6 +22,7 @@ secrets:
 
   provider: aws
   region: eu-west-1
+  default_region: eu-west-1
   eks_role: ""  # When running on EKS
   iam_role: ""  # When running on EC2
 
@@ -40,7 +41,6 @@ dns:
   domain_filter: example.com
   # Cloudflare
   provider: cloudflare
-  email: my-cloudflare@example.com
   proxied: true
   hosted_zone_id: ABCDEXAMPLE # optional
   secret_ref:

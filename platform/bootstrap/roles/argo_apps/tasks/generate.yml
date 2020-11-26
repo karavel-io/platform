@@ -4,7 +4,7 @@
     name: '{{ component_name }}'
     namespace: '{{ component_namespace }}'
     repo: '{{ argocd.git.repo }}'
-    path: '{{ output_dir }}/{{ component_name }}'
+    path: '{{ vendor_dir }}/{{ component_name }}'
   template:
     src: application.yml.j2
     dest: '{{ playbook_dir }}/{{ applications_dir }}/{{ component_name }}.yml'
