@@ -1,2 +1,2 @@
-output_dir: vendor
+vendor_dir: vendor
 applications_dir: applications

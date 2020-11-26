@@ -1,5 +1,5 @@
 init_namespaces: true
-output_dir: vendor
+vendor_dir: vendor
 
 letsencrypt:
   provider: '{{ dns.provider }}'

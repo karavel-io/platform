@@ -3,6 +3,6 @@ kind: Kustomization
 
 resources:
 {% for component in components %}
-- {{ output_dir }}/{{ component.name }}
+- {{ vendor_dir }}/{{ component.name }}
 {% endfor %}
 - {{ applications_dir }}
