@@ -22,3 +22,6 @@ nav:
       - operator-handbook/bootstrap.md
       - operator-handbook/variables.md
       - operator-handbook/customizing.md
+  - Developer Handbook:
+      - developer-handbook/bootstrap.md
+
