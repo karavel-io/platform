@@ -1,4 +1,5 @@
 # Karavel <img align="right" width=384 src="https://via.placeholder.com/384x200.png?text=Karavel%20Logo%20Here">
+[![Karavel](https://circleci.com/gh/mikamai/karavel/tree/master.svg?style=svg)](https://circleci.com/gh/mikamai/karavel/tree/master)
 
 Karavel is an pure-upstream Kubernetes distribution
 that combines best-in-breed open source components to deliver
