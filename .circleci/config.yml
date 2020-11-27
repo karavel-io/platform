@@ -1,7 +1,22 @@
 version: 2.1
-orbs:
-  welcome: circleci/welcome-orb@0.4.1
+
 workflows:
-  welcome:
+  docs:
     jobs:
-      - welcome/run
+      - docs/build
+
+jobs:
+  docs/build:
+    docker:
+      - image: squidfunk/mkdocs-material:6.1.6
+    steps:
+      - checkout
+      - - add_ssh_keys:
+            fingerprints:
+              - "95:21:09:e7:b3:a2:00:1a:1e:19:30:69:6b:2f:83:b5"
+      - run:
+          name: Publish docs to GitHub Pages
+          command: mkdocs gh-deploy --strict --force
+    branches:
+      only:
+        - master
