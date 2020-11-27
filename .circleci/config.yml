@@ -3,14 +3,14 @@ version: 2.1
 workflows:
   docs:
     jobs:
-      - docs/build:
+      - docs-build:
           filters:
             branches:
               only:
                 - master
 
 jobs:
-  docs/build:
+  docs-build:
     docker:
       - image: squidfunk/mkdocs-material:6.1.6
     steps:
