@@ -17,6 +17,7 @@ jobs:
       - run:
           name: Publish docs to GitHub Pages
           command: mkdocs gh-deploy --strict --force
-    branches:
-      only:
-        - master
+    filters:
+      branches:
+        only:
+          - master
