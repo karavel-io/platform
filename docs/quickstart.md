@@ -8,7 +8,8 @@ of Git and Kubernetes and know your way around a command shell.
 
 ### Tools
 
-- [git], [ansible], [kubectl], [helm] and [kustomize] installed on your local machine
+- [ansible] 2.10 or later
+- [git], [kubectl], [helm] and [kustomize] installed on your local machine
 - admin access to a running Kubernetes cluster. Minikube is fine for a simple, local deployment for testing purposes.
 - Ansible will also need [Python] to run, as well as the `openshift` module to interact with the cluster.
   It can be installed by running `pip install openshift`.
