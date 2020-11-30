@@ -8,7 +8,7 @@ of Git and Kubernetes and know your way around a command shell.
 
 ### Tools
 
-- [git], [ansible], [kubectl] and [kustomize] installed on your local machine
+- [git], [ansible], [kubectl], [helm] and [kustomize] installed on your local machine
 - admin access to a running Kubernetes cluster. Minikube is fine for a simple, local deployment for testing purposes.
 - Ansible will also need [Python] to run, as well as the `openshift` module to interact with the cluster.
   It can be installed by running `pip install openshift`.
@@ -185,6 +185,7 @@ Congratulations, you are now running a full fledged Karavel instance!
 [git]: https://git-scm.com/
 [ansible]: https://ansible.com/
 [kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+[helm]: https://helm.sh
 [kustomize]: https://kubernetes-sigs.github.io/kustomize/installation/
 [Python]: https://www.python.org/
 [External Secrets controller]: https://github.com/external-secrets/kubernetes-external-secrets
