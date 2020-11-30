@@ -7,6 +7,7 @@ adminGroup: ""
 credentialsSecret: # creates the infrastructure-repo-secret from the secure backend
   backend: secretsManager
   key: ""
+  type: ssh
 
 secret: # creates the argocd-secret manifest from the secure backend
   backend: secretsManager

@@ -16,4 +16,4 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod
-  secretName: argocd-secret
+  secretName: argocd-tls

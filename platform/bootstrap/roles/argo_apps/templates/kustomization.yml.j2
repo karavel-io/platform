@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
 - project.yml
+- bootstrap.yml
 {% for app in apps %}
 - {{ app }}.yml
 {% endfor %}
