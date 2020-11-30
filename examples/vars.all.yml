@@ -134,6 +134,7 @@ argocd:
   credentials_secret:
     backend: secretsManager
     key: my-cluster/argocd-pull-creds
+    type: ssh
 
   # creates the argocd-secret manifest from the secure backend
   # Can contain all the keys defined in argocd-secrets

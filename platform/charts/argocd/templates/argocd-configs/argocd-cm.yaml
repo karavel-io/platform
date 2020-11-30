@@ -18,15 +18,18 @@ data:
         type: helm
         url: https://charts.mikamai.com/karavel
       - url: {{ .Values.git.repo }}
+        {{- if eq .Values.credentialsSecret.type "ssh"}}
+        sshPrivateKeySecret:
+          name: infrastructure-repo-secret
+          key: sshPrivateKey
+        {{- else }}
         usernameSecret:
           name: infrastructure-repo-secret
           key: username
         passwordSecret:
           name: infrastructure-repo-secret
           key: password
-        sshPrivateKeySecret:
-          name: infrastructure-repo-secret
-          key: sshPrivateKey
+        {{- end }}
     {{- with .Values.oidc.config }}
     oidc.config: |
       name: {{ .name }}

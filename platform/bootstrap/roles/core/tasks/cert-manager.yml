@@ -17,5 +17,5 @@
         email: '{{ letsencrypt.email }}'
         cloudflare:
           enabled: '{{ letsencrypt.provider == "cloudflare" }}'
-          email: '{{ letsencrypt.email if secrets.provider == "cloudflare" else "" }}'
-          secret: '{{ letsencrypt.secret_ref if secrets.provider == "cloudflare" else "" }}'
+          email: '{{ letsencrypt.email if letsencrypt.provider else "" }}'
+          secret: '{{ (letsencrypt.secret_ref | default(dns.secret_ref)) if letsencrypt.provider else "" }}'
