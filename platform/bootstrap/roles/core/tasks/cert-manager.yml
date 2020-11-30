@@ -18,4 +18,4 @@
         cloudflare:
           enabled: '{{ letsencrypt.provider == "cloudflare" }}'
           email: '{{ letsencrypt.email if secrets.provider == "cloudflare" else "" }}'
-          secret: '{{ letsencrypt.secret_ref }}'
+          secret: '{{ letsencrypt.secret_ref if secrets.provider == "cloudflare" else "" }}'
