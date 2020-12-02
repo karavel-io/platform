@@ -5,8 +5,8 @@ type: application
 version: 0.1.0
 appVersion: 1.0.4
 maintainers:
-  - name: Mikamai Cloud Team
-    email: tech+cloud@mikamai.com
+  - name: MatteoJoliveau
+    email: matteo.joliveau@mikamai.com
 
 home: https://cert-manager.io
 sources:
