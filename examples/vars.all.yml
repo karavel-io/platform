@@ -123,10 +123,6 @@ argocd:
       client_id: argocd
       requested_scopes: [ "openid", "profile", "email", "groups" ]
 
-  # Policy group for admins
-  # Maps to the OIDC provider group
-  adminGroup: ""
-
   # creates the infrastructure-repo-secret from the secure backend
   # Must contain the keys `username` and `password` for Git basic auth/token based auth
   # OR
@@ -143,3 +139,9 @@ argocd:
     backend: secretsManager
     key: my-cluster/argocd-secret
 
+# ============================ #
+# AWS Node Termination Handler #
+# ============================ #
+aws_node_termination_handler:
+  webhook:
+    url: https://example.com/slack
