@@ -1,6 +1,14 @@
 apiVersion: v2
 name: external-dns
-description: Configure external DNS servers for Kubernetes Ingresses and Services
+description: External DNS component for Karavel
 type: application
 version: 0.1.0
 appVersion: 0.7.4
+maintainers:
+  - name: Mikamai Cloud Team
+    email: tech+cloud@mikamai.com
+
+home: https://github.com/kubernetes-sigs/external-dns
+sources:
+  - https://github.com/kubernetes-sigs/external-dns
+  - https://github.com/mikamai/karavel
