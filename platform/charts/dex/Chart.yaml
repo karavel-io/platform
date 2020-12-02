@@ -1,6 +1,14 @@
 apiVersion: v2
 name: dex
-description: Dex OIDC provider
+description: Dex component for Karavel
 type: application
 version: 0.1.0
 appVersion: 2.26.0
+maintainers:
+  - name: Mikamai Cloud Team
+    email: tech+cloud@mikamai.com
+
+home: https://dexidp.io
+sources:
+  - https://github.com/dexidp/dex
+  - https://github.com/mikamai/karavel

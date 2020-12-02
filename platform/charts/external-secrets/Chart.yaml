@@ -1,5 +1,14 @@
-apiVersion: v1
+apiVersion: v2
 name: external-secrets
+description: Kubernetes External Secrets component for Karavel
+type: application
 version: 0.1.0
 appVersion: 6.0.0
-description: Kubernetes External Secrets by Godaddy
+maintainers:
+  - name: Mikamai Cloud Team
+    email: tech+cloud@mikamai.com
+
+home: https://github.com/external-secrets/kubernetes-external-secrets
+sources:
+  - https://github.com/external-secrets/kubernetes-external-secrets
+  - https://github.com/mikamai/karavel

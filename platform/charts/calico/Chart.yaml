@@ -1,6 +1,14 @@
 apiVersion: v2
 name: calico
-description: Calico chart
+description: Calico component for Karavel
 type: application
 version: 0.1.0
 appVersion: 3.16.5
+maintainers:
+  - name: Mikamai Cloud Team
+    email: tech+cloud@mikamai.com
+
+home: https://projectcalico.org
+sources:
+  - https://github.com/projectcalico.org
+  - https://github.com/mikamai/karavel
