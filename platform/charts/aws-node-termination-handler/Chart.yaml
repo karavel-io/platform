@@ -1,0 +1,14 @@
+apiVersion: v2
+name: aws-node-termination-handler
+description: AWS Node Termination Handler component for Karavel
+type: application
+version: 0.1.0
+appVersion: 1.11.0
+maintainers:
+  - name: Mikamai Cloud Team
+    email: tech+cloud@mikamai.com
+
+home: https://github.com/aws/aws-node-termination-handler
+sources:
+  - https://github.com/aws/aws-node-termination-handler
+  - https://github.com/mikamai/karavel

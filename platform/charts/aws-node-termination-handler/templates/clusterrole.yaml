@@ -1,0 +1,31 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aws-node-termination-handler
+  labels:
+    app.kubernetes.io/name: aws-node-termination-handler
+    app.kubernetes.io/instance: aws-node-termination-handler
+    k8s-app: aws-node-termination-handler
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-version: {{ .Chart.Version }}
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs:
+    - get
+    - list
+    - patch
+    - update
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list"]
+- apiGroups: [""]
+  resources: ["pods/eviction"]
+  verbs: ["create"]
+- apiGroups: ["extensions"]
+  resources: ["daemonsets"]
+  verbs: ["get"]
+- apiGroups: ["apps"]
+  resources: ["daemonsets"]
+  verbs: ["get"]

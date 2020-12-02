@@ -1,0 +1,70 @@
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: aws-node-termination-handler
+  labels:
+    app.kubernetes.io/name: aws-node-termination-handler
+    app.kubernetes.io/instance: aws-node-termination-handler
+    k8s-app: aws-node-termination-handler
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-version: {{ .Chart.Version }}
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+spec:
+  privileged: false
+  hostIPC: false
+  hostNetwork: true
+  hostPID: false
+  readOnlyRootFilesystem: false
+  allowPrivilegeEscalation: false
+  allowedCapabilities:
+    - '*'
+  fsGroup:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+    - '*'
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: aws-node-termination-handler-psp
+  labels:
+    app.kubernetes.io/name: aws-node-termination-handler
+    app.kubernetes.io/instance: aws-node-termination-handler
+    k8s-app: aws-node-termination-handler
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-version: {{ .Chart.Version }}
+rules:
+  - apiGroups: ['policy']
+    resources: ['podsecuritypolicies']
+    verbs:     ['use']
+    resourceNames:
+      - aws-node-termination-handler
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: aws-node-termination-handler-psp
+  labels:
+    app.kubernetes.io/name: aws-node-termination-handler
+    app.kubernetes.io/instance: aws-node-termination-handler
+    k8s-app: aws-node-termination-handler
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-version: {{ .Chart.Version }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: aws-node-termination-handler-psp
+subjects:
+  - kind: ServiceAccount
+    name: aws-node-termination-handler
+    namespace: {{ .Release.Namespace }}
