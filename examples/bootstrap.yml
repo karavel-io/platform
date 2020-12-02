@@ -5,6 +5,8 @@
     - import_role:
         name: mikamai.karavel.core
     - import_role:
+        name: mikamai.karavel.core_aws
+    - import_role:
         name: mikamai.karavel.nginx
     - import_role:
         name: mikamai.karavel.argo_apps

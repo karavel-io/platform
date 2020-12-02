@@ -2,7 +2,7 @@ site_name: Karavel
 site_url: https://docs.karavel.io
 repo_name: mikamai/karavel
 repo_url: https://github.com/mikamai/karavel
-copyright: © 2020 MIKAMAI | Documentation Distributed under CC BY SA 4.0 | All Rights Reserved
+copyright: © 2020 MIKAMAI | Documentation distributed under CC BY SA 4.0 | All Rights Reserved
 strict: false
 theme:
   name: material
@@ -20,6 +20,10 @@ nav:
   - Operator Handbook:
       - Introduction: operator-handbook/index.md
       - operator-handbook/bootstrap.md
+      - Components:
+          - operator-handbook/core.md
+          - operator-handbook/aws.md
+          - operator-handbook/ingress-controllers.md
       - operator-handbook/variables.md
       - operator-handbook/customizing.md
   - Developer Handbook:

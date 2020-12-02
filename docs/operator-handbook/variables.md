@@ -274,7 +274,93 @@ TODO
 
 ## ArgoCD
 
-TODO
+[ArgoCD] is the beating heart of Karavel, the GitOps engine monitoring and deploying applications
+and services to the cluster.
+
+| Variable | Type | Default | Notes |
+| -------- | ---- | ------- | ----- |
+| `public_host` | hostname | none (required) | Public host for ArgoCD UI and API |
+| `git.repo` | Git HTTPS/SSH URL | none (required) | Git URL for the repository holding Karavel manifests |
+| `oidc` | object | none (required) | [ArgoCD OIDC configuration object]. **NOTICE** This object is passed as-is, so keys should be camelCased instead of snake_cased |
+| `credential_secret` | ExternalSecretRef | none (required) | Configuration for the `ExternalSecret` object that will fetch the Git provider credentials used to pull the Git repository |
+| `secret` | ExternalSecretRef | none (required) | Configuration for the `ExternalSecret` object that will fetch the [ArgoCD secret object] |
+
+### Example
+
+```yaml
+# vars.yml
+
+argocd:
+  public_host: argocd.example.com
+  git:
+    # Git repository that holds the platform manifests
+    # A.K.A. this repo
+    repo: git@github.com:example/example.git
+
+  # OIDC provider for authentication
+  oidc:
+    config:
+      name: "Sample"
+      issuer: "https://sample.auth0.com"
+      client_id: argocd
+      requested_scopes: [ "openid", "profile", "email", "groups" ]
+
+  # creates the infrastructure-repo-secret from the secure backend
+  # Must contain the keys `username` and `password` for Git basic auth/token based auth
+  # OR
+  # Must contain the key `sshPrivateKey` for Git SSH auth
+  credentials_secret:
+    backend: secretsManager
+    key: my-cluster/argocd-pull-creds
+    type: ssh
+
+  # creates the argocd-secret manifest from the secure backend
+  # Can contain all the keys defined in argocd-secrets
+  # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-secret.yaml#L10
+  secret:
+    backend: secretsManager
+    key: my-cluster/argocd-secret
+```
+
+## AWS Node Termination Handler
+
+The [AWS Node Termination Handler] is a small daemon that manages rebooting EC2 instances used as cluster nodes.
+It properly cordons and drains nodes before they are terminated or rebooted so that Kubernetes can cleanly reschedule them.
+
+This component is only needed in clusters running on AWS EC2 or EKS.
+
+| Variable | Type | Default | Notes |
+| -------- | ---- | ------- | ----- |
+| `processor` | string | imds | Chooses the underlying processor. At the moment only `imds` for the Instance Metadata Service processor is supported. |
+| `webhook.url` | url | none (optional) | Webhook URL that will receive termination updates. |
+| `webhook.headers` | object | `{ "Content-type": "application/json" }` | Headers sent to the Webhook URL |
+| `webhook.tpl` | url | see below | Message template sent to the Webhook URL |
+
+Default Webhook template
+
+```
+[NTH][Instance Interruption]
+EventID: {{ .EventID }}  - Kind: {{ .Kind }} - Instance: {{ .InstanceID }} - Start Time: {{ .StartTime }}
+{{ .Description }}
+```
+
+### Example
+
+```yaml
+# vars.yml
+
+aws_node_termination_handler:
+  processor: imds
+  webhook:
+    url: "https://example.com/slack"
+    headers:
+      Content-type: application/json
+      Authorization: Bearer <token>
+    tpl: |
+      [NTH][Instance Interruption]
+      EventID: {{ .EventID }}  - Kind: {{ .Kind }} - Instance: {{ .InstanceID }} - Start Time: {{ .StartTime }}
+      {{ .Description }}
+```
 
 [bootstrap tool]: ../bootstrap
 [Calico]: https://projectcalico.org/
@@ -296,3 +382,7 @@ TODO
 [Let's Encrypt]: https://letsencrypt.org/
 [http01]: https://cert-manager.io/docs/configuration/acme/http01/
 [dns01]: https://cert-manager.io/docs/configuration/acme/dns01/
+[ArgoCD]: https://argoproj.github.io/argo-cd
+[ArgoCD OIDC configuration object]: https://argoproj.github.io/argo-cd/operator-manual/user-management/#existing-oidc-provider
+[ArgoCD Secret object]: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-secret.yaml#L10
+[AWS Node Termination Handler]: https://github.com/aws/aws-node-termination-handler
