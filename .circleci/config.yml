@@ -1,15 +1,27 @@
 version: 2.1
 
 workflows:
-  docs:
+  default:
     jobs:
+      - helm-lint
       - docs-build:
+          requires:
+            - helm-lint
           filters:
             branches:
               only:
                 - master
 
 jobs:
+  helm-lint:
+    docker:
+      - image: quay.io/helmpack/chart-testing:v3.3.1
+    steps:
+      - checkout
+      - run:
+          name: Lint charts
+          command: ct lint --all --chart-dirs platform/charts
+
   docs-build:
     docker:
       - image: squidfunk/mkdocs-material:6.1.6
