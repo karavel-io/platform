@@ -1,4 +1,4 @@
-processor: imds # values are: imds, queue
+processor: imds  # values are: imds, queue
 webhook:
   url: ""
   headers:
