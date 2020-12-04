@@ -21,9 +21,10 @@ nav:
       - Introduction: operator-handbook/index.md
       - operator-handbook/bootstrap.md
       - Components:
-          - operator-handbook/core.md
-          - operator-handbook/aws.md
-          - operator-handbook/ingress-controllers.md
+          - operator-handbook/components/core.md
+          - operator-handbook/components/aws.md
+          - operator-handbook/components/ingress-controllers.md
+          - operator-handbook/components/logging.md
       - operator-handbook/variables.md
       - operator-handbook/customizing.md
   - Developer Handbook:
