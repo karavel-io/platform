@@ -28,6 +28,9 @@ spec:
             - sysctl -w fs.inotify.max_user_instances=128
           securityContext:
             privileged: true
+      tolerations:
+        # Run anywhere
+        - operator: Exists
       containers:
         - name: promtail
           image: "grafana/promtail:{{ .Values.promtail.version }}"
