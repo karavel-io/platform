@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: promtail-headless
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: promtail
+spec:
+  clusterIP: None
+  ports:
+    - port: 3101
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/name: promtail

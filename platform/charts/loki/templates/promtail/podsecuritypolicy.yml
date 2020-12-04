@@ -1,0 +1,30 @@
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: promtail
+  labels:
+    app.kubernetes.io/name: promtail
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  volumes:
+    - 'secret'
+    - 'configMap'
+    - 'hostPath'
+    - 'projected'
+    - 'downwardAPI'
+    - 'emptyDir'
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  runAsUser:
+    rule: 'RunAsAny'
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'RunAsAny'
+  fsGroup:
+    rule: 'RunAsAny'
+  readOnlyRootFilesystem: true
+  requiredDropCapabilities:
+    - ALL

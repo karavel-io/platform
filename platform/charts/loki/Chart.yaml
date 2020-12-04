@@ -1,0 +1,14 @@
+apiVersion: v2
+name: loki
+description: Grafana Loki component for Karavel
+type: application
+version: 0.1.0
+appVersion: 2.0.0
+maintainers:
+  - name: MatteoJoliveau
+    email: matteo.joliveau@mikamai.com
+
+home: https://grafana.com/oss/loki/
+sources:
+  - https://github.com/grafana/loki
+  - https://github.com/mikamai/karavel

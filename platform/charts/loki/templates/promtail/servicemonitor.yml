@@ -1,0 +1,17 @@
+{{- if false }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: promtail
+  labels:
+    app.kubernetes.io/name: promtail
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: promtail
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace | quote }}
+  endpoints:
+  - port: http-metrics
+{{- end }}

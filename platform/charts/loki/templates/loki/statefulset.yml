@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: loki
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+  {{ with .Values.loki.s3.iamRole }}
+  annotations:
+    iam.amazonaws.com/role: {{ . }}
+  {{ end }}
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: loki
+  serviceName: loki-headless
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: loki
+    spec:
+      serviceAccountName: loki
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: loki
+          image: "grafana/loki:{{ .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-config.file=/etc/loki/loki.yaml"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/loki
+            - name: storage
+              mountPath: "/data"
+            - name: scratch
+              mountPath: /tmp/scratch
+            - name: rules
+              mountPath: /rules
+          ports:
+            - name: http-metrics
+              containerPort: 3100
+              protocol: TCP
+            - name: gossip
+              containerPort: 7946
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 45
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 45
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            readOnlyRootFilesystem: true
+          env: []
+      terminationGracePeriodSeconds: 4800
+      volumes:
+        - name: scratch
+          emptyDir: {}
+        - name: rules
+          configMap:
+            name: loki-alerting-rules
+        - name: config
+          secret:
+            secretName: loki
+        - name: storage
+          emptyDir: {}

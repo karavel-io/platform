@@ -7,7 +7,7 @@ spec:
   ingress:
     enabled: True
     hostname: {{ .Values.grafana.host }}
-    tlsEnabled: true
+    tlsEnabled: false
     tlsSecretName: cluster-grafana-tls
     annotations:
       kubernetes.io/ingress.class: nginx

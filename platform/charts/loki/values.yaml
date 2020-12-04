@@ -1,0 +1,6 @@
+grafana: {}
+loki:
+  objectStore: filesystem  # filesystem | s3
+  s3: {}
+promtail:
+  version: 2.0.0

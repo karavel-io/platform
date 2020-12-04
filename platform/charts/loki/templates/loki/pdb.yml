@@ -1,0 +1,12 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: loki
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: loki
+  minAvailable: 1
