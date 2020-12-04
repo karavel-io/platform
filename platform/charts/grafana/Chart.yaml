@@ -1,0 +1,14 @@
+apiVersion: v2
+name: grafana
+description: Grafana component for Karavel
+type: application
+version: 0.1.0
+appVersion: 3.6.0
+maintainers:
+  - name: MatteoJoliveau
+    email: matteo.joliveau@mikamai.com
+
+home: https://grafana.com
+sources:
+  - https://github.com/integr8ly/grafana-operator
+  - https://github.com/mikamai/karavel
