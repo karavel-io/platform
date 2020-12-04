@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: promtail
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: promtail
+data:
+  promtail.yaml: |
+    {{- .Files.Get "configs/promtail.yaml" | nindent 4 }}
+

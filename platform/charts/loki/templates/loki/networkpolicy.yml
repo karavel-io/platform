@@ -1,0 +1,21 @@
+{{ if false }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: loki
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: loki
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: {{ template "client.name" . }}
+            release: {{ .Release.Name }}
+    - ports:
+      - port: 3100
+  {{ end }}

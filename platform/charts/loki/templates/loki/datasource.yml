@@ -1,0 +1,14 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  name: loki-datasource
+  namespace: {{ .Values.grafana.namespace | default .Release.Namespace }}
+spec:
+  name: loki.yaml
+  datasources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki.{{ .Release.Namespace }}:3100
+      version: 1
+      editable: false
