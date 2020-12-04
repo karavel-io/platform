@@ -1,0 +1,34 @@
+apiVersion: integreatly.org/v1alpha1
+kind: Grafana
+metadata:
+  name: cluster-grafana
+  namespace: {{ .Release.Namespace }}
+spec:
+  ingress:
+    enabled: True
+    hostname: {{ .Values.grafana.host }}
+    tlsEnabled: true
+    tlsSecretName: cluster-grafana-tls
+    annotations:
+      kubernetes.io/ingress.class: nginx
+  client:
+    preferService: true
+  jsonnet:
+    libraryLabelSelector:
+      matchLabels:
+        app: grafana
+  config:
+    log:
+      mode: "console"
+      level: "warn"
+    security:
+      admin_user: "root"
+      admin_password: "secret"
+    auth:
+      disable_login_form: False
+      disable_signout_menu: True
+    auth.anonymous:
+      enabled: False
+  dashboardLabelSelector:
+    - matchExpressions:
+        - {key: app, operator: In, values: [grafana]}

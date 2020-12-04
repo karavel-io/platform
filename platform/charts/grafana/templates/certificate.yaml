@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: cluster-grafana-tls
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: cluster-grafana-tls
+    helm.sh/chart: {{ include "grafana.chart" . }}
+    app.kubernetes.io/part-of: cluster-grafana
+spec:
+  commonName: {{ .Values.grafana.host }}
+  dnsNames:
+    - {{ .Values.grafana.host }}
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-staging
+  secretName: cluster-grafana-tls
