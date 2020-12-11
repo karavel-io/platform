@@ -1,17 +1,18 @@
-{{- if .Values.controller.admissionWebhooks.enabled -}}
 # before changing this value, check the required kubernetes version
 # https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#prerequisites
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  {{- if .Values.controller.admissionWebhooks.annotations }}
-  annotations: {{ toYaml .Values.controller.admissionWebhooks.annotations | nindent 4 }}
-  {{- end }}
-  labels:
-    {{- include "ingress-nginx.labels" . | nindent 4 }}
-    app.kubernetes.io/component: admission-webhook
-  name: {{ include "ingress-nginx.fullname" . }}-admission
+  name: ingress-nginx-admission
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-name: ingress-nginx
+    karavel.io/component-version: {{ .Chart.Version }}
 webhooks:
   - name: validate.nginx.ingress.kubernetes.io
     matchPolicy: Equivalent
@@ -25,7 +26,7 @@ webhooks:
           - UPDATE
         resources:
           - ingresses
-    failurePolicy: {{ .Values.controller.admissionWebhooks.failurePolicy | default "Fail" }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -33,15 +34,5 @@ webhooks:
     clientConfig:
       service:
         namespace: {{ .Release.Namespace }}
-        name: {{ include "ingress-nginx.controller.fullname" . }}-admission
+        name: ingress-nginx-controller-admission
         path: /networking/v1beta1/ingresses
-    {{- if .Values.controller.admissionWebhooks.timeoutSeconds }}
-    timeoutSeconds: {{ .Values.controller.admissionWebhooks.timeoutSeconds }}
-    {{- end }}
-    {{- if .Values.controller.admissionWebhooks.namespaceSelector }}
-    namespaceSelector: {{ toYaml .Values.controller.admissionWebhooks.namespaceSelector | nindent 6 }}
-    {{- end }}
-    {{- if .Values.controller.admissionWebhooks.objectSelector }}
-    objectSelector: {{ toYaml .Values.controller.admissionWebhooks.objectSelector | nindent 6 }}
-    {{- end }}
-{{- end }}

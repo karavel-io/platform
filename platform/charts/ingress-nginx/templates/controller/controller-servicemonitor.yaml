@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ingress-nginx-controller
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-name: ingress-nginx
+    karavel.io/component-version: {{ .Chart.Version }}
+spec:
+  endpoints:
+    - port: metrics
+      interval: 30s
+      honorLabels: true
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/version: {{ .Chart.AppVersion }}
+      app.kubernetes.io/part-of: ingress-nginx
+      app.kubernetes.io/managed-by: karavel
+      karavel.io/component-name: ingress-nginx
+      karavel.io/component-version: {{ .Chart.Version }}

@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: default-backend
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: default-backend
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-name: ingress-nginx
+    karavel.io/component-version: {{ .Chart.Version }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/component: default-backend
+      app.kubernetes.io/version: {{ .Chart.AppVersion }}
+      app.kubernetes.io/part-of: ingress-nginx
+      app.kubernetes.io/managed-by: karavel
+      karavel.io/component-name: ingress-nginx
+      karavel.io/component-version: {{ .Chart.Version }}
+  replicas: 1
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/component: default-backend
+        app.kubernetes.io/version: {{ .Chart.AppVersion }}
+        app.kubernetes.io/part-of: ingress-nginx
+        app.kubernetes.io/managed-by: karavel
+        karavel.io/component-name: ingress-nginx
+        karavel.io/component-version: {{ .Chart.Version }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: default-backend
+          image: "k8s.gcr.io/defaultbackend-amd64:1.5"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+            runAsUser: 65534
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 10m
+              memory: 20Mi
+            requests:
+              cpu: 10m
+              memory: 20Mi
+      serviceAccountName: default-backend
+      terminationGracePeriodSeconds: 60

@@ -1,15 +1,20 @@
-{{- if and .Values.controller.admissionWebhooks.enabled .Values.controller.admissionWebhooks.patch.enabled .Values.podSecurityPolicy.enabled -}}
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: {{ include "ingress-nginx.fullname" . }}-admission
+  name: ingress-nginx-admission
   namespace: {{ .Release.Namespace }}
-  annotations:
-    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    {{- include "ingress-nginx.labels" . | nindent 4 }}
+    app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-name: ingress-nginx
+    karavel.io/component-version: {{ .Chart.Version }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    argocd.argoproj.io/hook: PreSync
 spec:
   allowPrivilegeEscalation: false
   fsGroup:
@@ -34,4 +39,3 @@ spec:
   - projected
   - secret
   - downwardAPI
-{{- end }}

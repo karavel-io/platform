@@ -1,10 +1,15 @@
-{{- if and .Values.rbac.create (not .Values.rbac.scope) -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  name: ingress-nginx
   labels:
-    {{- include "ingress-nginx.labels" . | nindent 4 }}
-  name: {{ include "ingress-nginx.fullname" . }}
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-name: ingress-nginx
+    karavel.io/component-version: {{ .Chart.Version }}
 rules:
   - apiGroups:
       - ""
@@ -17,16 +22,6 @@ rules:
     verbs:
       - list
       - watch
-{{- if and .Values.controller.scope.enabled .Values.controller.scope.namespace }}
-  - apiGroups:
-      - ""
-    resources:
-      - namespaces
-    resourceNames:
-      - "{{ .Values.controller.scope.namespace }}"
-    verbs:
-      - get
-{{- end }}
   - apiGroups:
       - ""
     resources:
@@ -73,4 +68,3 @@ rules:
       - get
       - list
       - watch
-{{- end }}

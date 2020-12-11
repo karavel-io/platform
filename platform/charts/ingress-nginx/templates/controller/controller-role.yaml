@@ -1,12 +1,16 @@
-{{- if .Values.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    {{- include "ingress-nginx.labels" . | nindent 4 }}
-    app.kubernetes.io/component: controller
-  name: {{ include "ingress-nginx.fullname" . }}
+  name: ingress-nginx
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-name: ingress-nginx
+    karavel.io/component-version: {{ .Chart.Version }}
 rules:
   - apiGroups:
       - ""
@@ -63,7 +67,7 @@ rules:
     resources:
       - configmaps
     resourceNames:
-      - {{ .Values.controller.electionID }}-{{ .Values.controller.ingressClass }}
+      - ingress-controller-leader-nginx
     verbs:
       - get
       - update
@@ -88,10 +92,7 @@ rules:
     verbs:
       - create
       - patch
-{{- if .Values.podSecurityPolicy.enabled }}
   - apiGroups:      [{{ template "podSecurityPolicy.apiGroup" . }}]
     resources:      ['podsecuritypolicies']
     verbs:          ['use']
-    resourceNames:  [{{ include "ingress-nginx.fullname" . }}]
-{{- end }}
-{{- end }}
+    resourceNames:  [ingress-nginx]
