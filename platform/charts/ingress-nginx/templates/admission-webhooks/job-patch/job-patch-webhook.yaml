@@ -16,7 +16,7 @@ spec:
       name: {{ include "ingress-nginx.name" . }}-admission-patch
       labels:
         app.kubernetes.io/name: {{ include "ingress-nginx.name" . }}-admission-patch
-        {{- include "ingress-nginx.labels" . | nindent 4 }}
+        {{- include "ingress-nginx.labels" . | nindent 8 }}
         app.kubernetes.io/component: admission-webhook
     spec:
       containers:
