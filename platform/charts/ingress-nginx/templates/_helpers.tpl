@@ -65,21 +65,19 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Common labels
 */}}
 {{- define "ingress-nginx.labels" -}}
-helm.sh/chart: {{ include "ingress-nginx.chart" . }}
 {{ include "ingress-nginx.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+karavel.io/component-version: {{ .Chart.Version }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end -}}
 
 {{/*
 Selector labels
 */}}
 {{- define "ingress-nginx.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "ingress-nginx.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
+app.kubernetes.io/part-of: {{ include "ingress-nginx.name" . }}
+app.kubernetes.io/managed-by: karavel
+karavel.io/component-name: {{ include "ingress-nginx.name" . }}
+{{- end }}
 
 {{/*
 Create the name of the controller service account to use

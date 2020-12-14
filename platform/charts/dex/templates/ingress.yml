@@ -1,14 +1,11 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: dex
+  name: {{ include "dex.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: dex
-    helm.sh/chart: {{ include "dex.chart" . }}
-    app.kubernetes.io/instance: dex
-    app.kubernetes.io/part-of: dex
-    app.kubernetes.io/version: v{{ .Chart.AppVersion }}
+    app.kubernetes.io/name: {{ include "dex.name" . }}
+    {{- include "dex.labels" . | nindent 4 }}
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -21,17 +18,17 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: dex
+              serviceName: {{ include "dex.name" . }}
               servicePort: https
     - host: {{ include "dex.apiHost" . }}
       http:
         paths:
           - path: /
             backend:
-              serviceName: dex
+              serviceName: {{ include "dex.name" . }}
               servicePort: grpc
   tls:
     - hosts:
         - {{ .Values.publicHost }}
         - {{ include "dex.apiHost" . }}
-      secretName: dex-tls
+      secretName: {{ include "dex.name" . }}-tls

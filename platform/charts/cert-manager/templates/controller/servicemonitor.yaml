@@ -1,0 +1,28 @@
+---
+{{ if false }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "cert-manager.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "cert-manager.name" . }}
+    {{- include "cert-manager.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controller
+    prometheus: default
+spec:
+  jobLabel: cert-manager
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "cert-manager.name" . }}
+      {{- include "cert-manager.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: controller
+  namespaceSelector:
+    matchNames:
+      - cert-manager
+  endpoints:
+  - targetPort: 9402
+    path: /metrics
+    interval: 60s
+    scrapeTimeout: 30s
+{{ end }}

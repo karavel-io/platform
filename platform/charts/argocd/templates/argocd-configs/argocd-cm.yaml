@@ -1,14 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: argocd-cm
+  name: {{ include "argocd.name" . }}-cm # Argo expects this exact name, so we won't template it
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: argocd-cm
-    helm.sh/chart: {{ include "argocd.chart" . }}
-    app.kubernetes.io/instance: argocd
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: server
+    {{- include "argocd.labels" . | nindent 4 }}
 data:
     application.instanceLabelKey: argocd.argoproj.io/instance
     url: "https://{{ .Values.publicHost }}"

@@ -1,24 +1,18 @@
-{{- if false }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "external-secrets.fullname" . }}
+  name: {{ include "external-secrets.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "external-secrets.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    {{- include "external-secrets.labels" . | nindent 4 }}
 spec:
   endpoints:
-  - interval: {{ .Values.serviceMonitor.interval }}
-    port: prometheus
+  - interval: 30s
+    port: metrics
     path: /metrics
   namespaceSelector:
     matchNames:
     - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "external-secrets.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/version: {{ .Chart.AppVersion }}
-{{- end }}
+      {{- include "external-secrets.selectorLabels" . | nindent 4 }}

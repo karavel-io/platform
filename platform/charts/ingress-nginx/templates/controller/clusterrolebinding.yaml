@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "ingress-nginx.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "ingress-nginx.name" . }}
+    {{- include "ingress-nginx.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "ingress-nginx.name" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "ingress-nginx.name" . }}
+    namespace: {{ .Release.Namespace }}

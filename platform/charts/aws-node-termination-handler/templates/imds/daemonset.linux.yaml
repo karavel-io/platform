@@ -2,15 +2,11 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: aws-node-termination-handler
+  name: {{ include "aws-node-termination-handler.name" . }}-linux
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: aws-node-termination-handler
-    app.kubernetes.io/instance: aws-node-termination-handler
-    k8s-app: aws-node-termination-handler
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
-    app.kubernetes.io/managed-by: karavel
-    karavel.io/component-version: {{ .Chart.Version }}
+    {{- include "aws-node-termination-handler.labels" . | nindent 4 }}
+    kubernetes.io/os: linux
 spec:
   updateStrategy:
     rollingUpdate:
@@ -18,15 +14,12 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app.kubernetes.io/name: aws-node-termination-handler
-      app.kubernetes.io/instance: aws-node-termination-handler
+      {{- include "aws-node-termination-handler.selectorLabels" . | nindent 6 }}
       kubernetes.io/os: linux
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: aws-node-termination-handler
-        app.kubernetes.io/instance: aws-node-termination-handler
-        k8s-app: aws-node-termination-handler
+        {{- include "aws-node-termination-handler.labels" . | nindent 8 }}
         kubernetes.io/os: linux
     spec:
       volumes:
@@ -53,12 +46,12 @@ spec:
                   operator: NotIn
                   values:
                     - fargate
-      serviceAccountName: aws-node-termination-handler
+      serviceAccountName: {{ include "aws-node-termination-handler.name" . }}
       hostNetwork: true
       dnsPolicy: "ClusterFirstWithHostNet"
       containers:
         - name: aws-node-termination-handler
-          image: amazon/aws-node-termination-handler:v{{ .Chart.AppVersion }}
+          image: docker.io/amazon/aws-node-termination-handler:v{{ .Chart.AppVersion }}
           imagePullPolicy: IfNotPresent
           securityContext:
             readOnlyRootFilesystem: true

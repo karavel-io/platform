@@ -4,7 +4,7 @@ metadata:
   name: goldpinger
   namespace: {{ .Release.Namespace }}
   labels:
-    app: goldpinger
+    {{- include "goldpinger.labels" . | nindent 4 }}
 spec:
   type: NodePort
   ports:
@@ -12,4 +12,4 @@ spec:
       nodePort: 30080
       name: http
   selector:
-    app: goldpinger
+    {{- include "goldpinger.selectorLabels" . | nindent 4 }}

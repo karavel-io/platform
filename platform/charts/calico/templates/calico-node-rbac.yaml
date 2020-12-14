@@ -1,9 +1,23 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "calico.name" . }}-node
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "calico.name" . }}-node
+    {{- include "calico.labels" . | nindent 4 }}
+    app.kubernetes.io/component: node
+---
 # Include a clusterrole for the calico-node DaemonSet,
 # and bind it to the calico-node serviceaccount.
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: calico-node
+  name: {{ include "calico.name" . }}-node
+  labels:
+    app.kubernetes.io/name: {{ include "calico.name" . }}-node
+    {{- include "calico.labels" . | nindent 4 }}
+    app.kubernetes.io/component: node
 rules:
   # The CNI plugin needs to get pods, nodes, and namespaces.
   - apiGroups: [""]
@@ -141,19 +155,18 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: calico-node
+  name: {{ include "calico.name" . }}-node
+  labels:
+    app.kubernetes.io/name: {{ include "calico.name" . }}-node
+    {{- include "calico.labels" . | nindent 4 }}
+    app.kubernetes.io/component: node
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: calico-node
+  name: {{ include "calico.name" . }}-node
 subjects:
   - kind: ServiceAccount
-    name: calico-node
+    name: {{ include "calico.name" . }}-node
     namespace: {{ .Release.Namespace }}
 
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: calico-node
-  namespace: {{ .Release.Namespace }}

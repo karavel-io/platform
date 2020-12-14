@@ -1,50 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: argocd-server
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ include "argocd.name" . }}-server
+  namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: argocd-server
-    helm.sh/chart: {{ include "argocd.chart" . }}
-    app.kubernetes.io/instance: argocd
-    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-server
+    {{- include "argocd.labels" . | nindent 4 }}
     app.kubernetes.io/component: server
-    app.kubernetes.io/version: {{ include "argocd.version" . | quote}}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: argocd-server
-      app.kubernetes.io/instance: argocd
+      app.kubernetes.io/name: {{ include "argocd.name" . }}-server
+      {{- include "argocd.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: server
   revisionHistoryLimit: 5
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: argocd-server
-        helm.sh/chart: {{ include "argocd.chart" . }}
-        app.kubernetes.io/instance: argocd
-        app.kubernetes.io/part-of: argocd
+        app.kubernetes.io/name: {{ include "argocd.name" . }}-server
+        {{- include "argocd.labels" . | nindent 8 }}
         app.kubernetes.io/component: server
-        app.kubernetes.io/version: {{ include "argocd.version" . | quote }}
     spec:
       containers:
       - name: server
-        image: "argoproj/argocd:{{ include "argocd.version" . }}"
+        image: "docker.io/argoproj/argocd:v{{ .Chart.AppVersion }}"
         imagePullPolicy: IfNotPresent
         command:
         - argocd-server
         - --staticassets
         - /shared/app
         - --repo-server
-        - argocd-repo-server:8081
+        - {{ include "argocd.name" . }}-repo-server:8081
         - --dex-server
-        - http://argocd-dex-server:5556
+        - http://{{ include "argocd.name" . }}-dex-server:5556
         - --logformat
         - text
         - --loglevel
         - info
         - --redis
-        - argocd-redis:6379
+        - {{ include "argocd.name" . }}-redis:6379
         - --insecure
         volumeMounts:
         - mountPath: /app/config/ssh
@@ -87,9 +81,9 @@ spec:
         name: static-files
       - configMap:
           defaultMode: 420
-          name: argocd-ssh-known-hosts-cm
+          name: {{ include "argocd.name" . }}-ssh-known-hosts-cm
         name: ssh-known-hosts
       - configMap:
           defaultMode: 420
-          name: argocd-tls-certs-cm
+          name: {{ include "argocd.name" . }}-tls-certs-cm
         name: tls-certs

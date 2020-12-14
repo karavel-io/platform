@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "aws-termination-handler.name" -}}
+{{- define "aws-node-termination-handler.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "aws-termination-handler.fullname" -}}
+{{- define "aws-node-termination-handler.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,36 +26,35 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "aws-termination-handler.chart" -}}
+{{- define "aws-node-termination-handler.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "aws-termination-handler.labels" -}}
-helm.sh/chart: {{ include "aws-termination-handler.chart" . }}
-{{ include "aws-termination-handler.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- define "aws-node-termination-handler.labels" -}}
+{{ include "aws-node-termination-handler.selectorLabels" . }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+karavel.io/component-version: {{ .Chart.Version }}
 {{- end }}
 
 {{/*
 Selector labels
 */}}
-{{- define "aws-termination-handler.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "aws-termination-handler.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+{{- define "aws-node-termination-handler.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "aws-node-termination-handler.name" . }}
+app.kubernetes.io/part-of: {{ include "aws-node-termination-handler.name" . }}
+app.kubernetes.io/managed-by: karavel
+karavel.io/component-name: {{ include "aws-node-termination-handler.name" . }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "aws-termination-handler.serviceAccountName" -}}
+{{- define "aws-node-termination-handler.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "aws-termination-handler.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "aws-node-termination-handler.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

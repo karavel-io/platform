@@ -1,13 +1,11 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: argocd-server
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ include "argocd.name" . }}-server
+  namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: argocd-server
-    helm.sh/chart: {{ include "argocd.chart" . }}
-    app.kubernetes.io/instance: argocd
-    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-server
+    {{- include "argocd.labels" . | nindent 4 }}
     app.kubernetes.io/component: server
 rules:
   - apiGroups:

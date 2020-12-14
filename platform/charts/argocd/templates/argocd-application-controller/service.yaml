@@ -1,20 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: argocd-application-controller
+  name: {{ include "argocd.name" . }}-application-controller
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: argocd-application-controller
-    helm.sh/chart: {{ include "argocd.chart" . }}
-    app.kubernetes.io/instance: argocd
-    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller
+    {{- include "argocd.labels" . | nindent 4 }}
     app.kubernetes.io/component: application-controller
 spec:
   ports:
   - name: https-controller
     port: 8082
-    targetPort: 8082
+    targetPort: controller
   selector:
-    app.kubernetes.io/instance: argocd
-    app.kubernetes.io/name: argocd-application-controller
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller
+    {{- include "argocd.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: application-controller

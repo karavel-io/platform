@@ -1,8 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: dex
+  name: {{ include "dex.name" . }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "dex.name" . }}
+    {{- include "dex.labels" . | nindent 4 }}
 data:
   config.yaml: |
     issuer: https://{{ .Values.publicHost }}

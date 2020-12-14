@@ -34,12 +34,9 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "dex.labels" -}}
-helm.sh/chart: {{ include "dex.chart" . }}
 {{ include "dex.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+karavel.io/component-version: {{ .Chart.Version }}
 {{- end }}
 
 {{/*
@@ -47,7 +44,9 @@ Selector labels
 */}}
 {{- define "dex.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "dex.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/part-of: {{ include "dex.name" . }}
+app.kubernetes.io/managed-by: karavel
+karavel.io/component-name: {{ include "dex.name" . }}
 {{- end }}
 
 {{/*

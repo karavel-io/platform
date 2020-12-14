@@ -1,15 +1,11 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: dex-tls
+  name: {{ include "dex.name" . }}-tls
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: dex-tls
-    helm.sh/chart: {{ include "dex.chart" . }}
-    app.kubernetes.io/instance: dex
-    app.kubernetes.io/part-of: dex
-    app.kubernetes.io/component: server
-    app.kubernetes.io/version: v{{ .Chart.AppVersion }}
+    app.kubernetes.io/name: {{ include "dex.name" . }}-tls
+    {{- include "dex.labels" . | nindent 4 }}
 spec:
   commonName: {{ .Values.publicHost }}
   dnsNames:

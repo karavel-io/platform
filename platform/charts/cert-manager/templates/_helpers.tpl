@@ -31,6 +31,24 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Common labels
+*/}}
+{{- define "cert-manager.labels" -}}
+{{ include "cert-manager.selectorLabels" . }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+karavel.io/component-version: {{ .Chart.Version }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "cert-manager.selectorLabels" -}}
+app.kubernetes.io/part-of: {{ include "cert-manager.name" . }}
+app.kubernetes.io/managed-by: karavel
+karavel.io/component-name: {{ include "cert-manager.name" . }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "cert-manager.serviceAccountName" -}}

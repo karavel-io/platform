@@ -34,20 +34,18 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "calico.labels" -}}
-helm.sh/chart: {{ include "calico.chart" . }}
 {{ include "calico.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+karavel.io/component-version: {{ .Chart.Version }}
 {{- end }}
 
 {{/*
 Selector labels
 */}}
 {{- define "calico.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "calico.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/part-of: {{ include "calico.name" . }}
+app.kubernetes.io/managed-by: karavel
+karavel.io/component-name: {{ include "calico.name" . }}
 {{- end }}
 
 {{/*

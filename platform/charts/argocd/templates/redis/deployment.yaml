@@ -1,28 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: argocd-redis
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ include "argocd.name" . }}-redis
+  namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: argocd-redis
-    helm.sh/chart: {{ include "argocd.chart" . }}
-    app.kubernetes.io/instance: argocd
-    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-redis
+    app.kubernetes.io/version: {{ .Values.redis.version }}
     app.kubernetes.io/component: redis
-    app.kubernetes.io/version: 5.0.8
+    app.kubernetes.io/part-of: {{ include "argocd.name" . }}}
+    app.kubernetes.io/managed-by: karavel
+    karavel.io/component-name: {{ include "argocd.name" . }}}
+    karavel.io/component-version: {{ .Chart.Version }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: argocd-redis
+      app.kubernetes.io/name: {{ include "argocd.name" . }}-redis
+      app.kubernetes.io/component: redis
+      app.kubernetes.io/part-of: {{ include "argocd.name" . }}}
+      app.kubernetes.io/managed-by: karavel
+      karavel.io/component-name: {{ include "argocd.name" . }}}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: argocd-redis
-        helm.sh/chart: {{ include "argocd.chart" . }}
-        app.kubernetes.io/instance: argocd
-        app.kubernetes.io/part-of: argocd
+        app.kubernetes.io/name: {{ include "argocd.name" . }}-redis
+        app.kubernetes.io/version: {{ .Values.redis.version }}
         app.kubernetes.io/component: redis
-        app.kubernetes.io/version: 5.0.8
+        app.kubernetes.io/part-of: {{ include "argocd.name" . }}}
+        app.kubernetes.io/managed-by: karavel
+        karavel.io/component-name: {{ include "argocd.name" . }}}
+        karavel.io/component-version: {{ .Chart.Version }}
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -31,15 +37,21 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
       containers:
-      - name: argocd-redis
+      - name: {{ include "argocd.name" . }}-redis
         args:
         - --save
         - ""
         - --appendonly
         - "no"
-        image: redis:5.0.8
+        image: "quay.io/bitnami/redis:{{ .Values.redis.version }}"
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 6379
+          - name: redis
+            containerPort: 6379
         resources:
-          {}
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi

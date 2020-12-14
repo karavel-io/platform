@@ -1,36 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dex-server
+  name: {{ include "dex.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: dex
-    helm.sh/chart: {{ include "dex.chart" . }}
-    app.kubernetes.io/instance: dex
-    app.kubernetes.io/part-of: dex
-    app.kubernetes.io/component: server
-    app.kubernetes.io/version: v{{ .Chart.AppVersion }}
+    app.kubernetes.io/name: {{ include "dex.name" . }}
+    {{- include "dex.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: dex
-      helm.sh/chart: {{ include "dex.chart" . }}
-      app.kubernetes.io/instance: dex
-      app.kubernetes.io/part-of: dex
-      app.kubernetes.io/component: server
-      app.kubernetes.io/version: v{{ .Chart.AppVersion }}
+      app.kubernetes.io/name: {{ include "dex.name" . }}
+      {{- include "dex.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: dex
-        helm.sh/chart: {{ include "dex.chart" . }}
-        app.kubernetes.io/instance: dex
-        app.kubernetes.io/part-of: dex
-        app.kubernetes.io/component: server
-        app.kubernetes.io/version: v{{ .Chart.AppVersion }}
+        app.kubernetes.io/name: {{ include "dex.name" . }}
+        {{- include "dex.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: dex
+      serviceAccountName: {{ include "dex.name" . }}
       containers:
         - image: quay.io/dexidp/dex:v{{ .Chart.AppVersion }}
           name: dex
@@ -70,7 +58,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: dex
+            name: {{ include "dex.name" . }}
             items:
               - key: config.yaml
                 path: config.yaml

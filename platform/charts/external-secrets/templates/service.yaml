@@ -1,19 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "external-secrets.fullname" . }}
+  name: {{ include "external-secrets.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "external-secrets.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    {{- include "external-secrets.labels" . | nindent 4 }}
 spec:
   selector:
-    app.kubernetes.io/name: {{ include "external-secrets.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    {{- include "external-secrets.selectorLabels" . | nindent 4 }}
   ports:
     - protocol: TCP
       port: 3001
-      name: prometheus
-      targetPort: prometheus
+      name: metrics
+      targetPort: metrics

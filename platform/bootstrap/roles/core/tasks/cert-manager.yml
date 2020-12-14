@@ -3,15 +3,15 @@
     state: present
     api_version: v1
     kind: Namespace
-    name: cert-manager
+    name: {{ include "cert-manager.name" . }}
   when: init_namespaces
 
 - include_role:
     name: install_component
   vars:
-    component_name: cert-manager
+    component_name: {{ include "cert-manager.name" . }}
     component_version: 0.1.0
-    component_namespace: cert-manager
+    component_namespace: {{ .Release.Namespace }}
     component_values:
       letsencrypt:
         email: '{{ letsencrypt.email }}'

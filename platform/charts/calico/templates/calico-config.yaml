@@ -3,11 +3,14 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: calico-config
+  name: {{ include "calico.name" . }}-config
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "calico.name" . }}-config
+    {{- include "calico.labels" . | nindent 4 }}
 data:
   # Typha is disabled.
-  typha_service_name: {{if .Values.typha.enable}}"calico-typha"{{else}}"none"{{end}}
+  typha_service_name: {{if .Values.typha.enable}}"{{ include "calico.name" . }}-typha"{{else}}"none"{{end}}
   # Configure the backend to use.
   calico_backend: "bird"
   # Configure the MTU to use for workload interfaces and tunnels.

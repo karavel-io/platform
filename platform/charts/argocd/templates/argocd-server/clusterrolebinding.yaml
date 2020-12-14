@@ -1,19 +1,17 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: argocd-server
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ include "argocd.name" . }}-server
+  namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: argocd-server
-    helm.sh/chart: {{ include "argocd.chart" . }}
-    app.kubernetes.io/instance: argocd
-    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-server
+    {{- include "argocd.labels" . | nindent 4 }}
     app.kubernetes.io/component: server
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: argocd-server
+  name: {{ include "argocd.name" . }}-server
 subjects:
 - kind: ServiceAccount
-  name: argocd-server
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ include "argocd.name" . }}-server
+  namespace: {{ .Release.Namespace }}

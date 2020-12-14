@@ -34,12 +34,9 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "external-dns.labels" -}}
-helm.sh/chart: {{ include "external-dns.chart" . }}
 {{ include "external-dns.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+karavel.io/component-version: {{ .Chart.Version }}
 {{- end }}
 
 {{/*
@@ -47,7 +44,9 @@ Selector labels
 */}}
 {{- define "external-dns.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "external-dns.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/part-of: {{ include "external-dns.name" . }}
+app.kubernetes.io/managed-by: karavel
+karavel.io/component-name: {{ include "external-dns.name" . }}
 {{- end }}
 
 {{/*

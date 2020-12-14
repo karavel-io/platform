@@ -4,20 +4,20 @@ metadata:
   name: goldpinger
   namespace: {{ .Release.Namespace }}
   labels:
-    app: goldpinger
+    {{- include "goldpinger.labels" . | nindent 4 }}
 spec:
   updateStrategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: goldpinger
+      {{- include "goldpinger.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '8080'
       labels:
-        app: goldpinger
+        {{- include "goldpinger.labels" . | nindent 8 }}
     spec:
       serviceAccountName: goldpinger
       tolerations:

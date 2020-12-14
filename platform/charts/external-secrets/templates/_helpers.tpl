@@ -40,3 +40,22 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "external-secrets.labels" -}}
+{{ include "external-secrets.selectorLabels" . }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+karavel.io/component-version: {{ .Chart.Version }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "external-secrets.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "external-secrets.name" . }}
+app.kubernetes.io/part-of: {{ include "external-secrets.name" . }}
+app.kubernetes.io/managed-by: karavel
+karavel.io/component-name: {{ include "external-secrets.name" . }}
+{{- end }}

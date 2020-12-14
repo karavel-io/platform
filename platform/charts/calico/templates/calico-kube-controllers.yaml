@@ -1,24 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: calico-kube-controllers
+  name: {{ include "calico.name" . }}-kube-controllers
   namespace: {{ .Release.Namespace }}
   labels:
-    k8s-app: calico-kube-controllers
+    app.kubernetes.io/name: {{ include "calico.name" . }}-kube-controllers
+    {{- include "calico.labels" . | nindent 4 }}
+    app.kubernetes.io/component: kube-controllers
 spec:
   # The controllers can only have a single active instance.
   replicas: 1
   selector:
     matchLabels:
-      k8s-app: calico-kube-controllers
+      app.kubernetes.io/name: {{ include "calico.name" . }}-kube-controllers
+      {{- include "calico.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: kube-controllers
   strategy:
     type: Recreate
   template:
     metadata:
-      name: calico-kube-controllers
+      name: {{ include "calico.name" . }}-kube-controllers
       namespace: {{ .Release.Namespace }}
       labels:
-        k8s-app: calico-kube-controllers
+        app.kubernetes.io/name: {{ include "calico.name" . }}-kube-controllers
+        {{- include "calico.labels" . | nindent 8 }}
+        app.kubernetes.io/component: kube-controllers
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -28,7 +34,7 @@ spec:
           operator: Exists
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
-      serviceAccountName: calico-kube-controllers
+      serviceAccountName: {{ include "calico.name" . }}-kube-controllers
       priorityClassName: system-cluster-critical
       containers:
         - name: calico-kube-controllers

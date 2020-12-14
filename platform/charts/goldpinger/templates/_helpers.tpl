@@ -41,12 +41,9 @@ v{{ .Chart.AppVersion }}
 Common labels
 */}}
 {{- define "goldpinger.labels" -}}
-helm.sh/chart: {{ include "goldpinger.chart" . }}
 {{ include "goldpinger.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+karavel.io/component-version: {{ .Chart.Version }}
 {{- end }}
 
 {{/*
@@ -54,7 +51,9 @@ Selector labels
 */}}
 {{- define "goldpinger.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "goldpinger.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/part-of: {{ include "goldpinger.name" . }}
+app.kubernetes.io/managed-by: karavel
+karavel.io/component-name: {{ include "goldpinger.name" . }}
 {{- end }}
 
 {{/*

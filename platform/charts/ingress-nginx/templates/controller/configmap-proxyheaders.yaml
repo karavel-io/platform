@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ingress-nginx.name" . }}-custom-proxy-headers
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "ingress-nginx.name" . }}-custom-proxy-headers
+    {{- include "ingress-nginx.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controller
+data: {}

@@ -1,14 +1,12 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  labels:
-    app.kubernetes.io/name: argocd-server
-    helm.sh/chart: {{ include "argocd.chart" . }}
-    app.kubernetes.io/instance: argocd
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/component: server
-  name: argocd-cert
+  name: {{ include "argocd.name" . }}-cert
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-cert
+    {{- include "argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: server
 spec:
   commonName: {{ .Values.publicHost }}
   dnsNames:
@@ -16,4 +14,4 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod
-  secretName: argocd-tls
+  secretName: {{ include "argocd.name" . }}-tls

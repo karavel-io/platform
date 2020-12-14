@@ -4,14 +4,18 @@
 kind: DaemonSet
 apiVersion: apps/v1
 metadata:
-  name: calico-node
+  name: {{ include "calico.name" . }}-node
   namespace: {{ .Release.Namespace }}
   labels:
-    k8s-app: calico-node
+    app.kubernetes.io/name: {{ include "calico.name" . }}-node
+    {{- include "calico.labels" . | nindent 4 }}
+    app.kubernetes.io/component: node
 spec:
   selector:
     matchLabels:
-      k8s-app: calico-node
+      app.kubernetes.io/name: {{ include "calico.name" . }}-node
+      {{- include "calico.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: node
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
@@ -19,7 +23,9 @@ spec:
   template:
     metadata:
       labels:
-        k8s-app: calico-node
+        app.kubernetes.io/name: {{ include "calico.name" . }}-node
+        {{- include "calico.labels" . | nindent 8 }}
+        app.kubernetes.io/component: node
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -33,7 +39,7 @@ spec:
           operator: Exists
         - effect: NoExecute
           operator: Exists
-      serviceAccountName: calico-node
+      serviceAccountName: {{ include "calico.name" . }}-node
       # Minimize downtime during a rolling upgrade or deletion; tell Kubernetes to do a "force
       # deletion": https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods.
       terminationGracePeriodSeconds: 0
