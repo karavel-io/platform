@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/name: {{ include "argocd.name" . }}-redis
     app.kubernetes.io/version: {{ .Values.redis.version }}
     app.kubernetes.io/component: redis
-    app.kubernetes.io/part-of: {{ include "argocd.name" . }}}
+    app.kubernetes.io/part-of: {{ include "argocd.name" . }}
     app.kubernetes.io/managed-by: karavel
-    karavel.io/component-name: {{ include "argocd.name" . }}}
+    karavel.io/component-name: {{ include "argocd.name" . }}
     karavel.io/component-version: {{ .Chart.Version }}
 spec:
   ports:
@@ -19,6 +19,6 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "argocd.name" . }}-redis
     app.kubernetes.io/component: redis
-    app.kubernetes.io/part-of: {{ include "argocd.name" . }}}
+    app.kubernetes.io/part-of: {{ include "argocd.name" . }}
     app.kubernetes.io/managed-by: karavel
-    karavel.io/component-name: {{ include "argocd.name" . }}}
+    karavel.io/component-name: {{ include "argocd.name" . }}

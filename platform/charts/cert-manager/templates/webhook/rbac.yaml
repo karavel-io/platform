@@ -12,10 +12,10 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "cert-manager.name" . }}-webhook:dynamic-serving
+  name: {{ include "cert-manager.name" . }}-webhook-dynamic-serving
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-webhook:dynamic-serving
+    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-webhook-dynamic-serving
     {{- include "cert-manager.labels" . | nindent 4 }}
     app.kubernetes.io/component: webhook
 rules:
@@ -32,16 +32,16 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "cert-manager.name" . }}-webhook:dynamic-serving
+  name: {{ include "cert-manager.name" . }}-webhook-dynamic-serving
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-webhook:dynamic-serving
+    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-webhook-dynamic-serving
     {{- include "cert-manager.labels" . | nindent 4 }}
     app.kubernetes.io/component: webhook
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "cert-manager.name" . }}-webhook:dynamic-serving
+  name: {{ include "cert-manager.name" . }}-webhook-dynamic-serving
 subjects:
 - apiGroup: ""
   kind: ServiceAccount

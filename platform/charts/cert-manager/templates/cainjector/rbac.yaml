@@ -61,10 +61,10 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "cert-manager.name" . }}-cainjector:leaderelection
+  name: {{ include "cert-manager.name" . }}-cainjector-leaderelection
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-cainjector
+    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-cainjector-leaderelection
     {{ include "cert-manager.labels" . | nindent 4 }}
     app.kubernetes.io/component: cainjector
 rules:
@@ -86,16 +86,16 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "cert-manager.name" . }}-cainjector:leaderelection
+  name: {{ include "cert-manager.name" . }}-cainjector-leaderelection
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-cainjector
+    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-cainjector-leaderelection
     {{ include "cert-manager.labels" . | nindent 4 }}
     app.kubernetes.io/component: cainjector
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "cert-manager.name" . }}-cainjector:leaderelection
+  name: {{ include "cert-manager.name" . }}-cainjector-leaderelection
 subjects:
   - kind: ServiceAccount
     name: {{ include "cert-manager.name" . }}-cainjector
