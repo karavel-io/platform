@@ -15,5 +15,5 @@
     name: install_component
   vars:
     component_name: ingress-nginx
-    component_version: 0.1.0
+    component_version: 0.1.1
     component_namespace: ingress-nginx
