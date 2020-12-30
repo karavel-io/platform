@@ -16,8 +16,8 @@ import_role:
 - [AWS Node Termination Handler]  
   Handles cordoning and draining of nodes when the underlying EC2 istance is going to
   be rebooted or terminated  
-  [config](./variables.md#aws-node-termination-handler)
+  [config](../variables.md#aws-node-termination-handler)
 
-[Karavel Bootstrap Tool]: ./bootstrap.md
+[Karavel Bootstrap Tool]: ../bootstrap.md
 [AWS EKS]: https://aws.amazon.com/eks
 [AWS Node Termination Handler]: https://github.com/aws/aws-node-termination-handler 
