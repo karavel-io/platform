@@ -362,7 +362,82 @@ aws_node_termination_handler:
       {{ .Description }}
 ```
 
-[bootstrap tool]: ../bootstrap
+## Grafana
+
+[Grafana] is the core of the observability platform offered by Karavel. It aggregates all the observability tools
+for logging, metrics and tracing and present them through a unified web interface. Karavel deploys the [grafana-operator]
+so that dashboards and datasources can be managed as Kubernetes resources and deployed alongside services and deployments.
+
+
+| Variable | Type | Default | Notes |
+| -------- | ---- | ------- | ----- |
+| `host` | hostname | none (required) | Public host for Grafana |
+| `secret` | ExternalSecretRef | none (required) | Configuration for the `ExternalSecret` object that will fetch the [Grafana] environment variables. Keys will be passed as-is as envar names |
+
+### Example
+
+```yaml
+grafana:
+  host: grafana.example.com
+  secret:
+    backend: secretsManager
+    key: my-cluster/grafana-secret
+```
+
+## Loki
+
+[Loki] is a logging aggregation tool by Grafana that is cheap and fast to operate. Karavel allows to configure Loki
+with a local filesystem, or an S3 bucket as the backing storage. It will configure itself as a Grafana datasource
+so that it will be available in the cluster Grafana. It currently supports the following stores:
+
+- Filesystem (with `store: filesystem`)
+- Amazon S3 or compatible (with `store: s3`)
+
+### General configuration
+
+| Variable | Type | Default | Notes |
+| -------- | ---- | ------- | ----- |
+| `store` | string | none (required) | Must match one of the available stores |
+
+#### Example
+
+```yaml
+loki:
+  store: filesystem
+```
+
+### S3
+
+Loki can store indexes and chunks in an S3 bucket or a compatible implementation, like Minio or Ceph.
+
+| Variable | Type | Default | Notes |
+| -------- | ---- | ------- | ----- |
+| `bucket` | string | none (required) | S3 bucket to use as the backing storage |
+| `endpoint` | hostname | none (optional) | Custom S3 endpoint when using a non-AWS S3 implementation (e.g. Minio) |
+| `encrypted` | boolean | `true` | Use SSE Encryption |
+| `insecure` | boolean | `false` | Support insecure (plain-text) connections to S3 (e.g. for local Minio) |
+| `path_style` | boolean | `false` | Use path-style instead of virtual-host strategy for constructing bucket URLs (e.g. for Minio) |
+| `region` | string | none (required) | Must match the [AWS Region] of the cluster to improve speed. |
+| `eks_role` | string | none (required) | AWS IAM Role that will be used by Loki to authenticate with AWS. Only used when running on [EKS]. |
+| `iam_role` | string | none (required) | AWS IAM Role that will be used by Loki to authenticate with AWS. Only used when running on EC2 with the kiam setup. |
+
+### Example
+
+```yaml
+loki:
+  store: s3
+  s3:
+    bucket: my-logging-bucket
+    endpoint: my-minio.example.com
+    region: eu-west-1
+    encrypted: true
+    insecure: false
+    path_style: false
+    eks_role: arn:aws:iam::1234567890:role/KaravelExampleSecrets  # When running on EKS
+    iam_role: arn:aws:iam::1234567890:role/KaravelExampleSecrets  # When running on EC2
+```
+
+[bootstrap tool]: ./bootstrap.md
 [Calico]: https://projectcalico.org/
 [Network Policies]: https://kubernetes.io/docs/concepts/services-networking/network-policies/
 [External Secrets]: https://github.com/external-secrets/kubernetes-external-secrets/
@@ -386,3 +461,6 @@ aws_node_termination_handler:
 [ArgoCD OIDC configuration object]: https://argoproj.github.io/argo-cd/operator-manual/user-management/#existing-oidc-provider
 [ArgoCD Secret object]: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-secret.yaml#L10
 [AWS Node Termination Handler]: https://github.com/aws/aws-node-termination-handler
+[Grafana]: ./components/grafana.md
+[grafana-operator]: https://github.com/integr8ly/grafana-operator
+[Loki]: ./components/logging.md

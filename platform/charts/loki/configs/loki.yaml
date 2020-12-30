@@ -57,7 +57,9 @@ storage_config:
   aws:
     s3: s3://{{ .region }}/{{ .bucket }}
     endpoint: {{ .endpoint }}
-    sse_encryption: true
+    sse_encryption: {{ .encrypted }}
+    insecure: {{ .insecure }}
+    s3forcepathstyle: {{ .pathStyle }}
   {{- end }}
 {{- end }}
 chunk_store_config:
