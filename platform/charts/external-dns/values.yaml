@@ -3,7 +3,7 @@ domainFilter: ""
 provider: cloudflare
 
 cloudflare:
-  proxied: true
+  proxied: false
   zoneId: ""
   secret:
     backend: secretsManager

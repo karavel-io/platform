@@ -29,3 +29,9 @@
           pathStyle: '{{ (loki.s3.path_style | default(false)) if loki.store == "s3" else omit }}'
           eksRole: '{{ (loki.s3.eks_role | default(omit)) if loki.store == "s3" else omit }}'
           iamRole: '{{ (loki.s3.iam_role | default(omit)) if loki.store == "s3" else omit }}'
+      jaeger:
+        enable: '{{ loki.jaeger.enabled | default(false) }}'
+        host: '{{ loki.jaeger.host | default(omit) }}'
+        endpoint: '{{ loki.jaeger.endpoint | default(omit) }}'
+        samplerType: '{{ loki.jaeger.sampler_type | default(omit) }}'
+        samplerParam: '{{ loki.jaeger.sampler_type | default(omit) }}'

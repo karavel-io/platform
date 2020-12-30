@@ -12,7 +12,18 @@ spec:
   datasources:
     - name: Loki
       type: loki
+      uid: loki
       access: proxy
       url: http://loki.{{ .Release.Namespace }}:3100
       version: 1
       editable: false
+      jsonData:
+        derivedFields:
+          {{- if .Values.jaeger.enable }}
+          - datasourceUid: {{ .Values.jaeger.dsUid }}
+            matcherRegex: (?:traceID|trace_id)=(\w+)
+            name: TraceID
+            url: $${__value.raw}
+          {{- else }}
+          []
+          {{- end }}

@@ -14,3 +14,11 @@ promtail:
 
 prometheus:
   enable: false
+
+jaeger:
+  enable: false
+  dsUid: tempo
+  host: tempo
+  endpoint: http://tempo:14268/api/traces
+  samplerType: const
+  samplerParam: 1
