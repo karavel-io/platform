@@ -19,7 +19,7 @@ Other logging solutions will be available as alternatives in the future.
   import_role:
     name: mikamai.karavel.logging_loki
   ```
-  [config](./variables.md#loki)
+  [config](../variables.md#loki)
   
 
 [Grafana Labs]: https://grafana.com/oss/

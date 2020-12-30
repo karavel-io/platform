@@ -21,7 +21,7 @@ supported and integrated by other open source projects.
   import_role:
     name: mikamai.karavel.ingress_nginx
   ```
-  [config](./variables.md#nginx-ingress-controller)
+  [config](../variables.md#nginx-ingress-controller)
   
 
 [Kubernetes Ingress Controllers]: https://kubernetes.io/docs/concepts/services-networking/ingress-controllers
