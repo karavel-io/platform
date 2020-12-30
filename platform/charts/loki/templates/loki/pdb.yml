@@ -5,8 +5,10 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: loki
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   minAvailable: 1

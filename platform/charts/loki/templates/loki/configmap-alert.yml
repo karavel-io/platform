@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
 data:
   loki-alerting-rules.yaml: |-
     groups: []

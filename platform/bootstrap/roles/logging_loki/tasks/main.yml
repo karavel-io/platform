@@ -17,3 +17,12 @@
     component_name: loki
     component_version: 0.1.0
     component_namespace: monitoring
+    component_values:
+      loki:
+        objectStore: '{{ loki.store | default("filesystem") }}'
+        s3:
+          bucket: '{{ loki.s3.bucket if loki.store == "s3" else omit }}'
+          endpoint: '{{ (loki.s3.endpoint | default(omit)) if loki.store == "s3" else omit }}'
+          region: '{{ loki.s3.region if loki.store == "s3" else omit }}'
+          eksRole: '{{ (loki.s3.eks_role | default(omit)) if loki.store == "s3" else omit }}'
+          iamRole: '{{ (loki.s3.iam_role | default(omit)) if loki.store == "s3" else omit }}'

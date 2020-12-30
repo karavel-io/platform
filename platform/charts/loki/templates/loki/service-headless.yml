@@ -6,6 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: loki
     app.kubernetes.io/service: headless
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   clusterIP: None
   ports:
@@ -19,3 +20,4 @@ spec:
       targetPort: gossip
   selector:
     app.kubernetes.io/name: loki
+    {{- include "loki.selectorLabels" . | nindent 4 }}

@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: promtail
+  name: loki
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: promtail
+    app.kubernetes.io/name: loki
     {{- include "loki.labels" . | nindent 4 }}
 data:
-  promtail.yaml: |
-    {{- .Files.Get "configs/promtail.yaml" | nindent 4 }}
-
+  loki.yaml: |
+    {{ tpl (.Files.Get "configs/loki.yaml") . | nindent 4 }}

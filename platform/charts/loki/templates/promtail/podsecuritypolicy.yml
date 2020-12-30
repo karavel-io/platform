@@ -4,6 +4,7 @@ metadata:
   name: promtail
   labels:
     app.kubernetes.io/name: promtail
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   privileged: false
   allowPrivilegeEscalation: false

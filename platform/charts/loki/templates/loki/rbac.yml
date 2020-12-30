@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
   {{ with .Values.loki.s3.eksRole }}
   annotations:
     eks.amazonaws.com/role-arn: {{ . }}
@@ -19,6 +20,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
 rules:
   - apiGroups:      ['extensions']
     resources:      ['podsecuritypolicies']
@@ -32,6 +34,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
   {{ with .Values.loki.s3.iamRole }}
   annotations:
     iam.amazonaws.com/role: {{ . }}
@@ -15,6 +16,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: loki
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   serviceName: loki-headless
   updateStrategy:
     type: RollingUpdate
@@ -22,6 +24,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: loki
+        {{- include "loki.labels" . | nindent 8 }}
     spec:
       serviceAccountName: loki
       securityContext:
@@ -79,7 +82,7 @@ spec:
           configMap:
             name: loki-alerting-rules
         - name: config
-          secret:
-            secretName: loki
+          configMap:
+            name: loki
         - name: storage
           emptyDir: {}

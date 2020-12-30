@@ -1,3 +1,4 @@
+{{- if .Values.prometheus.enable }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -16,3 +17,4 @@ spec:
   selector:
     matchLabels:
       {{- include "external-secrets.selectorLabels" . | nindent 4 }}
+{{- end }}

@@ -6,6 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: loki
     app.kubernetes.io/service: primary
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -15,3 +16,4 @@ spec:
       targetPort: http-metrics
   selector:
     app.kubernetes.io/name: loki
+    {{- include "loki.selectorLabels" . | nindent 4 }}

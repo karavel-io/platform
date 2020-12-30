@@ -1,2 +1,6 @@
 grafana:
   host: grafana.example.com
+
+secret:
+  backend: secretsManager
+  key: ""

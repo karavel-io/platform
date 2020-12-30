@@ -37,6 +37,7 @@ Version tag
 {{- define "goldpinger.version" -}}
 v{{ .Chart.AppVersion }}
 {{- end }}
+
 {{/*
 Common labels
 */}}

@@ -15,3 +15,6 @@ vault:
   extraCertsSecret:
     name: "vault-ca"
     key: "ca.pem"
+
+prometheus:
+  enable: false

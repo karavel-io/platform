@@ -3,12 +3,30 @@ kind: Grafana
 metadata:
   name: cluster-grafana
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: cluster-grafana
+    {{- include "grafana.labels" . | nindent 4 }}
 spec:
+  deployment:
+    labels:
+      app.kubernetes.io/name: cluster-grafana
+      {{- include "grafana.labels" . | nindent 6 }}
+    skipCreateAdminAccount: false #TODO: switch to true
+    envFrom:
+      - secretRef:
+          name: cluster-{{ include "grafana.name" . }}-secrets
+  service:
+    labels:
+      app.kubernetes.io/name: cluster-grafana
+      {{- include "grafana.labels" . | nindent 6 }}
   ingress:
-    enabled: True
+    enabled: true
     hostname: {{ .Values.grafana.host }}
-    tlsEnabled: false
+    tlsEnabled: true
     tlsSecretName: cluster-grafana-tls
+    labels:
+      app.kubernetes.io/name: cluster-grafana
+      {{- include "grafana.labels" . | nindent 6 }}
     annotations:
       kubernetes.io/ingress.class: nginx
   client:
@@ -18,17 +36,20 @@ spec:
       matchLabels:
         app: grafana
   config:
+    server:
+      root_url: https://{{ .Values.grafana.host }}
     log:
-      mode: "console"
-      level: "warn"
-    security:
-      admin_user: "root"
-      admin_password: "secret"
+      mode: console
+      level: warn
     auth:
-      disable_login_form: False
-      disable_signout_menu: True
+      disable_login_form: true
+      disable_signout_menu: false
     auth.anonymous:
-      enabled: False
+      enabled: false
+    auth.generic_oauth:
+      enabled: true
+    users:
+      viewers_can_edit: true
   dashboardLabelSelector:
     - matchExpressions:
         - {key: app, operator: In, values: [grafana]}

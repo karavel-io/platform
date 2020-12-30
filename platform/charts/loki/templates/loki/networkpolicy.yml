@@ -6,16 +6,18 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: loki
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   ingress:
     - from:
       - podSelector:
           matchLabels:
-            app: {{ template "client.name" . }}
-            release: {{ .Release.Name }}
+            app.kubernetes.io/name: promtail
+            {{- include "loki.labels" . | nindent 12 }}
     - ports:
       - port: 3100
   {{ end }}
