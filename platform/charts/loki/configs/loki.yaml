@@ -55,9 +55,8 @@ storage_config:
 {{- else if eq .Values.loki.objectStore "s3" }}
   {{- with .Values.loki.s3 }}
   aws:
-    bucketnames: {{ .buckets }}
+    s3: s3://{{ .region }}/{{ .bucket }}
     endpoint: {{ .endpoint }}
-    region: {{ .region }}
     sse_encryption: true
   {{- end }}
 {{- end }}
@@ -68,7 +67,7 @@ table_manager:
   retention_period: 0s
 compactor:
   working_directory: /data/loki/boltdb-shipper-compactor
-  shared_store: filesystem
+  shared_store: {{ .Values.loki.objectStore }}
 # Needed for Alerting: https://grafana.com/docs/loki/latest/alerting/
 # This is just a simple example, for more details: https://grafana.com/docs/loki/latest/configuration/#ruler_config
 #  ruler:

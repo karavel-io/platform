@@ -7,3 +7,6 @@ letsencrypt:
       backend: secretsManager
       key: ""
       property: ""
+
+prometheus:
+  enable: false

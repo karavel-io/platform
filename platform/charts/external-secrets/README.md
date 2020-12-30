@@ -156,7 +156,7 @@ spec:
 Save the file and run:
 
 ```sh
-kubectl apply -f hello-service-external-secret.yml
+kubectl apply -f hello-service-external-configmap.yml
 ```
 
 Wait a few minutes and verify that the associated `Secret` has been created:

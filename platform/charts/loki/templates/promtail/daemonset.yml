@@ -5,10 +5,12 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: promtail
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: promtail
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,6 +19,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: promtail
+        {{- include "loki.labels" . | nindent 8 }}
     spec:
       serviceAccountName: promtail
       initContainers:

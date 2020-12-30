@@ -34,20 +34,18 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "loki.labels" -}}
-helm.sh/chart: {{ include "loki.chart" . }}
 {{ include "loki.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+karavel.io/component-version: {{ .Chart.Version }}
 {{- end }}
 
 {{/*
 Selector labels
 */}}
 {{- define "loki.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "loki.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/part-of: {{ include "loki.name" . }}
+app.kubernetes.io/managed-by: karavel
+karavel.io/component-name: {{ include "loki.name" . }}
 {{- end }}
 
 {{/*

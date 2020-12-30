@@ -4,6 +4,7 @@ metadata:
   name: loki
   labels:
     app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   privileged: false
   allowPrivilegeEscalation: false

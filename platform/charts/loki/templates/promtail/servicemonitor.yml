@@ -1,14 +1,16 @@
-{{- if false }}
+{{- if .Values.prometheus.enable }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: promtail
   labels:
     app.kubernetes.io/name: promtail
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: promtail
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace | quote }}

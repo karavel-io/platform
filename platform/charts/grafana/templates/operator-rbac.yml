@@ -3,11 +3,17 @@ kind: ServiceAccount
 metadata:
   name: grafana-operator
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: grafana-operator
+    {{- include "grafana.labels" . | nindent 4 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: grafana-operator
+  labels:
+    app.kubernetes.io/name: grafana-operator
+    {{- include "grafana.labels" . | nindent 4 }}
 rules:
   - apiGroups:
       - integreatly.org
@@ -26,6 +32,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: grafana-operator
+  labels:
+    app.kubernetes.io/name: grafana-operator
+    {{- include "grafana.labels" . | nindent 4 }}
 roleRef:
   name: grafana-operator
   kind: ClusterRole
@@ -40,6 +49,9 @@ kind: Role
 metadata:
   name: grafana-operator
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: grafana-operator
+    {{- include "grafana.labels" . | nindent 4 }}
 rules:
   - apiGroups:
       - ""
@@ -137,6 +149,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: grafana-operator
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: grafana-operator
+    {{- include "grafana.labels" . | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: grafana-operator

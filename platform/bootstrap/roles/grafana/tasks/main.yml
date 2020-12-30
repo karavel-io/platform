@@ -20,3 +20,4 @@
     component_values:
       grafana:
         host: '{{ grafana.host }}'
+      secret: '{{ grafana.secret }}'

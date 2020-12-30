@@ -5,13 +5,12 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: cluster-grafana-tls
-    helm.sh/chart: {{ include "grafana.chart" . }}
-    app.kubernetes.io/part-of: cluster-grafana
+    {{- include "grafana.labels" . | nindent 4 }}
 spec:
   commonName: {{ .Values.grafana.host }}
   dnsNames:
     - {{ .Values.grafana.host }}
   issuerRef:
     kind: ClusterIssuer
-    name: letsencrypt-staging
+    name: letsencrypt-prod
   secretName: cluster-grafana-tls

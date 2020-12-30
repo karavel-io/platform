@@ -1,3 +1,4 @@
+{{- if .Values.prometheus.enable }}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -43,3 +44,4 @@ spec:
           annotations:
             description: Too many 4XXs
             summary: More than 5% of all requests returned 4XX, this requires your attention
+{{- end }}

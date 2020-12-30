@@ -3,6 +3,9 @@ kind: GrafanaDataSource
 metadata:
   name: loki-datasource
   namespace: {{ .Values.grafana.namespace | default .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   name: loki.yaml
   datasources:
