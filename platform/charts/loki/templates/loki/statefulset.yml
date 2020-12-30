@@ -38,6 +38,20 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/loki/loki.yaml"
+          {{- if .Values.jaeger.enable }}
+            - "-tracing.enabled=true"
+          {{- with .Values.jaeger }}
+          env:
+            - name: JAEGER_AGENT_HOST
+              value: {{ .host }}
+            - name: JAEGER_ENDPOINT
+              value: {{ .endpoint }}
+            - name: JAEGER_SAMPLER_TYPE
+              value: {{ .samplerType }}
+            - name: JAEGER_SAMPLER_PARAM
+              value: {{ .samplerParam | quote }}
+          {{- end }}
+          {{- end }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki
@@ -73,7 +87,6 @@ spec:
               memory: 128Mi
           securityContext:
             readOnlyRootFilesystem: true
-          env: []
       terminationGracePeriodSeconds: 4800
       volumes:
         - name: scratch

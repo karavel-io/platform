@@ -12,7 +12,8 @@ spec:
   datasources:
     - name: Tempo
       type: tempo
+      uid: tempo
       access: proxy
-      url: http://tempo.{{ .Release.Namespace }}:3100
+      url: http://tempo-query.{{ .Release.Namespace }}:16686
       version: 1
       editable: false
