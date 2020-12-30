@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tempo
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: tempo
+    {{ include "tempo.labels" . | nindent 4 }}
+  {{ with .Values.tempo.s3.iamRole }}
+  annotations:
+    iam.amazonaws.com/role: {{ . }}
+  {{ end }}
+spec:
+  serviceName: tempo-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tempo
+      {{ include "tempo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      name: tempo
+      labels:
+        app.kubernetes.io/name: tempo
+        {{ include "tempo.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: tempo
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: tempo
+          image: "grafana/tempo:{{ .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-config.file=/etc/tempo/tempo.yaml"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/tempo
+            - name: storage
+              mountPath: "/data"
+          ports:
+            - name: tempo
+              containerPort: 3100
+            - name: jaeger-compact
+              containerPort: 6831
+            - name: jaeger-binary
+              containerPort: 6832
+            - name: jaeger-http
+              containerPort: 14268
+            - name: jaeger-grpc
+              containerPort: 14250
+            - name: opentelemetry
+              containerPort: 55680
+            - name: zipkin
+              containerPort: 9411
+            - name: gossip
+              containerPort: 7946
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: tempo
+            initialDelaySeconds: 45
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: tempo
+            initialDelaySeconds: 45
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      restartPolicy: Always
+      volumes:
+        - name: config
+          configMap:
+            name: tempo
+        - name: storage
+          emptyDir: {}
