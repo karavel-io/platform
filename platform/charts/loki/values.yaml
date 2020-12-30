@@ -2,7 +2,13 @@ grafana:
   namespace: ""
 loki:
   objectStore: filesystem  # filesystem | s3
-  s3: {}
+  s3:
+    region: ""
+    bucket: ""
+    endpoint: ""
+    encrypted: true
+    insecure: false
+    pathStyle: false
 promtail:
   version: 2.1.0
 

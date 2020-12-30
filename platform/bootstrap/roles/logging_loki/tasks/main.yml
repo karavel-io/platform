@@ -24,5 +24,8 @@
           bucket: '{{ loki.s3.bucket if loki.store == "s3" else omit }}'
           endpoint: '{{ (loki.s3.endpoint | default(omit)) if loki.store == "s3" else omit }}'
           region: '{{ loki.s3.region if loki.store == "s3" else omit }}'
+          encrypted: '{{ (loki.s3.encrypted | default(true)) if loki.store == "s3" else omit }}'
+          insecure: '{{ (loki.s3.insecure | default(false)) if loki.store == "s3" else omit }}'
+          pathStyle: '{{ (loki.s3.path_style | default(false)) if loki.store == "s3" else omit }}'
           eksRole: '{{ (loki.s3.eks_role | default(omit)) if loki.store == "s3" else omit }}'
           iamRole: '{{ (loki.s3.iam_role | default(omit)) if loki.store == "s3" else omit }}'

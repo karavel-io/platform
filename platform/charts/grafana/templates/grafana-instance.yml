@@ -52,4 +52,4 @@ spec:
       viewers_can_edit: true
   dashboardLabelSelector:
     - matchExpressions:
-        - {key: app, operator: In, values: [grafana]}
+        - {key: grafana.integreatly.org/instance, operator: In, values: [cluster-grafana]}

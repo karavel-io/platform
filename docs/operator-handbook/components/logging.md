@@ -23,7 +23,7 @@ Other logging solutions will be available as alternatives in the future.
   
 
 [Grafana Labs]: https://grafana.com/oss/
-[Grafana]: https://grafana.com/oss/grafana
+[Grafana]: ./grafana.md
 [Loki]: https://grafana.com/oss/loki
 [Promtail]: https://grafana.com/docs/loki/latest/clients/promtail/
 [Explorer tab]: https://grafana.com/docs/grafana/latest/explore/
