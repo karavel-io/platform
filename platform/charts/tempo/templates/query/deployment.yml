@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tempo-query
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: tempo-query
+    {{ include "tempo.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tempo-query
+      {{ include "tempo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      name: tempo
+      labels:
+        app.kubernetes.io/name: tempo-query
+        {{ include "tempo.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: tempo-query
+          image: "grafana/tempo-query:{{ .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--grpc-storage-plugin.configuration-file=/etc/tempo/tempo-query.yaml"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/tempo
+          ports:
+            - name: query
+              containerPort: 16686
+      restartPolicy: Always
+      volumes:
+        - name: config
+          configMap:
+            name: tempo
