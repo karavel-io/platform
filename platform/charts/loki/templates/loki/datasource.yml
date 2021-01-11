@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.grafana.namespace | default .Release.Namespace }}
   labels:
     app.kubernetes.io/name: loki
-    grafana.integreatly.org/instance: cluster-grafana
+    grafana.integreatly.org/instance: grafana-operated
     {{- include "loki.labels" . | nindent 4 }}
 spec:
   name: loki.yaml

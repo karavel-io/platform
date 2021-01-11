@@ -1,10 +1,10 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: cluster-grafana-tls
+  name: grafana-operated-tls
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: cluster-grafana-tls
+    app.kubernetes.io/name: grafana-operated-tls
     {{- include "grafana.labels" . | nindent 4 }}
 spec:
   commonName: {{ .Values.grafana.host }}
@@ -13,4 +13,4 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod
-  secretName: cluster-grafana-tls
+  secretName: grafana-operated-tls
