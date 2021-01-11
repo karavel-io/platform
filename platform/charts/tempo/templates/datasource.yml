@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.grafana.namespace | default .Release.Namespace }}
   labels:
     app.kubernetes.io/name: tempo
-    grafana.integreatly.org/instance: cluster-grafana
+    grafana.integreatly.org/instance: grafana-operated
     {{- include "tempo.labels" . | nindent 4 }}
 spec:
   name: tempo.yaml
