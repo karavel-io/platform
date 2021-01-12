@@ -3,7 +3,7 @@
     name: karavel
     repo_url: "https://charts.mikamai.com/karavel"
 
-- name: Ensure monigoring namespace
+- name: Ensure monitoring namespace
   kubernetes.core.k8s:
     state: present
     api_version: v1
