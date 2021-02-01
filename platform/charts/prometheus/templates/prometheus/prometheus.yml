@@ -1,0 +1,55 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    prometheus: prometheus-operated
+  name: prometheus-operated
+  namespace: {{ .Release.Namespace }}
+spec:
+  alerting:
+    alertmanagers:
+      - name: alertmanager-operated
+        namespace: {{ .Release.Namespace }}
+        port: web
+  image: quay.io/prometheus/prometheus:v{{ .Values.prometheus.version }}
+  nodeSelector:
+    kubernetes.io/os: linux
+  podMetadata:
+    labels:
+      app.kubernetes.io/name: prometheus
+      app.kubernetes.io/component: prometheus
+      {{- include "prometheus.labels" . | nindent 6 }}
+      app.kubernetes.io/version: {{ .Values.prometheus.version }}
+    {{- with .Values.thanos.s3.iamRole }}
+    annotations:
+      iam.amazonaws.com/role: {{ . }}
+    {{- end }}
+  podMonitorNamespaceSelector: {}
+  probeNamespaceSelector: {}
+  probeSelector: {}
+  replicas: 2
+  resources:
+    requests:
+      memory: 400Mi
+  ruleSelector:
+    matchLabels:
+      prometheus: prometheus-operated
+      role: alert-rules
+  thanos:
+    image: quay.io/thanos/thanos:v{{ .Values.thanos.version }}
+    version: v{{ .Values.thanos.version }}
+    objectStorageConfig:
+      name: prometheus-operated-thanos-config
+      key: thanos.yaml
+    logLevel: info
+    logFormat: logfmt
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: prometheus-operated
+  serviceMonitorNamespaceSelector: {}
+  version: {{ .Values.prometheus.version }}

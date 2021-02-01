@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: alert-router
+    app.kubernetes.io/name: alertmanager
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.alertmanager.version }}
+  name: alertmanager
+  namespace: {{ .Release.Namespace }}
+spec:
+  endpoints:
+  - interval: 30s
+    port: web
+  selector:
+    matchLabels:
+      alertmanager: operated
+      app.kubernetes.io/component: alert-router
+      app.kubernetes.io/name: alertmanager
+      {{- include "prometheus.selectorLabels" . | nindent 6 }}

@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-adapter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: prometheus-adapter
+    app.kubernetes.io/component: metrics-adapter
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.metricsAdapter.version }}
+spec:
+  endpoints:
+  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    interval: 30s
+    port: https
+    scheme: https
+    tlsConfig:
+      insecureSkipVerify: true
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-adapter
+      app.kubernetes.io/component: metrics-adapter
+      {{- include "prometheus.selectorLabels" . | nindent 6 }}
