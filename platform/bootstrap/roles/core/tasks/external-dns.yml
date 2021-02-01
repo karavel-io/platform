@@ -18,7 +18,7 @@
       cloudflare:
         proxied: '{{ dns.proxied | default(True) }}'
         zoneId: '{{ dns.hosted_zone_id | default(omit)}}'
-        secret: '{{ dns.secret_ref }}'
+        secret: '{{ dns.secret_ref | default(omit) }}'
       route53:
         zoneType: '{{ dns.hosted_zone_type | default(omit)}}'
         zoneId: '{{ dns.hosted_zone_id | default(omit)}}'
