@@ -55,6 +55,7 @@ spec:
         - --query.replica-label=prometheus_replica
         - --query.replica-label=rule_replica
         - --store=dnssrv+_grpc._tcp.thanos-store.{{ .Release.Namespace }}.svc.cluster.local
+        - --store=dnssrv+_grpc._tcp.prometheus-operated.{{ .Release.Namespace }}.svc.cluster.local
         image: quay.io/thanos/thanos:v{{ .Values.thanos.version }}
         livenessProbe:
           failureThreshold: 4

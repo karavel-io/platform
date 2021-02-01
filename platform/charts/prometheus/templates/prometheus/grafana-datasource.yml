@@ -14,7 +14,7 @@ spec:
       type: prometheus
       uid: prometheus
       access: proxy
-      url: http://prometheus-operated.{{ .Release.Namespace }}:9090
+      url: http://thanos-query.{{ .Release.Namespace }}.svc.cluster.local:9090
       version: 1
       editable: false
       jsonData: {}
