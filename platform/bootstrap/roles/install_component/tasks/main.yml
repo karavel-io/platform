@@ -19,7 +19,7 @@
   with_items: '{{ component.manifests }}'
   when: item.kind != "CustomResourceDefinition"
   copy:
-    dest: '{{ playbook_dir }}/{{ vendor_dir }}/{{ component_name }}/{{ item.metadata.name }}-{{ item.kind | lower }}.yml'
+    dest: '{{ playbook_dir }}/{{ vendor_dir }}/{{ component_name }}/{{ item.metadata.name }}-{{ item.kind | lower }}{{ "-" + item.metadata.namespace if "namespace" in item.metadata and item.metadata.namespace != component_namespace else "" }}.yml'
     content: '{{ item | to_nice_yaml }}'
     mode: 0644
 

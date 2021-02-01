@@ -17,6 +17,7 @@ spec:
   image: quay.io/prometheus/prometheus:v{{ .Values.prometheus.version }}
   nodeSelector:
     kubernetes.io/os: linux
+  serviceMonitorSelector: {}
   podMetadata:
     labels:
       app.kubernetes.io/name: prometheus
