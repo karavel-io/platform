@@ -9,4 +9,4 @@ letsencrypt:
       property: ""
 
 prometheus:
-  enable: false
+  enable: true
