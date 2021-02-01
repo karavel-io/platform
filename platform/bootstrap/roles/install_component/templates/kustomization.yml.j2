@@ -6,6 +6,6 @@ resources:
 {% if item.kind == "CustomResourceDefinition" %}
 - crds/{{ item.metadata.name }}.yml
 {% else %}
-- {{ item.metadata.name }}-{{ item.kind | lower }}.yml
+- {{ item.metadata.name }}-{{ item.kind | lower }}{{ "-" + item.metadata.namespace if "namespace" in item.metadata and item.metadata.namespace != component_namespace else "" }}.yml
 {% endif %}
 {% endfor %}
