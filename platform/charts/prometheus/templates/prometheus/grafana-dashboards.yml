@@ -1,0 +1,345 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: apiserver
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: apiserver
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: apiserver
+  configMapRef:
+    name: grafana-dashboard-apiserver
+    key: apiserver.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: cluster-total
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: cluster-total
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: cluster-total
+  configMapRef:
+    name: grafana-dashboard-cluster-total
+    key: cluster-total.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: controller-manager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: controller-manager
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: controller-manager
+  configMapRef:
+    name: grafana-dashboard-controller-manager
+    key: controller-manager.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-cluster
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: k8s-resources-cluster
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: k8s-resources-cluster
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-cluster
+    key: k8s-resources-cluster.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-namespace
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: k8s-resources-namespace
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: k8s-resources-namespace
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-namespace
+    key: k8s-resources-namespace.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-node
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: k8s-resources-node
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: k8s-resources-node
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-node
+    key: k8s-resources-node.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-pod
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: k8s-resources-pod
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: k8s-resources-pod
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-pod
+    key: k8s-resources-pod.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-workload
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: k8s-resources-workload
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: k8s-resources-workload
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-workload
+    key: k8s-resources-workload.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-workloads-namespace
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: k8s-resources-workloads-namespace
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: k8s-resources-workloads-namespace
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-workloads-namespace
+    key: k8s-resources-workloads-namespace.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: kubelet
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: kubelet
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: kubelet
+  configMapRef:
+    name: grafana-dashboard-kubelet
+    key: kubelet.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: namespace-by-pod
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: namespace-by-pod
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: namespace-by-pod
+  configMapRef:
+    name: grafana-dashboard-namespace-by-pod
+    key: namespace-by-pod.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: namespace-by-workload
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: namespace-by-workload
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: namespace-by-workload
+  configMapRef:
+    name: grafana-dashboard-namespace-by-workload
+    key: namespace-by-workload.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: node-cluster-rsrc-use
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: node-cluster-rsrc-use
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: node-cluster-rsrc-use
+  configMapRef:
+    name: grafana-dashboard-node-cluster-rsrc-use
+    key: node-cluster-rsrc-use.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: node-rsrc-use
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: node-rsrc-use
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: node-rsrc-use
+  configMapRef:
+    name: grafana-dashboard-node-rsrc-use
+    key: node-rsrc-use.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: nodes
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: nodes
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: nodes
+  configMapRef:
+    name: grafana-dashboard-nodes
+    key: nodes.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: persistentvolumesusage
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: persistentvolumesusage
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: persistentvolumesusage
+  configMapRef:
+    name: grafana-dashboard-persistentvolumesusage
+    key: persistentvolumesusage.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: pod-total
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: pod-total
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: pod-total
+  configMapRef:
+    name: grafana-dashboard-pod-total
+    key: pod-total.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: prometheus-remote-write
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: prometheus-remote-write
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: prometheus-remote-write
+  configMapRef:
+    name: grafana-dashboard-prometheus-remote-write
+    key: prometheus-remote-write.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: prometheus
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: prometheus
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: prometheus
+  configMapRef:
+    name: grafana-dashboard-prometheus
+    key: prometheus.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: proxy
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: proxy
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: proxy
+  configMapRef:
+    name: grafana-dashboard-proxy
+    key: proxy.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: scheduler
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: scheduler
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: scheduler
+  configMapRef:
+    name: grafana-dashboard-scheduler
+    key: scheduler.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: statefulset
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: statefulset
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: statefulset
+  configMapRef:
+    name: grafana-dashboard-statefulset
+    key: statefulset.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: workload-total
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: workload-total
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: workload-total
+  configMapRef:
+    name: grafana-dashboard-workload-total
+    key: workload-total.json
+---

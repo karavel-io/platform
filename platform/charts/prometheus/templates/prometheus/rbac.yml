@@ -1,0 +1,238 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-operated
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes/metrics
+  verbs:
+  - get
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-operated
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-operated
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-operated
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+  name: prometheus-operated-config
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+  name: prometheus-operated
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-operated
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-operated
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+  name: prometheus-operated
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-operated
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-operated
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+  name: prometheus-operated
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-operated
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-operated
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+  name: prometheus-operated-config
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-operated-config
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-operated
+    namespace: {{ .Release.Namespace }}
+---
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+  name: prometheus-operated
+  namespace: default
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+  name: prometheus-operated
+  namespace: kube-system
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+  name: prometheus-operated
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-operated
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: prometheus
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+  {{- with .Values.thanos.s3.eksRole }}
+  annotations:
+    eks.amazonaws.com/role-arn: {{ . }}
+  {{- end }}

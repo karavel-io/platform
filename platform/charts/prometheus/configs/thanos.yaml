@@ -1,0 +1,17 @@
+{{- if eq .Values.thanos.objectStore "filesystem" }}
+type: FILESYSTEM
+config:
+  directory: ""
+{{- else if eq .Values.thanos.objectStore "s3" }}
+{{- with .Values.thanos.s3 }}
+type: S3
+config:
+  bucket: {{ .bucket }}
+  endpoint: {{ .endpoint }}
+  insecure: {{ .insecure }}
+  {{- if .encrypted }}
+  sse_config:
+    type: SSE-S3
+  {{- end }}
+  {{- end }}
+{{- end }}
