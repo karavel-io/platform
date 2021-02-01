@@ -10,4 +10,4 @@ tempo:
     insecure: false
     pathStyle: false
 prometheus:
-  enable: false
+  enable: true
