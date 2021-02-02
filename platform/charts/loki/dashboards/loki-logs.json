@@ -60,7 +60,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(go_goroutines{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\"})",
+                    "expr": "sum(go_goroutines{namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\"})",
                     "refId": "A"
                 }
             ],
@@ -146,7 +146,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(go_gc_duration_seconds{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\"}) by (quantile)",
+                    "expr": "sum(go_gc_duration_seconds{namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\"}) by (quantile)",
                     "legendFormat": "{{quantile}}",
                     "refId": "A"
                 }
@@ -233,7 +233,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(rate(container_cpu_usage_seconds_total{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\"}[5m]))",
+                    "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\"}[5m]))",
                     "refId": "A"
                 }
             ],
@@ -319,7 +319,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(container_memory_working_set_bytes{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\"})",
+                    "expr": "sum(container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\"})",
                     "refId": "A"
                 }
             ],
@@ -405,7 +405,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(rate(container_network_transmit_bytes_total{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\"}[5m]))",
+                    "expr": "sum(rate(container_network_transmit_bytes_total{namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\"}[5m]))",
                     "refId": "A"
                 }
             ],
@@ -491,7 +491,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(rate(container_network_receive_bytes_total{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\"}[5m]))",
+                    "expr": "sum(rate(container_network_receive_bytes_total{namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\"}[5m]))",
                     "refId": "A"
                 }
             ],
@@ -577,7 +577,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "increase(kube_pod_container_status_last_terminated_reason{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\"}[30m]) > 0",
+                    "expr": "increase(kube_pod_container_status_last_terminated_reason{namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\"}[30m]) > 0",
                     "legendFormat": "{{reason}}",
                     "refId": "A"
                 }
@@ -664,7 +664,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(rate(promtail_custom_bad_words_total{cluster=\"$cluster\", exported_namespace=\"$namespace\", exported_pod=~\"$deployment.*\", exported_pod=~\"$pod\", container=~\"$container\"}[5m])) by (level)",
+                    "expr": "sum(rate(promtail_custom_bad_words_total{exported_namespace=\"$namespace\", exported_pod=~\"$deployment.*\", exported_pod=~\"$pod\", container=~\"$container\"}[5m])) by (level)",
                     "legendFormat": "{{level}}",
                     "refId": "A"
                 }
@@ -768,7 +768,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(rate({cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\", level=~\"$level\"}$filter[5m])) by (level)",
+                    "expr": "sum(rate({namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\", level=~\"$level\"}$filter[5m])) by (level)",
                     "intervalFactor": 3,
                     "legendFormat": "{{level}}",
                     "refId": "A"
@@ -833,7 +833,7 @@
             },
             "targets": [
                 {
-                    "expr": "{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\", level=~\"$level\"} $filter",
+                    "expr": "{namespace=\"$namespace\", pod=~\"$deployment.*\", pod=~\"$pod\", container=~\"$container\", level=~\"$level\"} $filter",
                     "refId": "A"
                 }
             ],
@@ -894,26 +894,6 @@
                 "datasource": "$metrics",
                 "hide": 0,
                 "includeAll": false,
-                "label": "cluster",
-                "multi": false,
-                "name": "cluster",
-                "options": [ ],
-                "query": "label_values(kube_pod_container_info, cluster)",
-                "refresh": 1,
-                "regex": "",
-                "sort": 2,
-                "tagValuesQuery": "",
-                "tags": [ ],
-                "tagsQuery": "",
-                "type": "query",
-                "useTags": false
-            },
-            {
-                "allValue": null,
-                "current": { },
-                "datasource": "$metrics",
-                "hide": 0,
-                "includeAll": false,
                 "label": "namespace",
                 "multi": false,
                 "name": "namespace",
@@ -938,7 +918,7 @@
                 "multi": false,
                 "name": "deployment",
                 "options": [ ],
-                "query": "label_values(kube_deployment_created{cluster=\"$cluster\", namespace=\"$namespace\"}, deployment)",
+                "query": "label_values(kube_deployment_created{namespace=\"$namespace\"}, deployment)",
                 "refresh": 1,
                 "regex": "",
                 "sort": 2,
@@ -958,7 +938,7 @@
                 "multi": false,
                 "name": "pod",
                 "options": [ ],
-                "query": "label_values(kube_pod_container_info{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$deployment.*\"}, pod)",
+                "query": "label_values(kube_pod_container_info{namespace=\"$namespace\", pod=~\"$deployment.*\"}, pod)",
                 "refresh": 1,
                 "regex": "",
                 "sort": 2,
@@ -978,7 +958,7 @@
                 "multi": false,
                 "name": "container",
                 "options": [ ],
-                "query": "label_values(kube_pod_container_info{cluster=\"$cluster\", namespace=\"$namespace\", pod=~\"$pod\", pod=~\"$deployment.*\"}, container)",
+                "query": "label_values(kube_pod_container_info{namespace=\"$namespace\", pod=~\"$pod\", pod=~\"$deployment.*\"}, container)",
                 "refresh": 1,
                 "regex": "",
                 "sort": 2,

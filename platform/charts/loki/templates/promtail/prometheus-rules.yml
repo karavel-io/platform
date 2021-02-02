@@ -3,6 +3,10 @@ kind: PrometheusRule
 metadata:
   name: promtail-rules
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: promtail
+    prometheus: prometheus-operated
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   groups:
   - name: promtail_alerts

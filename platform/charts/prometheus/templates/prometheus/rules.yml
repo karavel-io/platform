@@ -7,7 +7,6 @@ metadata:
     {{- include "prometheus.labels" . | nindent 4 }}
     app.kubernetes.io/version: {{ .Values.prometheus.version }}
     prometheus: prometheus-operated
-    role: alert-rules
   name: k8s-rules
   namespace: {{ .Release.Namespace }}
 spec:

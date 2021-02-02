@@ -8,7 +8,6 @@ metadata:
     app.kubernetes.io/component: exporter
     {{- include "prometheus.labels" . | nindent 4 }}
     prometheus: prometheus-operated
-    role: alert-rules
 spec:
   groups:
   - name: general.rules
