@@ -28,6 +28,10 @@ spec:
     name: grafana-dashboard-loki-logs
     key: loki-logs.json
 ---
+# This dashboard is too big for Kubernetes and causes the following error:
+# The ConfigMap "grafana-dashboard-loki-operational" is invalid: metadata.annotations: Too long: must have at most 262144 bytes
+# See https://github.com/grafana/loki/issues/3171
+{{- if false}}
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
@@ -42,6 +46,7 @@ spec:
   configMapRef:
     name: grafana-dashboard-loki-operational
     key: loki-operational.json
+{{- end }}
 ---
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard

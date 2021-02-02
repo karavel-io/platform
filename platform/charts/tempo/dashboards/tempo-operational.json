@@ -5579,11 +5579,7 @@
  "templating": {
   "list": [
    {
-    "current": {
-     "selected": false,
-     "text": "1-ops-tools1",
-     "value": "1-ops-tools1"
-    },
+    "current": {},
     "description": null,
     "error": null,
     "hide": 0,
@@ -5601,11 +5597,7 @@
     "type": "datasource"
    },
    {
-    "current": {
-     "selected": false,
-     "text": "loki-dev",
-     "value": "loki-dev"
-    },
+    "current": {},
     "description": null,
     "error": null,
     "hide": 0,
@@ -5625,11 +5617,7 @@
    },
    {
     "allValue": null,
-    "current": {
-     "selected": false,
-     "text": "ops-tools1",
-     "value": "ops-tools1"
-    },
+    "current": {},
     "datasource": "$ds",
     "definition": "label_values(tempo_build_info, cluster)",
     "description": null,
@@ -5660,11 +5648,7 @@
    },
    {
     "allValue": null,
-    "current": {
-     "selected": false,
-     "text": "tracing-ops",
-     "value": "tracing-ops"
-    },
+    "current": {},
     "datasource": "$ds",
     "definition": "label_values(kube_pod_container_info{image=~\".*tempo.*\", cluster=\"$cluster\"}, namespace)",
     "description": null,
@@ -5695,11 +5679,7 @@
    },
    {
     "allValue": ".*",
-    "current": {
-     "selected": false,
-     "text": "All",
-     "value": "$__all"
-    },
+    "current": {},
     "description": null,
     "error": null,
     "hide": 0,

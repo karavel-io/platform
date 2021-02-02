@@ -8,4 +8,4 @@ metadata:
     {{- include "loki.labels" . | nindent 4 }}
 data:
   promtail.json: |
-  {{ .Files.Get "dashboards/promtail.json" | nindent 4 }}
+  {{- .Files.Get "dashboards/promtail.json" | nindent 4 }}
