@@ -54,3 +54,9 @@ spec:
   serviceAccountName: prometheus-operated
   serviceMonitorNamespaceSelector: {}
   version: {{ .Values.prometheus.version }}
+  storage:
+    volumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 5Gi
