@@ -38,7 +38,6 @@ spec:
   ruleSelector:
     matchLabels:
       prometheus: prometheus-operated
-      role: alert-rules
   thanos:
     image: quay.io/thanos/thanos:v{{ .Values.thanos.version }}
     version: v{{ .Values.thanos.version }}

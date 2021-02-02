@@ -3,6 +3,10 @@ kind: PrometheusRule
 metadata:
   name: tempo-rules
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: tempo
+    prometheus: prometheus-operated
+    {{- include "tempo.labels" . | nindent 4 }}
 spec:
   groups:
   - name: "tempo_rules"
