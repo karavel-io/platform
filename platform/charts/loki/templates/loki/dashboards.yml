@@ -1,0 +1,75 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: loki-chunks
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    grafana.integreatly.org/instance: grafana-operated
+  {{- include "loki.labels" . | nindent 4 }}
+spec:
+  name: loki-chunks
+  configMapRef:
+    name: grafana-dashboard-loki-chunks
+    key: loki-chunks.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: loki-logs
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    grafana.integreatly.org/instance: grafana-operated
+  {{- include "loki.labels" . | nindent 4 }}
+spec:
+  name: loki-logs
+  configMapRef:
+    name: grafana-dashboard-loki-logs
+    key: loki-logs.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: loki-operational
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "loki.labels" . | nindent 4 }}
+spec:
+  name: loki-operational
+  configMapRef:
+    name: grafana-dashboard-loki-operational
+    key: loki-operational.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: loki-reads
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    grafana.integreatly.org/instance: grafana-operated
+  {{- include "loki.labels" . | nindent 4 }}
+spec:
+  name: loki-reads
+  configMapRef:
+    name: grafana-dashboard-loki-reads
+    key: loki-reads.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: loki-writes
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    grafana.integreatly.org/instance: grafana-operated
+  {{- include "loki.labels" . | nindent 4 }}
+spec:
+  name: loki-writes
+  configMapRef:
+    name: grafana-dashboard-loki-writes
+    key: loki-writes.json
+---

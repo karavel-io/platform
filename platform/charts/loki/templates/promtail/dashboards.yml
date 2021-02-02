@@ -1,0 +1,14 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: promtail
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: promtail
+    grafana.integreatly.org/instance: grafana-operated
+  {{- include "loki.labels" . | nindent 4 }}
+spec:
+  name: promtail
+  configMapRef:
+    name: grafana-dashboard-promtail
+    key: promtail.json
