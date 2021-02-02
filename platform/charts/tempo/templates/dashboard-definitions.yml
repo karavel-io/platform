@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-tempo-operational
+  namespace: {{ .Release.Namespace }}
+data:
+  tempo-operational.json: |
+    {{ .Files.Get "dashboards/tempo-operational.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-tempo-reads
+  namespace: {{ .Release.Namespace }}
+data:
+  tempo-reads.json: |
+  {{ .Files.Get "dashboards/tempo-reads.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-tempo-resources
+  namespace: {{ .Release.Namespace }}
+data:
+  tempo-resources.json: |
+  {{ .Files.Get "dashboards/tempo-resources.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-tempo-writes
+  namespace: {{ .Release.Namespace }}
+data:
+  tempo-writes.json: |
+    {{ .Files.Get "dashboards/tempo-writes.json" | nindent 4 }}
