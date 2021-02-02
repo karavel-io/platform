@@ -1,0 +1,60 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: tempo-operational
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: tempo
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "tempo.labels" . | nindent 4 }}
+spec:
+  name: tempo-operational
+  configMapRef:
+    name: grafana-dashboard-tempo-operational
+    key: tempo-operational.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: tempo-reads
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: tempo
+    grafana.integreatly.org/instance: grafana-operated
+  {{- include "tempo.labels" . | nindent 4 }}
+spec:
+  name: tempo-reads
+  configMapRef:
+    name: grafana-dashboard-tempo-reads
+    key: tempo-reads.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: tempo-resources
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: tempo
+    grafana.integreatly.org/instance: grafana-operated
+  {{- include "tempo.labels" . | nindent 4 }}
+spec:
+  name: tempo-resources
+  configMapRef:
+    name: grafana-dashboard-tempo-resources
+    key: tempo-resources.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: tempo-writes
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: tempo
+    grafana.integreatly.org/instance: grafana-operated
+  {{- include "tempo.labels" . | nindent 4 }}
+spec:
+  name: tempo-writes
+  configMapRef:
+    name: grafana-dashboard-tempo-writes
+    key: tempo-writes.json
+---
