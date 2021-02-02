@@ -28,4 +28,9 @@ spec:
   serviceAccountName: alertmanager-operated
   version: {{ .Values.alertmanager.version }}
   configSecret: alertmanager-operated
+  alertmanagerConfigNamespaceSelector: {}
+  alertmanagerConfigSelector:
+    matchLabels:
+      alertmanager: operated
+
 
