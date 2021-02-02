@@ -9,6 +9,5 @@ metadata:
   {{- include "loki.labels" . | nindent 4 }}
 spec:
   name: promtail
-  configMapRef:
-    name: grafana-dashboard-promtail
-    key: promtail.json
+  json: |
+    {{- .Files.Get "dashboards/promtail.json" | nindent 4 }}
