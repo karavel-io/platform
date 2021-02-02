@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-loki-chunks
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
+data:
+  loki-chunks.json: |
+  {{ .Files.Get "dashboards/loki-chunks.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-loki-logs
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
+data:
+  loki-logs.json: |
+  {{ .Files.Get "dashboards/loki-logs.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-loki-operational
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
+data:
+  loki-operational.json: |
+    {{ .Files.Get "dashboards/loki-operational.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-loki-reads
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
+data:
+  loki-reads.json: |
+  {{ .Files.Get "dashboards/loki-reads.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-loki-writes
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: loki
+    {{- include "loki.labels" . | nindent 4 }}
+data:
+  loki-writes.json: |
+    {{ .Files.Get "dashboards/loki-writes.json" | nindent 4 }}
