@@ -9,5 +9,6 @@ pkgs.mkShell {
       ansible_2_10
       openshift
       pypkgs.kubernetes
+      go
     ];
 }
