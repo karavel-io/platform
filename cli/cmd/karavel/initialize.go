@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/mikamai/karavel/cli/pkg/actions"
+	"github.com/mikamai/karavel/cli/pkg/action"
 	"github.com/urfave/cli/v2"
 	"log"
 	"path/filepath"
+	"strings"
 )
 
 func NewInitCommand(logger *log.Logger) *cli.Command {
@@ -21,7 +22,7 @@ func NewInitCommand(logger *log.Logger) *cli.Command {
 				Name:        "karavel-version",
 				Aliases:     []string{"kv"},
 				Usage:       "Karavel Platform version to initialize",
-				DefaultText: "latest",
+				Value:       "latest",
 				Destination: &ver,
 			},
 		},
@@ -35,11 +36,9 @@ func NewInitCommand(logger *log.Logger) *cli.Command {
 				return err
 			}
 
-			if ver == "" {
-				ver = "0.1.0" // TODO: retrieve from Releases
-			}
+			ver = strings.TrimPrefix(ver, "v")
 
-			return actions.Initialize(logger, actions.InitParams{
+			return action.Initialize(logger, action.InitParams{
 				Workdir:        cwd,
 				KaravelVersion: ver,
 			})

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/mikamai/karavel/cli/pkg/actions"
+	"github.com/mikamai/karavel/cli/pkg/action"
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
@@ -47,7 +47,7 @@ Bootstrap a new Karavel project with the given config (defaults to 'karavel.cfg'
 				return fmt.Errorf("invalid config file %s, is a directory", cpath)
 			}
 
-			return actions.Bootstrap(logger, actions.BootstrapParams{
+			return action.Bootstrap(logger, action.BootstrapParams{
 				ConfigPath: cpath,
 			})
 		},
