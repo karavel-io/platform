@@ -6,6 +6,7 @@ require (
 	github.com/hashicorp/hcl/v2 v2.8.2
 	github.com/mittwald/go-helm-client v0.4.2
 	github.com/pkg/errors v0.9.1
+	github.com/stretchr/testify v1.6.1
 	github.com/urfave/cli/v2 v2.3.0
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 	helm.sh/helm/v3 v3.5.1
