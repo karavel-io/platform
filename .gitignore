@@ -155,6 +155,7 @@ override.tf.json
 # !example_override.tf
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+!cli/pkg/plan
 plan
 *.plan
 
@@ -204,3 +205,4 @@ dist/
 *.tgz
 *.zip
 site/
+tmp/
