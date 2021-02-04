@@ -13,14 +13,13 @@ func NewInitCommand(logger *log.Logger) *cli.Command {
 	var ver string
 
 	return &cli.Command{
-		Name:      "initialize",
-		Aliases:   []string{"init"},
+		Name:      "init",
 		Usage:     "Initialize a new Karavel project",
 		ArgsUsage: "WORKDIR",
 		Flags: []cli.Flag{
 			&cli.PathFlag{
-				Name:        "karavel-version",
-				Aliases:     []string{"kv"},
+				Name:        "version",
+				Aliases:     []string{"v"},
 				Usage:       "Karavel Platform version to initialize",
 				Value:       "latest",
 				Destination: &ver,
