@@ -12,3 +12,6 @@ home: https://argoproj.github.io/argo-cd
 sources:
   - https://github.com/argoproj/argo-cd
   - https://github.com/mikamai/karavel
+
+annotations:
+  bootstrap: true
