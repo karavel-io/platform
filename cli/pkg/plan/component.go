@@ -109,15 +109,12 @@ func (c *Component) Render(outdir string) error {
 	var wg sync.WaitGroup
 	resch := make(chan routineRes)
 
-	for _, d := range docs {
+	for i, d := range docs {
 		wg.Add(1)
-		go func(doc helmw.YamlDoc) {
+		go func(i int, doc helmw.YamlDoc) {
 			defer wg.Done()
-			k := strings.ToLower(doc["kind"].(string))
-			meta := doc["metadata"].(helmw.YamlDoc)
-			ns := ""
-			if meta["namespace"] != nil && meta["namespace"] != c.namespace {
-				ns = "-" + meta["namespace"].(string)
+			if len(doc) == 0 {
+				return
 			}
 
 			var buf bytes.Buffer
@@ -133,13 +130,20 @@ func (c *Component) Render(outdir string) error {
 				return
 			}
 
+			k := strings.ToLower(doc["kind"].(string))
+			meta := doc["metadata"].(helmw.YamlDoc)
+			ns := ""
+			if meta["namespace"] != nil && meta["namespace"] != c.namespace {
+				ns = "-" + meta["namespace"].(string)
+			}
+
 			basename := fmt.Sprintf("%s-%s%s.yml", meta["name"], k, ns)
 			filename := filepath.Join(outdir, basename)
 			if err := ioutil.WriteFile(filename, buf.Bytes(), 0655); err != nil {
 				resch <- routineRes{err: err}
 			}
 			resch <- routineRes{filename: filepath.Base(basename)}
-		}(d)
+		}(i, d)
 	}
 
 	go func() {
