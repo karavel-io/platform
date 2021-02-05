@@ -12,3 +12,8 @@ home: https://grafana.com/oss/tempo/
 sources:
   - https://github.com/grafana/tempo
   - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/dependencies: grafana
+  prometheus.enable: prometheus
+  monitoring.enable: grafana, prometheus

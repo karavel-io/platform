@@ -19,8 +19,8 @@ spec:
       editable: false
       jsonData:
         derivedFields:
-          {{- if .Values.jaeger.enable }}
-          - datasourceUid: {{ .Values.jaeger.dsUid }}
+          {{- if .Values.tracing.enable }}
+          - datasourceUid: {{ .Values.tracing.dsUid }}
             matcherRegex: (?:traceID|trace_id)=(\w+)
             name: TraceID
             url: $${__value.raw}

@@ -12,3 +12,6 @@ home: https://prometheus.io/
 sources:
   - https://github.com/prometheus-operator/kube-prometheus
   - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/dependencies: grafana

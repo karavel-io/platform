@@ -19,10 +19,16 @@ import (
 	"sync"
 )
 
+const (
+	bootstrapAnnotation    = "karavel.io/bootstrap"
+	dependenciesAnnotation = "karavel.io/dependencies"
+)
+
 // reserved annotations that should not be interpreted as
 // feature flags
 var reservedAnnotations = map[string]bool{
-	"bootstrap": true,
+	bootstrapAnnotation:    true,
+	dependenciesAnnotation: true,
 }
 
 type Component struct {
@@ -38,26 +44,33 @@ type Component struct {
 
 func NewComponentFromChartMetadata(meta *chart.Metadata) (Component, error) {
 	var deps []string
-	for _, dep := range meta.Dependencies {
-		deps = append(deps, dep.Name)
+	depsCsv := meta.Annotations[dependenciesAnnotation]
+	if depsCsv != "" {
+		depsCsv = strings.ReplaceAll(depsCsv, " ", "")
+		cr := csv.NewReader(strings.NewReader(depsCsv))
+		d, err := cr.Read()
+		if err != nil {
+			return Component{}, err
+		}
+		deps = d
 	}
 
 	integs := make(map[string][]string)
-	for integ, s := range meta.Annotations {
+	for integ, reqsCsv := range meta.Annotations {
 		if reservedAnnotations[integ] {
 			continue
 		}
 
-		r := strings.NewReader(s)
-		cr := csv.NewReader(r)
-		adeps, err := cr.Read()
+		reqsCsv = strings.ReplaceAll(reqsCsv, " ", "")
+		cr := csv.NewReader(strings.NewReader(reqsCsv))
+		reqs, err := cr.Read()
 		if err != nil {
 			return Component{}, errors.Wrap(err, "failed to read integration dependencies")
 		}
-		integs[integ] = adeps
+		integs[integ] = reqs
 	}
 
-	bootstrap, err := strconv.ParseBool(meta.Annotations["bootstrap"])
+	bootstrap, err := strconv.ParseBool(meta.Annotations[bootstrapAnnotation])
 	if err != nil {
 		bootstrap = false
 	}
