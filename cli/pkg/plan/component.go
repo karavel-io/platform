@@ -100,6 +100,10 @@ func (c *Component) IsBootstrap() bool {
 	return c.bootstrap
 }
 
+func (c *Component) Params() string {
+	return c.jsonParams
+}
+
 type routineRes struct {
 	filename string
 	err      error

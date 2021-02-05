@@ -9,16 +9,25 @@ import (
 	"path/filepath"
 )
 
-const DefaultFileName = "karavel.cfg"
+const DefaultFileName = "karavel.hcl"
 
-func NewBootstrapCommand(logger *log.Logger) *cli.Command {
+func NewRenderCommand(logger *log.Logger) *cli.Command {
+	debug := false
 	return &cli.Command{
-		Name:  "bootstrap",
-		Usage: "Bootstrap a new Karavel project",
+		Name:  "render",
+		Usage: "Render a new Karavel project",
 		Description: `
-Bootstrap a new Karavel project with the given config (defaults to 'karavel.cfg' in the current directory). 
+Render a new Karavel project with the given config (defaults to 'karavel.hcl' in the current directory). 
 `,
 		ArgsUsage: "[CONFIG]",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:        "debug",
+				Aliases:     []string{"d"},
+				Usage:       "Output debug logs",
+				Destination: &debug,
+			},
+		},
 		Action: func(ctx *cli.Context) error {
 			cpath := ctx.Args().Get(0)
 			if cpath == "" {
@@ -47,8 +56,9 @@ Bootstrap a new Karavel project with the given config (defaults to 'karavel.cfg'
 				return fmt.Errorf("invalid config file %s, is a directory", cpath)
 			}
 
-			return action.Bootstrap(logger, action.BootstrapParams{
+			return action.Render(logger, action.RenderParams{
 				ConfigPath: cpath,
+				Debug:      debug,
 			})
 		},
 	}
