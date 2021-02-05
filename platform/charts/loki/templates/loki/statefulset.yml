@@ -38,9 +38,9 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/loki/loki.yaml"
-          {{- if .Values.jaeger.enable }}
+          {{- if .Values.tracing.enable }}
             - "-tracing.enabled=true"
-          {{- with .Values.jaeger }}
+          {{- with .Values.tracing }}
           env:
             - name: JAEGER_AGENT_HOST
               value: {{ .host }}
