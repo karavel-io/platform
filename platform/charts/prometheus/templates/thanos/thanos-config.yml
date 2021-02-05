@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: prometheus-operated-thanos-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: prometheus-operated
+    app.kubernetes.io/component: thanos-sidecar
+    {{- include "prometheus.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  thanos.yaml: |
+    {{ tpl (.Files.Get "configs/thanos.yaml") . | nindent 4 }}

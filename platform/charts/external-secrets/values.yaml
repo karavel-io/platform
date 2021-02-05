@@ -17,4 +17,4 @@ vault:
     key: "ca.pem"
 
 prometheus:
-  enable: false
+  enable: true

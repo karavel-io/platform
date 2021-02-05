@@ -13,7 +13,7 @@ promtail:
   version: 2.1.0
 
 prometheus:
-  enable: false
+  enable: true
 
 jaeger:
   enable: false

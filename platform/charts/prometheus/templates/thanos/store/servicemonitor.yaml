@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: object-store-gateway
+    app.kubernetes.io/instance: thanos-store
+    app.kubernetes.io/name: thanos-store
+    app.kubernetes.io/version: {{ .Values.thanos.version }}
+    {{- include "prometheus.labels" . | nindent 4 }}
+  name: thanos-store
+  namespace: {{ .Release.Namespace }}
+spec:
+  endpoints:
+  - port: http
+    relabelings:
+    - separator: /
+      sourceLabels:
+      - namespace
+      - pod
+      targetLabel: instance
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: object-store-gateway
+      app.kubernetes.io/instance: thanos-store
+      app.kubernetes.io/name: thanos-store
+      {{- include "prometheus.selectorLabels" . | nindent 6 }}

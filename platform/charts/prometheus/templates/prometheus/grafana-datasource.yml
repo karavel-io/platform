@@ -1,0 +1,20 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  name: prometheus-datasource
+  namespace: {{ .Values.grafana.namespace | default .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: prometheus
+    grafana.integreatly.org/instance: grafana-operated
+    {{- include "prometheus.labels" . | nindent 4 }}
+spec:
+  name: prometheus.yaml
+  datasources:
+    - name: Prometheus
+      type: prometheus
+      uid: prometheus
+      access: proxy
+      url: http://thanos-query.{{ .Release.Namespace }}.svc.cluster.local:9090
+      version: 1
+      editable: false
+      jsonData: {}
