@@ -17,7 +17,7 @@ func main() {
 		Version: Version,
 		Commands: []*cli.Command{
 			NewInitCommand(logger),
-			NewBootstrapCommand(logger),
+			NewRenderCommand(logger),
 		},
 	}
 

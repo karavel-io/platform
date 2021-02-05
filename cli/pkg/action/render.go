@@ -15,32 +15,40 @@ import (
 	"sync"
 )
 
-type BootstrapParams struct {
+type RenderParams struct {
 	ConfigPath string
+	Debug      bool
 }
 
-func Bootstrap(logger *log.Logger, params BootstrapParams) error {
+func Render(logger *log.Logger, params RenderParams) error {
+	debug := params.Debug
 	cpath := params.ConfigPath
 	workdir := filepath.Dir(cpath)
 	appsDir := filepath.Join(workdir, "applications")
 	projsDir := filepath.Join(workdir, "projects")
 
-	logger.Printf("Bootstrapping new Karavel project with config file %s\n", cpath)
+	logger.Printf("Rendering new Karavel project with config file %s\n", cpath)
 
+	if debug {
+		logger.Print("Reading config file")
+	}
 	cfg, err := config.ReadFrom(logger.Writer(), cpath)
 	if err != nil {
 		return errors.Wrap(err, "failed to read config file")
 	}
 
+	if debug {
+		logger.Printf("Setting up Karavel Charts repository %s", cfg.HelmRepoUrl)
+	}
 	if err := helmw.SetupHelm(cfg.HelmRepoUrl); err != nil {
-		return errors.Wrap(err, "failed to setup Karavel Chart repository")
+		return errors.Wrap(err, "failed to setup Karavel Charts repository")
 	}
 
 	logger.Println()
 
 	p, err := plan.NewFromConfig(&cfg)
 	if err != nil {
-		return errors.Wrap(err, "failed to instantiate bootstrap plan from config")
+		return errors.Wrap(err, "failed to instantiate render plan from config")
 	}
 
 	if err := p.Validate(); err != nil {
@@ -62,12 +70,12 @@ func Bootstrap(logger *log.Logger, params BootstrapParams) error {
 	var wg sync.WaitGroup
 	ch := make(chan utils.Pair)
 	var apps []string
-	bootstrapDirs := []string{"applications", "projects"}
+	renderDirs := []string{"applications", "projects"}
 	for _, c := range p.Components() {
 		appFile := c.Name() + ".yml"
 		apps = append(apps, appFile)
 		if c.IsBootstrap() {
-			bootstrapDirs = append(bootstrapDirs, filepath.Join("vendor", c.Name()))
+			renderDirs = append(renderDirs, filepath.Join("vendor", c.Name()))
 		}
 
 		wg.Add(1)
@@ -75,13 +83,20 @@ func Bootstrap(logger *log.Logger, params BootstrapParams) error {
 			defer wg.Done()
 
 			outdir := filepath.Join(workdir, "vendor", comp.Name())
-			logger.Printf("Bootstrapping component '%s' %s at %s", comp.Name(), comp.Version(), strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
+			logger.Printf("Rendering component '%s' %s at %s", comp.Name(), comp.Version(), strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
+			if debug {
+				logger.Printf("Component '%s' %s params: %s", comp.Name(), comp.Version(), comp.Params())
+			}
 			if err := comp.Render(outdir); err != nil {
 				pair, _ := utils.NewPair(comp.Name(), err)
 				ch <- pair
 				return
 			}
 
+			if debug {
+				logger.Printf("Rendering application manifest for component '%s' %s", comp.Name(), comp.Version())
+			}
+			// TODO: git integration to detect repo and path if not provided in config
 			if err := comp.RenderApplication(argoNs, "TODO", "TODO", filepath.Join(appsDir, appFile)); err != nil {
 				pair, _ := utils.NewPair(comp.Name(), err)
 				ch <- pair
@@ -114,8 +129,8 @@ func Bootstrap(logger *log.Logger, params BootstrapParams) error {
 		return errors.Wrap(err, "failed to render projects kustomization.yml")
 	}
 
-	if err := utils.RenderKustomizeFile(workdir, bootstrapDirs); err != nil {
-		return errors.Wrap(err, "failed to render bootstrap kustomization.yml")
+	if err := utils.RenderKustomizeFile(workdir, renderDirs); err != nil {
+		return errors.Wrap(err, "failed to render render kustomization.yml")
 	}
 
 	return nil

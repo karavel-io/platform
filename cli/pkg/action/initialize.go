@@ -60,16 +60,6 @@ func Initialize(logger *log.Logger, params InitParams) error {
 	logger.Printf("Fetching bootstrap config from %s with checksum %s", cfgUrl, sumUrl)
 	logger.Println()
 
-	// TODO: implement init
-	// mkdir -p workdir
-	// check if karavel.cfg already exists
-	// if exists and !force
-	//   exit with error
-	// elif exists and force
-	//   overwrite with boilerplate
-	// else
-	//    write boilerplate
-
 	if err := os.MkdirAll(workdir, 0755); err != nil {
 		return err
 	}
