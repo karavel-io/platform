@@ -4,4 +4,4 @@ metadata:
   name: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/managed-by: karavel
-    karavel.io/component-name: ingress-nginx
+    karavel.io/component-name: {{ .Chart.Name }}

@@ -64,7 +64,7 @@ metadata:
     app.kubernetes.io/component: prometheus
     {{- include "prometheus.labels" . | nindent 4 }}
     app.kubernetes.io/version: {{ .Values.prometheus.version }}
-  {{- with .Values.thanos.s3.eksRole }}
+  {{- with .Values.s3.eksRole }}
   annotations:
     eks.amazonaws.com/role-arn: {{ . }}
   {{- end }}

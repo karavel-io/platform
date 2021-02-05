@@ -3,15 +3,16 @@ prometheus:
 
 thanos:
   version: 0.18.0
-  objectStore: filesystem
-  s3:
-    bucket:
-    endpoint: s3.amazonaws.com
-    region:
-    encrypted: true
-    insecure: false
-    eksRole:
-    iamRole:
+
+store: filesystem
+s3:
+  bucket:
+  endpoint:
+  region:
+  encrypted: true
+  insecure: false
+  eksRole:
+  iamRole:
 
 operator:
   version: 0.45.0
