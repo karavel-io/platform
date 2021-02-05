@@ -1,13 +1,13 @@
-{{- if eq .Values.thanos.objectStore "filesystem" }}
+{{- if eq .Values.store "filesystem" }}
 type: FILESYSTEM
 config:
   directory: ""
-{{- else if eq .Values.thanos.objectStore "s3" }}
-{{- with .Values.thanos.s3 }}
+{{- else if eq .Values.store "s3" }}
+{{- with .Values.s3 }}
 type: S3
 config:
   bucket: {{ .bucket }}
-  endpoint: {{ .endpoint }}
+  endpoint: {{ .endpoint | default (printf "s3.dualstack.%s.amazonaws.com" .region ) }}
   insecure: {{ .insecure }}
   {{- if .encrypted }}
   sse_config:

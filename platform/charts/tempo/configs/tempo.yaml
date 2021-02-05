@@ -38,14 +38,14 @@ storage:
       path: /tmp/tempo/wal             # where to store the the wal locally
       bloom_filter_false_positive: .05 # bloom filter false positive rate.  lower values create larger filters but fewer false positives
       index_downsample: 10             # number of traces per index record
-    {{- if eq .Values.tempo.objectStore "local" }}
+    {{- if eq .Values.store "filesystem" }}
     local:
       path: /data/tempo/blocks
-    {{- else if eq .Values.tempo.objectStore "s3" }}
-    {{- with .Values.tempo.s3 }}
+    {{- else if eq .Values.store "s3" }}
+    {{- with .Values.s3 }}
     s3:
       bucket: {{ .bucket }}                    # how to store data in s3
-      endpoint: {{ .enpoint | default "s3.amazonaws.com" }}
+      endpoint: {{ .enpoint }}
       insecure: {{ .insecure }}
       region: {{ .region }}
     {{- end }}

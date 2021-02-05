@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/name: grafana-operated-tls
     {{- include "grafana.labels" . | nindent 4 }}
 spec:
-  commonName: {{ .Values.grafana.host }}
+  commonName: {{ .Values.host }}
   dnsNames:
-    - {{ .Values.grafana.host }}
+    - {{ .Values.host }}
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod

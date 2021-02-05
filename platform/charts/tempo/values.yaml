@@ -1,13 +1,12 @@
 grafana:
   namespace: ""
-tempo:
-  objectStore: local  # local | s3
-  s3:
-    region: ""
-    bucket: ""
-    endpoint: ""
-    encrypted: true
-    insecure: false
-    pathStyle: false
+store: filesystem  # filesystem | s3
+s3:
+  region: ""
+  bucket: ""
+  endpoint: s3.amazonaws.com
+  encrypted: true
+  insecure: false
+  pathStyle: false
 prometheus:
   enable: true
