@@ -3,7 +3,7 @@
 
 Karavel is an pure-upstream Kubernetes distribution
 that combines best-in-breed open source components to deliver
-a production ready platform for enterprises.
+a production ready platform for enterprises based on GitOps.
 
 Karavel is packaged as a curated set of components and services, ranging from networking addons
 to load balancers and observability tools.
