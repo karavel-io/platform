@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -129,12 +130,13 @@ func (c *Component) Render(outdir string) error {
 	resch := make(chan routineRes)
 
 	for i, d := range docs {
+		if len(d) == 0 {
+			continue
+		}
+
 		wg.Add(1)
 		go func(i int, doc helmw.YamlDoc) {
 			defer wg.Done()
-			if len(doc) == 0 {
-				return
-			}
 
 			var buf bytes.Buffer
 			enc := yaml.NewEncoder(&buf)
@@ -156,11 +158,12 @@ func (c *Component) Render(outdir string) error {
 				ns = "-" + meta["namespace"].(string)
 			}
 
-			basename := fmt.Sprintf("%s-%s%s.yml", meta["name"], k, ns)
+			basename := fmt.Sprintf("%s-%s%s.yml", k, meta["name"], ns)
 			filename := filepath.Join(outdir, basename)
 			if err := ioutil.WriteFile(filename, buf.Bytes(), 0655); err != nil {
 				resch <- routineRes{err: err}
 			}
+
 			resch <- routineRes{filename: filepath.Base(basename)}
 		}(i, d)
 	}
@@ -178,6 +181,7 @@ func (c *Component) Render(outdir string) error {
 		files = append(files, res.filename)
 	}
 
+	sort.Strings(files)
 	return utils.RenderKustomizeFile(outdir, files)
 }
 

@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 )
@@ -116,6 +117,7 @@ func Render(logger *log.Logger, params RenderParams) error {
 		}
 	}
 
+	sort.Strings(apps)
 	if err := utils.RenderKustomizeFile(appsDir, apps); err != nil {
 		return errors.Wrap(err, "failed to render applications kustomization.yml")
 	}
