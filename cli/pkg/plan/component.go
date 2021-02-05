@@ -18,6 +18,12 @@ import (
 	"sync"
 )
 
+// reserved annotations that should not be interpreted as
+// feature flags
+var reservedAnnotations = map[string]bool{
+	"bootstrap": true,
+}
+
 type Component struct {
 	name             string
 	namespace        string
@@ -36,7 +42,7 @@ func NewComponentFromChartMetadata(meta *chart.Metadata) (Component, error) {
 
 	integs := make(map[string][]string)
 	for integ, s := range meta.Annotations {
-		if integ == "bootstrap" {
+		if reservedAnnotations[integ] {
 			continue
 		}
 
