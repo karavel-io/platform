@@ -33,7 +33,7 @@ func GetChartManifest(chartname string) (*chart.Metadata, error) {
 
 type YamlDoc map[string]interface{}
 
-func TemplateChart(name string, namespace string, version string) ([]YamlDoc, error) {
+func TemplateChart(name string, namespace string, version string, values string) ([]YamlDoc, error) {
 	hc, err := helmclient.New(&helmclient.Options{})
 	if err != nil {
 		return nil, err
@@ -41,10 +41,11 @@ func TemplateChart(name string, namespace string, version string) ([]YamlDoc, er
 	h := hc.(*helmclient.HelmClient)
 
 	ch := &helmclient.ChartSpec{
-		ChartName: fmt.Sprintf("%s/%s", HelmRepoName, name),
-		Namespace: namespace,
-		Version:   version,
-		SkipCRDs:  false,
+		ChartName:  fmt.Sprintf("%s/%s", HelmRepoName, name),
+		Namespace:  namespace,
+		Version:    version,
+		SkipCRDs:   false,
+		ValuesYaml: values,
 	}
 
 	manifests, err := h.TemplateChart(ch)

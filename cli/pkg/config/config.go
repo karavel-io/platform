@@ -6,6 +6,8 @@ import (
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclparse"
 	"github.com/mikamai/karavel/cli/pkg/helmw"
+	"github.com/zclconf/go-cty/cty"
+	"github.com/zclconf/go-cty/cty/json"
 	"io"
 	"strings"
 )
@@ -47,6 +49,23 @@ func ReadFrom(logw io.Writer, filename string) (Config, error) {
 	for i := range c.Components {
 		cc := &c.Components[i]
 		cc.Name = strings.ToLower(cc.Name)
+		pp := make(map[string]cty.Value)
+		for l, a := range cc.RawParams {
+			v, err := a.Expr.Value(nil)
+			if err != nil {
+				_ = w.WriteDiagnostics(err)
+				if err.HasErrors() {
+					return c, ErrConfigParseFailed
+				}
+			}
+			pp[l] = v
+		}
+		m := cty.ObjectVal(pp)
+		j, jerr := json.Marshal(m, m.Type())
+		if jerr != nil {
+			return c, jerr
+		}
+		cc.JsonParams = string(j)
 	}
 
 	return c, nil
