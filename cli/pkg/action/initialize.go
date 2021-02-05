@@ -76,7 +76,7 @@ func Initialize(logger *log.Logger, params InitParams) error {
 
 	filedst := filepath.Join(workdir, filename)
 	info, err := os.Stat(filedst)
-	if err != nil && err != os.ErrNotExist {
+	if err != nil && !os.IsNotExist(err) {
 		return err
 	}
 
