@@ -21,7 +21,7 @@ spec:
       {{- include "grafana.labels" . | nindent 6 }}
   ingress:
     enabled: true
-    hostname: {{ .Values.grafana.host }}
+    hostname: {{ .Values.host }}
     tlsEnabled: true
     tlsSecretName: grafana-operated-tls
     labels:
@@ -35,7 +35,7 @@ spec:
         grafana.integreatly.org/instance: grafana-operated
   config:
     server:
-      root_url: https://{{ .Values.grafana.host }}
+      root_url: https://{{ .Values.host }}
     log:
       mode: console
       level: warn

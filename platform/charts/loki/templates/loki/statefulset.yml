@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: loki
     {{- include "loki.labels" . | nindent 4 }}
-  {{ with .Values.loki.s3.iamRole }}
+  {{ with .Values.s3.iamRole }}
   annotations:
     iam.amazonaws.com/role: {{ . }}
   {{ end }}

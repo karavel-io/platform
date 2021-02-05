@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: thanos-store
     app.kubernetes.io/version: {{ .Values.thanos.version }}
     {{- include "prometheus.labels" . | nindent 4 }}
-  {{- with .Values.thanos.s3.iamRole }}
+  {{- with .Values.s3.iamRole }}
   annotations:
     iam.amazonaws.com/role: {{ . }}
   {{- end }}
