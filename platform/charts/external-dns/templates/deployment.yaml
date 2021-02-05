@@ -1,3 +1,4 @@
+{{- $provider := required "param provider is required" .Values.provider }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
