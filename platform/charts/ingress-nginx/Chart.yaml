@@ -2,7 +2,7 @@ apiVersion: v2
 name: ingress-nginx
 description: NGINX Ingress Controller component for Karavel
 type: application
-version: 0.1.1
+version: 0.1.0
 appVersion: 0.41.2
 maintainers:
   - name: MatteoJoliveau
@@ -12,3 +12,7 @@ home: https://github.com/kubernetes/ingress-nginx
 sources:
 - https://github.com/kubernetes/ingress-nginx
 - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/bootstrap: true
+  prometheus.enable: prometheus

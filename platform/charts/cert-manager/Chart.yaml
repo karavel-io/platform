@@ -14,4 +14,6 @@ sources:
 - https://github.com/mikamai/karavel
 
 annotations:
-  bootstrap: true
+  karavel.io/bootstrap: true
+  karavel.io/dependencies: external-secrets
+  prometheus.enable: prometheus

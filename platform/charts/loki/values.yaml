@@ -15,7 +15,7 @@ promtail:
 prometheus:
   enable: true
 
-jaeger:
+tracing:
   enable: false
   dsUid: tempo
   host: tempo

@@ -12,3 +12,6 @@ home: https://grafana.com
 sources:
   - https://github.com/integr8ly/grafana-operator
   - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/dependencies: cert-manager, external-secrets
