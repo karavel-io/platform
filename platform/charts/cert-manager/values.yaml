@@ -1,7 +1,7 @@
 letsencrypt:
   email: ""
   cloudflare:
-    enabled: true
+    enabled: false
     email: "tech@mikamai.com"
     secret:
       backend: secretsManager
