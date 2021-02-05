@@ -8,6 +8,7 @@ import (
 	"github.com/mikamai/karavel/cli/pkg/helmw"
 	"github.com/mikamai/karavel/cli/pkg/utils"
 	"github.com/pkg/errors"
+	"github.com/tidwall/sjson"
 	"gopkg.in/yaml.v3"
 	"helm.sh/helm/v3/pkg/chart"
 	"io/ioutil"
@@ -32,6 +33,7 @@ type Component struct {
 	dependencies     []string
 	integrationsDeps map[string][]string
 	integrations     map[string]bool
+	jsonParams       string
 }
 
 func NewComponentFromChartMetadata(meta *chart.Metadata) (Component, error) {
@@ -101,7 +103,7 @@ func (c *Component) Render(outdir string) error {
 		return errors.Wrap(err, deferr)
 	}
 
-	docs, err := helmw.TemplateChart(c.name, c.namespace, c.version)
+	docs, err := helmw.TemplateChart(c.name, c.namespace, c.version, c.jsonParams)
 	if err != nil {
 		return errors.Wrap(err, deferr)
 	}
@@ -181,5 +183,18 @@ func (c *Component) RenderApplication(argoNs string, repoUrl string, path string
 	if err := ioutil.WriteFile(outfile, buf.Bytes(), 0655); err != nil {
 		return errors.Wrap(err, deferr)
 	}
+	return nil
+}
+
+func (c *Component) patchIntegrations() error {
+	jp := c.jsonParams
+	for p, b := range c.integrations {
+		j, err := sjson.Set(jp, p, b)
+		if err != nil {
+			return err
+		}
+		jp = j
+	}
+	c.jsonParams = jp
 	return nil
 }

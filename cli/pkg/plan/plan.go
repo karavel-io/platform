@@ -24,6 +24,7 @@ func NewFromConfig(cfg *config.Config) (*Plan, error) {
 			return nil, errors.Wrap(err, "failed to build plan from config")
 		}
 		comp.namespace = c.Namespace
+		comp.jsonParams = c.JsonParams
 		p.AddComponent(comp)
 	}
 
@@ -62,7 +63,9 @@ func (p *Plan) Validate() error {
 		return err
 	}
 
-	p.processIntegrations()
+	if err := p.processIntegrations(); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -78,7 +81,7 @@ func (p *Plan) checkDependencies() error {
 	return nil
 }
 
-func (p *Plan) processIntegrations() {
+func (p *Plan) processIntegrations() error {
 	for _, c := range p.components {
 		c.integrations = make(map[string]bool)
 		for integ, dd := range c.integrationsDeps {
@@ -88,5 +91,9 @@ func (p *Plan) processIntegrations() {
 			}
 			c.integrations[integ] = active
 		}
+		if err := c.patchIntegrations(); err != nil {
+			return err
+		}
 	}
+	return nil
 }
