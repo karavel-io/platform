@@ -5,4 +5,4 @@ bin:
 	mkdir -p ./bin
 
 cli: clean bin
-	go build -o ./bin/karavel ./cli/cmd/karavel
+	go build -o ./bin/karavel ./cmd/karavel
