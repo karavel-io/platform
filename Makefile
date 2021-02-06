@@ -40,11 +40,18 @@ install: build
 clean:
 	rm -rf $(BINDIR)
 
+.PHONY: test
 test:
 	go test $(PKGS)
 
+.PHONY: fmt
 fmt:
 	go fmt $(PKGS)
 
+.PHONY: vet
 vet:
 	go vet $(PKGS)
+
+.PHONY: start-mkdocs
+start-mkdocs:
+	docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
