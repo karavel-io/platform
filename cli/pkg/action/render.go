@@ -90,8 +90,17 @@ func Render(log logger.Logger, params RenderParams) error {
 			}
 
 			log.Debugf("Rendering application manifest for component '%s' %s", comp.Name(), comp.Version())
+			appfile := filepath.Join(appsDir, appFile)
+			// if the application file already exists, we skip it. It has already been created
+			// and we don't want to overwrite any changes the user may have made
+			_, err := os.Stat(appfile)
+			if !os.IsNotExist(err) {
+				ch <- utils.NewPair(msg, err)
+				return
+			}
+
 			// TODO: git integration to detect repo and path if not provided in config
-			if err := comp.RenderApplication(argoNs, "TODO", "TODO", filepath.Join(appsDir, appFile)); err != nil {
+			if err := comp.RenderApplication(argoNs, "TODO", "TODO", appfile); err != nil {
 				ch <- utils.NewPair(msg, err)
 			}
 		}(c)
