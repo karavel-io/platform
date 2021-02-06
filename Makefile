@@ -1,7 +1,8 @@
-BINDIR  := $(CURDIR)/bin
-BINNAME ?= karavel
+PROJ_DIR     := $(CURDIR)/cli
+BINDIR       := $(PROJ_DIR)/bin
+BINNAME      ?= karavel
 INSTALL_PATH ?= /usr/local/bin
-SHELL   = /usr/bin/env bash
+SHELL        = /usr/bin/env bash
 
 SRC := $(shell find . -type f -name '*.go' -print) go.mod go.sum
 
@@ -9,8 +10,9 @@ GOBIN         = $(shell go env GOBIN)
 ifeq ($(GOBIN),)
 GOBIN         = $(shell go env GOPATH)/bin
 endif
+PKGS          = $(PROJ_DIR)/...
 
-VERSION    = $(shell cat $(CURDIR)/VERSION)
+VERSION    = $(shell cat $(PROJ_DIR)/VERSION)
 GIT_COMMIT = $(shell git rev-parse  HEAD)
 GIT_DIRTY  = $(shell test -n "`git status --porcelain`" && echo "dirty" || echo "clean")
 BUILD_DATE = $(shell date +'%Y-%m-%d %H:%M:%S')
@@ -28,7 +30,7 @@ all: build
 build: $(BINDIR)/$(BINNAME)
 
 $(BINDIR)/$(BINNAME): $(SRC)
-	GO111MODULE=on go build -ldflags "$(LDFLAGS)" -o $(BINDIR)/$(BINNAME) ./cmd/karavel
+	GO111MODULE=on go build -ldflags "$(LDFLAGS)" -o $(BINDIR)/$(BINNAME) $(PROJ_DIR)/cmd/karavel
 
 .PHONY: install
 install: build
@@ -39,10 +41,10 @@ clean:
 	rm -rf $(BINDIR)
 
 test:
-	go test ./...
+	go test $(PKGS)
 
 fmt:
-	go fmt ./...
+	go fmt $(PKGS)
 
 vet:
-	go vet ./...
+	go vet $(PKGS)
