@@ -1,18 +1,16 @@
 package utils
 
-import "errors"
-
 type Pair struct {
 	a interface{}
 	b interface{}
 }
 
-func NewPair(a interface{}, b interface{}) (Pair, error) {
+func NewPair(a interface{}, b interface{}) Pair {
 	if a == nil || b == nil {
-		return Pair{}, errors.New("both elements of a pair must be present")
+		panic("both elements of a pair must be present")
 	}
 
-	return Pair{a, b}, nil
+	return Pair{a, b}
 }
 
 func (p *Pair) A() interface{} {
@@ -21,6 +19,14 @@ func (p *Pair) A() interface{} {
 
 func (p *Pair) B() interface{} {
 	return p.b
+}
+
+func (p *Pair) StringA() string {
+	s, done := p.a.(string)
+	if done {
+		return s
+	}
+	return ""
 }
 
 func (p *Pair) ErrorB() error {
