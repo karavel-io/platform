@@ -1,7 +1,7 @@
 version: 2.1
 
 workflows:
-  default:
+  platform:
     jobs:
       - helm-lint
       - docs-build:
@@ -11,6 +11,9 @@ workflows:
             branches:
               only:
                 - master
+  cli:
+    jobs:
+      - cli-verify
 
 jobs:
   helm-lint:
@@ -34,3 +37,20 @@ jobs:
           name: Publish docs to GitHub Pages
           command: |
             mkdocs gh-deploy --strict --force --message "[ci skip] Deployed 7881965 with MkDocs version: 1.1.2"
+
+  cli-verify:
+    working_directory: ~/project/cli
+    docker:
+      - image: quay.io/bitnami/golang:1.15
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Build CLI
+          command: make build
+      - run:
+          name: Run tests
+          command: make test
+      - run:
+          name: Run linter
+          command: make lint
