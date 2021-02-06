@@ -1,4 +1,4 @@
-module github.com/mikamai/karavel/cli
+module github.com/mikamai/karavel
 
 go 1.15
 

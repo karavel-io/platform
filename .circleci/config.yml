@@ -39,18 +39,32 @@ jobs:
             mkdocs gh-deploy --strict --force --message "[ci skip] Deployed 7881965 with MkDocs version: 1.1.2"
 
   cli-verify:
-    working_directory: ~/project/cli
     docker:
-      - image: quay.io/bitnami/golang:1.15
+      - image: circleci/golang:1.12
     steps:
-      - checkout:
-          path: ~/project
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
       - run:
           name: Build CLI
           command: make build
+      - save_cache:
+          key: go-mod-v4-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - run: mkdir -p $TEST_RESULTS
       - run:
           name: Run tests
-          command: make test
+          command: |
+            PACKAGE_NAMES=$(go list ./cli/... | circleci tests split --split-by=timings --timings-type=classname)
+            gotestsum --junitfile ${TEST_RESULTS}/gotestsum-report.xml -- $PACKAGE_NAMES
       - run:
           name: Run linter
-          command: make lint
+          command: make vet
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
+
+      - store_test_results:
+          path: /tmp/test-results
