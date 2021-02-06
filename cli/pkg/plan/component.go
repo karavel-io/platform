@@ -7,6 +7,7 @@ import (
 	"github.com/mikamai/karavel/cli/pkg/argo"
 	"github.com/mikamai/karavel/cli/pkg/helmw"
 	"github.com/mikamai/karavel/cli/pkg/utils"
+	"github.com/mikamai/karavel/cli/pkg/utils/predicate"
 	"github.com/pkg/errors"
 	"github.com/tidwall/sjson"
 	"gopkg.in/yaml.v3"
@@ -182,7 +183,7 @@ func (c *Component) Render(outdir string) error {
 	}
 
 	sort.Strings(files)
-	return utils.RenderKustomizeFile(outdir, files)
+	return utils.RenderKustomizeFile(outdir, files, predicate.StringFalse)
 }
 
 func (c *Component) RenderApplication(argoNs string, repoUrl string, path string, outfile string) error {

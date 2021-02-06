@@ -6,6 +6,7 @@ import (
 	"github.com/mikamai/karavel/cli/pkg/helmw"
 	"github.com/mikamai/karavel/cli/pkg/plan"
 	"github.com/mikamai/karavel/cli/pkg/utils"
+	"github.com/mikamai/karavel/cli/pkg/utils/predicate"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"log"
@@ -72,6 +73,7 @@ func Render(logger *log.Logger, params RenderParams) error {
 	ch := make(chan utils.Pair)
 	var apps []string
 	renderDirs := []string{"applications", "projects"}
+
 	for _, c := range p.Components() {
 		appFile := c.Name() + ".yml"
 		apps = append(apps, appFile)
@@ -83,14 +85,15 @@ func Render(logger *log.Logger, params RenderParams) error {
 		go func(comp *plan.Component) {
 			defer wg.Done()
 
+			msg := fmt.Sprintf("failed to render component '%s'", comp.Name())
 			outdir := filepath.Join(workdir, "vendor", comp.Name())
 			logger.Printf("Rendering component '%s' %s at %s", comp.Name(), comp.Version(), strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
 			if debug {
 				logger.Printf("Component '%s' %s params: %s", comp.Name(), comp.Version(), comp.Params())
 			}
+
 			if err := comp.Render(outdir); err != nil {
-				pair, _ := utils.NewPair(comp.Name(), err)
-				ch <- pair
+				ch <- utils.NewPair(msg, err)
 				return
 			}
 
@@ -99,8 +102,7 @@ func Render(logger *log.Logger, params RenderParams) error {
 			}
 			// TODO: git integration to detect repo and path if not provided in config
 			if err := comp.RenderApplication(argoNs, "TODO", "TODO", filepath.Join(appsDir, appFile)); err != nil {
-				pair, _ := utils.NewPair(comp.Name(), err)
-				ch <- pair
+				ch <- utils.NewPair(msg, err)
 			}
 		}(c)
 	}
@@ -113,12 +115,12 @@ func Render(logger *log.Logger, params RenderParams) error {
 	for pair := range ch {
 		err := pair.ErrorB()
 		if err != nil {
-			return errors.Wrapf(err, "failed to render component '%s'", pair.A())
+			return errors.Wrap(err, pair.StringA())
 		}
 	}
 
 	sort.Strings(apps)
-	if err := utils.RenderKustomizeFile(appsDir, apps); err != nil {
+	if err := utils.RenderKustomizeFile(appsDir, apps, predicate.IsStringInSlice(apps)); err != nil {
 		return errors.Wrap(err, "failed to render applications kustomization.yml")
 	}
 
@@ -127,11 +129,12 @@ func Render(logger *log.Logger, params RenderParams) error {
 		return errors.Wrap(err, "failed to render infrastructure project file")
 	}
 
-	if err := utils.RenderKustomizeFile(projsDir, []string{infraProj}); err != nil {
+	projs := []string{infraProj}
+	if err := utils.RenderKustomizeFile(projsDir, projs, predicate.IsStringInSlice(projs)); err != nil {
 		return errors.Wrap(err, "failed to render projects kustomization.yml")
 	}
 
-	if err := utils.RenderKustomizeFile(workdir, renderDirs); err != nil {
+	if err := utils.RenderKustomizeFile(workdir, renderDirs, predicate.StringOr(predicate.IsStringInSlice(renderDirs), predicate.StringHasPrefix("vendor"))); err != nil {
 		return errors.Wrap(err, "failed to render render kustomization.yml")
 	}
 
