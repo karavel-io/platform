@@ -6,10 +6,10 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/mikamai/karavel/cli/pkg/logger"
 	"github.com/mikamai/karavel/cli/pkg/utils"
 	"github.com/pkg/errors"
 	"io/ioutil"
-	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -30,15 +30,14 @@ type InitParams struct {
 	SumUrlOverride  string
 }
 
-func Initialize(logger *log.Logger, params InitParams) error {
+func Initialize(log logger.Logger, params InitParams) error {
 	workdir := params.Workdir
 	ver := params.KaravelVersion
 	filename := params.Filename
 	force := params.Force
 
-	logger.Printf("Initializing new Karavel %s project at %s\n", ver, workdir)
-
-	logger.Println()
+	log.Infof("Initializing new Karavel %s project at %s", ver, workdir)
+	log.Info()
 
 	var url string
 	if ver == "latest" {
@@ -57,8 +56,8 @@ func Initialize(logger *log.Logger, params InitParams) error {
 		sumUrl = path.Join(url, filename+".sha256")
 	}
 
-	logger.Printf("Fetching bootstrap config from %s with checksum %s", cfgUrl, sumUrl)
-	logger.Println()
+	log.Infof("Fetching bootstrap config from %s with checksum %s", cfgUrl, sumUrl)
+	log.Info()
 
 	if err := os.MkdirAll(workdir, 0755); err != nil {
 		return err
@@ -75,23 +74,23 @@ func Initialize(logger *log.Logger, params InitParams) error {
 	}
 
 	if info != nil && force {
-		logger.Printf("WARNING: Karavel config file %s already exists and will be overwritten", filename)
+		log.Warnf("Karavel config file %s already exists and will be overwritten", filename)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 
-	cfg, err := download(ctx, logger, cfgUrl)
+	cfg, err := download(ctx, log, cfgUrl)
 	if err != nil {
 		return err
 	}
-	logger.Println()
+	log.Info()
 
-	shaHex, err := download(ctx, logger, sumUrl)
+	shaHex, err := download(ctx, log, sumUrl)
 	if err != nil {
 		return err
 	}
-	logger.Println()
+	log.Info()
 
 	shaHex = bytes.TrimSpace(shaHex)
 	shaD := make([]byte, hex.DecodedLen(len(shaHex)))
@@ -110,11 +109,11 @@ func Initialize(logger *log.Logger, params InitParams) error {
 		return errors.Errorf("checksum mismatch: wanted %x, got %x", sha, sum)
 	}
 
-	logger.Printf("Checksum successfully validated. Writing config file to %s", filedst)
+	log.Infof("Checksum successfully validated. Writing config file to %s", filedst)
 	return ioutil.WriteFile(filedst, cfg, 0655)
 }
 
-func download(ctx context.Context, logger *log.Logger, url string) ([]byte, error) {
+func download(ctx context.Context, log logger.Logger, url string) ([]byte, error) {
 	f, err := ioutil.TempFile("", path.Base(url))
 	if err != nil {
 		return nil, err
@@ -122,7 +121,7 @@ func download(ctx context.Context, logger *log.Logger, url string) ([]byte, erro
 	defer f.Close()
 	defer os.Remove(f.Name())
 
-	if err := utils.DownloadWithProgress(ctx, logger, url, f.Name()); err != nil {
+	if err := utils.DownloadWithProgress(ctx, log, url, f.Name()); err != nil {
 		return nil, err
 	}
 	return ioutil.ReadFile(f.Name())

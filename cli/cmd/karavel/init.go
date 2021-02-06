@@ -2,15 +2,17 @@ package main
 
 import (
 	"github.com/mikamai/karavel/cli/pkg/action"
+	"github.com/mikamai/karavel/cli/pkg/logger"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-func NewInitCommand(logger *log.Logger) *cli.Command {
+func NewInitCommand(log logger.Logger) *cli.Command {
+	var debug bool
+	var quiet bool
 	var ver string
 	var filename string
 	var force bool
@@ -30,15 +32,14 @@ func NewInitCommand(logger *log.Logger) *cli.Command {
 				Destination: &ver,
 			},
 			&cli.PathFlag{
-				Name:        "config",
-				Aliases:     []string{"c"},
+				Name:        "output-file",
+				Aliases:     []string{"o"},
 				Usage:       "Karavel config file name to create",
 				Value:       DefaultFileName,
 				Destination: &filename,
 			},
 			&cli.BoolFlag{
 				Name:        "force",
-				Aliases:     []string{"f"},
 				Usage:       "Overwrite the config file even if it already exists",
 				Value:       false,
 				Destination: &force,
@@ -47,16 +48,28 @@ func NewInitCommand(logger *log.Logger) *cli.Command {
 				Name:        "config-url",
 				Usage:       "URL pointing to the Karavel config file to download. Requires setting --checksum-url too",
 				DefaultText: "the official Karavel config file URL",
+				EnvVars:     []string{"KARAVEL_CONFIG_URL"},
 				Destination: &cfgUrl,
 			},
 			&cli.PathFlag{
 				Name:        "checksum-url",
 				Usage:       "URL pointing to the Karavel config file checksum to download. Requires setting --config-url too",
 				DefaultText: "the official Karavel config file checksum URL",
+				EnvVars:     []string{"KARAVEL_CHECKSUM_URL"},
 				Destination: &sumUrl,
 			},
+			flagDebug(&debug),
+			flagQuiet(&quiet),
 		},
 		Action: func(ctx *cli.Context) error {
+			if debug {
+				log.SetLevel(logger.LvlDebug)
+			}
+
+			if quiet {
+				log.SetLevel(logger.LvlError)
+			}
+
 			cwd := ctx.Args().Get(0)
 			if cwd == "" {
 				d, err := os.Getwd()
@@ -76,7 +89,7 @@ func NewInitCommand(logger *log.Logger) *cli.Command {
 				return errors.New("both --config-url and --checksum-url must be provided")
 			}
 
-			return action.Initialize(logger, action.InitParams{
+			return action.Initialize(log, action.InitParams{
 				Workdir:         cwd,
 				Filename:        filename,
 				KaravelVersion:  ver,

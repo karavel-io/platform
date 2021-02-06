@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"github.com/mikamai/karavel/cli/pkg/config"
 	"github.com/mikamai/karavel/cli/pkg/helmw"
+	"github.com/mikamai/karavel/cli/pkg/logger"
 	"github.com/mikamai/karavel/cli/pkg/plan"
 	"github.com/mikamai/karavel/cli/pkg/utils"
 	"github.com/mikamai/karavel/cli/pkg/utils/predicate"
 	"github.com/pkg/errors"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -19,34 +19,28 @@ import (
 
 type RenderParams struct {
 	ConfigPath string
-	Debug      bool
 }
 
-func Render(logger *log.Logger, params RenderParams) error {
-	debug := params.Debug
+func Render(log logger.Logger, params RenderParams) error {
 	cpath := params.ConfigPath
 	workdir := filepath.Dir(cpath)
 	appsDir := filepath.Join(workdir, "applications")
 	projsDir := filepath.Join(workdir, "projects")
 
-	logger.Printf("Rendering new Karavel project with config file %s\n", cpath)
+	log.Infof("Rendering new Karavel project with config file %s", cpath)
 
-	if debug {
-		logger.Print("Reading config file")
-	}
-	cfg, err := config.ReadFrom(logger.Writer(), cpath)
+	log.Debug("Reading config file")
+	cfg, err := config.ReadFrom(log.Writer(), cpath)
 	if err != nil {
 		return errors.Wrap(err, "failed to read config file")
 	}
 
-	if debug {
-		logger.Printf("Setting up Karavel Charts repository %s", cfg.HelmRepoUrl)
-	}
+	log.Debugf("Setting up Karavel Charts repository %s", cfg.HelmRepoUrl)
 	if err := helmw.SetupHelm(cfg.HelmRepoUrl); err != nil {
 		return errors.Wrap(err, "failed to setup Karavel Charts repository")
 	}
 
-	logger.Println()
+	log.Info()
 
 	p, err := plan.NewFromConfig(&cfg)
 	if err != nil {
@@ -87,19 +81,15 @@ func Render(logger *log.Logger, params RenderParams) error {
 
 			msg := fmt.Sprintf("failed to render component '%s'", comp.Name())
 			outdir := filepath.Join(workdir, "vendor", comp.Name())
-			logger.Printf("Rendering component '%s' %s at %s", comp.Name(), comp.Version(), strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
-			if debug {
-				logger.Printf("Component '%s' %s params: %s", comp.Name(), comp.Version(), comp.Params())
-			}
+			log.Infof("Rendering component '%s' %s at %s", comp.Name(), comp.Version(), strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
+			log.Debugf("Component '%s' %s params: %s", comp.Name(), comp.Version(), comp.Params())
 
 			if err := comp.Render(outdir); err != nil {
 				ch <- utils.NewPair(msg, err)
 				return
 			}
 
-			if debug {
-				logger.Printf("Rendering application manifest for component '%s' %s", comp.Name(), comp.Version())
-			}
+			log.Debugf("Rendering application manifest for component '%s' %s", comp.Name(), comp.Version())
 			// TODO: git integration to detect repo and path if not provided in config
 			if err := comp.RenderApplication(argoNs, "TODO", "TODO", filepath.Join(appsDir, appFile)); err != nil {
 				ch <- utils.NewPair(msg, err)

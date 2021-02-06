@@ -2,9 +2,9 @@ package utils
 
 import (
 	"context"
+	"github.com/mikamai/karavel/cli/pkg/logger"
 	"github.com/pkg/errors"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path"
@@ -14,11 +14,11 @@ import (
 // Thank you Cosmin!
 // https://gist.github.com/albulescu/e61979cc852e4ee8f49c
 
-func DownloadWithProgress(ctx context.Context, logger *log.Logger, url string, filename string) error {
+func DownloadWithProgress(ctx context.Context, log logger.Logger, url string, filename string) error {
 	file := path.Base(url)
 
-	logger.Printf("Downloading file %s from %s\n", file, url)
-	logger.Println()
+	log.Infof("Downloading file %s from %s\n", file, url)
+	log.Info()
 
 	start := time.Now()
 
@@ -47,7 +47,7 @@ func DownloadWithProgress(ctx context.Context, logger *log.Logger, url string, f
 	//done := make(chan int64)
 
 	// TODO: fix printing
-	//go printDownloadPercent(ctx, logger, done, filename, int64(size))
+	//go printDownloadPercent(ctx, log, done, filename, int64(size))
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -64,29 +64,29 @@ func DownloadWithProgress(ctx context.Context, logger *log.Logger, url string, f
 	//done <- n
 
 	elapsed := time.Since(start)
-	logger.Println()
-	logger.Printf("Download completed in %s", elapsed)
+	log.Info()
+	log.Infof("Download completed in %s", elapsed)
 	return nil
 }
 
-func printDownloadPercent(ctx context.Context, logger *log.Logger, done chan int64, path string, total int64) {
+func printDownloadPercent(ctx context.Context, log logger.Logger, done chan int64, path string, total int64) {
 	for {
 		select {
 		case <-ctx.Done():
-			logger.Println(ctx.Err())
+			log.Error(ctx.Err())
 			return
 		case <-done:
 			return
 		default:
 			file, err := os.Open(path)
 			if err != nil {
-				logger.Print(err)
+				log.Error(err)
 				return
 			}
 
 			fi, err := file.Stat()
 			if err != nil {
-				logger.Print(err)
+				log.Error(err)
 				return
 			}
 
@@ -97,7 +97,7 @@ func printDownloadPercent(ctx context.Context, logger *log.Logger, done chan int
 
 			percent := float64(size) / float64(total) * 100
 
-			logger.Printf("%.0f%%", percent)
+			log.Infof("%.0f%%", percent)
 		}
 	}
 }
