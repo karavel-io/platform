@@ -28,7 +28,7 @@ all: build
 build: $(BINDIR)/$(BINNAME)
 
 $(BINDIR)/$(BINNAME): $(SRC)
-	go build -ldflags "$(LDFLAGS)" -o $(BINDIR)/$(BINNAME) ./cmd/karavel
+	GO111MODULE=on go build -ldflags "$(LDFLAGS)" -o $(BINDIR)/$(BINNAME) ./cmd/karavel
 
 .PHONY: install
 install: build
