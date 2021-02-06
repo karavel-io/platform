@@ -32,4 +32,5 @@ jobs:
             - "95:21:09:e7:b3:a2:00:1a:1e:19:30:69:6b:2f:83:b5"
       - run:
           name: Publish docs to GitHub Pages
-          command: mkdocs gh-deploy --strict --force
+          command: |
+            mkdocs gh-deploy --strict --force --message "[ci skip] Deployed 7881965 with MkDocs version: 1.1.2"
