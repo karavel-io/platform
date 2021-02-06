@@ -6,10 +6,6 @@ type Pair struct {
 }
 
 func NewPair(a interface{}, b interface{}) Pair {
-	if a == nil || b == nil {
-		panic("both elements of a pair must be present")
-	}
-
 	return Pair{a, b}
 }
 
