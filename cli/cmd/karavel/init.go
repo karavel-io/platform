@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -19,7 +20,7 @@ func NewInitCommand(logger *log.Logger) *cli.Command {
 	return &cli.Command{
 		Name:      "init",
 		Usage:     "Initialize a new Karavel project",
-		ArgsUsage: "WORKDIR",
+		ArgsUsage: "[WORKDIR]",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "version",
@@ -58,7 +59,11 @@ func NewInitCommand(logger *log.Logger) *cli.Command {
 		Action: func(ctx *cli.Context) error {
 			cwd := ctx.Args().Get(0)
 			if cwd == "" {
-				return errors.New("argument 'workdir' must be provided")
+				d, err := os.Getwd()
+				if err != nil {
+					return err
+				}
+				cwd = d
 			}
 			cwd, err := filepath.Abs(cwd)
 			if err != nil {
