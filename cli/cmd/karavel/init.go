@@ -4,73 +4,25 @@ import (
 	"github.com/mikamai/karavel/cli/pkg/action"
 	"github.com/mikamai/karavel/cli/pkg/logger"
 	"github.com/pkg/errors"
-	"github.com/urfave/cli/v2"
+	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-func NewInitCommand(log logger.Logger) *cli.Command {
-	var debug bool
-	var quiet bool
+func NewInitCommand(log logger.Logger) *cobra.Command {
 	var ver string
 	var filename string
 	var force bool
 	var cfgUrl string
 	var sumUrl string
 
-	return &cli.Command{
-		Name:      "init",
-		Usage:     "Initialize a new Karavel project",
-		ArgsUsage: "[WORKDIR]",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:        "version",
-				Aliases:     []string{"v"},
-				Usage:       "Karavel Platform version to initialize",
-				Value:       "latest",
-				Destination: &ver,
-			},
-			&cli.PathFlag{
-				Name:        "output-file",
-				Aliases:     []string{"o"},
-				Usage:       "Karavel config file name to create",
-				Value:       DefaultFileName,
-				Destination: &filename,
-			},
-			&cli.BoolFlag{
-				Name:        "force",
-				Usage:       "Overwrite the config file even if it already exists",
-				Value:       false,
-				Destination: &force,
-			},
-			&cli.PathFlag{
-				Name:        "config-url",
-				Usage:       "URL pointing to the Karavel config file to download. Requires setting --checksum-url too",
-				DefaultText: "the official Karavel config file URL",
-				EnvVars:     []string{"KARAVEL_CONFIG_URL"},
-				Destination: &cfgUrl,
-			},
-			&cli.PathFlag{
-				Name:        "checksum-url",
-				Usage:       "URL pointing to the Karavel config file checksum to download. Requires setting --config-url too",
-				DefaultText: "the official Karavel config file checksum URL",
-				EnvVars:     []string{"KARAVEL_CHECKSUM_URL"},
-				Destination: &sumUrl,
-			},
-			flagDebug(&debug),
-			flagQuiet(&quiet),
-		},
-		Action: func(ctx *cli.Context) error {
-			if debug {
-				log.SetLevel(logger.LvlDebug)
-			}
-
-			if quiet {
-				log.SetLevel(logger.LvlError)
-			}
-
-			cwd := ctx.Args().Get(0)
+	cmd := &cobra.Command{
+		Use:   "init [WORKDIR]",
+		Short: "Initialize a new Karavel project",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cwd := args[0]
 			if cwd == "" {
 				d, err := os.Getwd()
 				if err != nil {
@@ -99,4 +51,12 @@ func NewInitCommand(log logger.Logger) *cli.Command {
 			})
 		},
 	}
+
+	cmd.Flags().StringVarP(&ver, "version", "v", "latest", "Karavel Platform version to initialize")
+	cmd.Flags().StringVarP(&filename, "output-file", "o", DefaultFileName, "Karavel config file name to create")
+	cmd.Flags().BoolVar(&force, "force", false, "Overwrite the config file even if it already exists")
+	cmd.Flags().StringVar(&cfgUrl, "config-url", "", "Override the official URL pointing to the Karavel config file to download. Requires setting --checksum-url too")
+	cmd.Flags().StringVar(&sumUrl, "checksum-url", "", "Override the official URL pointing to the Karavel config file checksum to download. Requires setting --config-url too")
+
+	return cmd
 }

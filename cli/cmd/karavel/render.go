@@ -4,48 +4,26 @@ import (
 	"fmt"
 	"github.com/mikamai/karavel/cli/pkg/action"
 	"github.com/mikamai/karavel/cli/pkg/logger"
-	"github.com/urfave/cli/v2"
+	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 )
 
 const DefaultFileName = "karavel.hcl"
 
-func NewRenderCommand(log logger.Logger) *cli.Command {
-	var debug bool
-	var quiet bool
+func NewRenderCommand(log logger.Logger) *cobra.Command {
 	var cpath string
-	return &cli.Command{
-		Name:  "render",
-		Usage: "Render a Karavel project",
-		Description: fmt.Sprintf(`
+	cmd := &cobra.Command{
+		Use:   "render",
+		Short: "Render a Karavel project",
+		Long: fmt.Sprintf(`
 Render a Karavel project with the given config (defaults to '%s' in the current directory).
 
 This command is idempotent and can be run multiple times without issues. 
 It will respect changes made to files outside the 'vendor' directory, only adding or removing Karavel-specific entries.
 It will, however, consider the 'vendor' directory as a fully-managed folder and may add, delete or modify any file inside it without warning.
 `, DefaultFileName),
-		Flags: []cli.Flag{
-			&cli.PathFlag{
-				Name:        "file",
-				Aliases:     []string{"f"},
-				Usage:       "Specify an alternate config file",
-				Value:       DefaultFileName,
-				Destination: &cpath,
-				EnvVars:     []string{"KARAVEL_CONFIG_FILE"},
-			},
-			flagDebug(&debug),
-			flagQuiet(&quiet),
-		},
-		Action: func(ctx *cli.Context) error {
-			if debug {
-				log.SetLevel(logger.LvlDebug)
-			}
-
-			if quiet {
-				log.SetLevel(logger.LvlError)
-			}
-
+		RunE: func(cmd *cobra.Command, args []string) error {
 			cpath, err := filepath.Abs(cpath)
 			if err != nil {
 				return err
@@ -74,4 +52,8 @@ It will, however, consider the 'vendor' directory as a fully-managed folder and 
 			})
 		},
 	}
+
+	cmd.Flags().StringVarP(&cpath, "file", "f", DefaultFileName, "Specify an alternate config file")
+
+	return cmd
 }
