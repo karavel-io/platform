@@ -1,4 +1,4 @@
-PROJ_DIR     := $(CURDIR)/cli
+PROJ_DIR     := $(CURDIR)
 BINDIR       := $(PROJ_DIR)/bin
 BINNAME      ?= karavel
 INSTALL_PATH ?= /usr/local/bin
@@ -51,7 +51,3 @@ fmt:
 .PHONY: vet
 vet:
 	go vet $(PKGS)
-
-.PHONY: start-mkdocs
-start-mkdocs:
-	docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material

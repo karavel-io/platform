@@ -39,10 +39,12 @@ jobs:
             mkdocs gh-deploy --strict --force --message "[ci skip] Deployed 7881965 with MkDocs version: 1.1.2"
 
   cli-verify:
+    working_directory: ~/project/cli
     docker:
       - image: circleci/golang:1.15
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - restore_cache:
           keys:
             - go-mod-v4-{{ checksum "go.sum" }}

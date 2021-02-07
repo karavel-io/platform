@@ -18,7 +18,7 @@ import (
 
 const (
 	latestReleaseURL = "https://github.com/mikamai/karavel/releases/latest/download"
-	releaseUrl       = "https://github.com/mikamai/karavel/releases/platform-%s/download"
+	releaseUrl       = "https://github.com/mikamai/karavel/releases/v%s/download"
 )
 
 type InitParams struct {
@@ -36,7 +36,7 @@ func Initialize(log logger.Logger, params InitParams) error {
 	filename := params.Filename
 	force := params.Force
 
-	log.Infof("Initializing new Karavel %s project at %s", ver, workdir)
+	log.Infof("Initializing new Karavel v%s project at %s", ver, workdir)
 	log.Info()
 
 	var url string

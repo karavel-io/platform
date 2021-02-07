@@ -20,9 +20,13 @@ func NewInitCommand(log logger.Logger) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "init [WORKDIR]",
 		Short: "Initialize a new Karavel project",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cwd := args[0]
+			var cwd string
+			if len(args) > 0 {
+				cwd = args[0]
+			}
+
 			if cwd == "" {
 				d, err := os.Getwd()
 				if err != nil {
