@@ -1,50 +1,47 @@
 package main
 
 import (
+	"context"
 	"github.com/mikamai/karavel/cli/internal/version"
 	"github.com/mikamai/karavel/cli/pkg/logger"
-	"github.com/urfave/cli/v2"
-	"os"
-)
-
-var (
-	flagDebug = func(i *bool) cli.Flag {
-		return &cli.BoolFlag{
-			Name:        "debug",
-			Aliases:     []string{"d"},
-			Usage:       "Output debug logs",
-			EnvVars:     []string{"KARAVEL_DEBUG"},
-			Destination: i,
-		}
-	}
-
-	flagQuiet = func(i *bool) cli.Flag {
-		return &cli.BoolFlag{
-			Name:        "quiet",
-			Aliases:     []string{"q"},
-			Usage:       "Suppress logs except errors",
-			EnvVars:     []string{"KARAVEL_QUIET"},
-			Destination: i,
-		}
-	}
+	"github.com/spf13/cobra"
+	"time"
 )
 
 func main() {
 	log := logger.New(logger.LvlInfo)
+	var debug bool
+	var quiet bool
+	var colors bool
 
-	app := &cli.App{
-		Name:    "karavel",
-		Usage:   "Smooth sailing in the Cloud sea",
+	app := cobra.Command{
+		Use:     "karavel",
+		Short:   "Smooth sailing in the Cloud sea",
+		Long:    ``,
 		Version: version.Short(),
-		Commands: []*cli.Command{
-			NewInitCommand(log),
-			NewRenderCommand(log),
-			NewVersionCommand(),
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			log.SetColors(colors)
+			if debug {
+				log.SetLevel(logger.LvlDebug)
+			}
+			if quiet {
+				log.SetLevel(logger.LvlError)
+			}
 		},
 	}
 
-	err := app.Run(os.Args)
-	if err != nil {
+	app.PersistentFlags().BoolVar(&debug, "debug", false, "Output debug logs")
+	app.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "Suppress all logs except errors")
+	app.PersistentFlags().BoolVar(&colors, "colors", true, "Enable colored logs")
+
+	app.AddCommand(NewInitCommand(log))
+	app.AddCommand(NewRenderCommand(log))
+	app.AddCommand(NewVersionCommand())
+
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Minute)
+	defer cancel()
+
+	if err := app.ExecuteContext(ctx); err != nil {
 		log.Fatal(err)
 	}
 }

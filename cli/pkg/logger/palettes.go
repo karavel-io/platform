@@ -1,6 +1,8 @@
 package logger
 
-import "github.com/fatih/color"
+import (
+	"github.com/fatih/color"
+)
 
 type palette struct {
 	debug *color.Color
@@ -17,9 +19,9 @@ const (
 
 var palettes = map[Palette]palette{
 	PaletteDefault: {
-		debug: color.New(color.FgGreen),
+		debug: color.New(color.FgHiGreen),
 		info:  color.New(),
-		warn:  color.New(color.FgYellow),
-		error: color.New(color.FgRed),
+		warn:  color.New(color.FgHiYellow),
+		error: color.New(color.FgHiRed),
 	},
 }
