@@ -1,6 +1,8 @@
-module github.com/mikamai/karavel
+module github.com/mikamai/karavel/cli
 
 go 1.15
+
+replace github.com/mikamai/karavel => ../
 
 require (
 	github.com/fatih/color v1.7.0
