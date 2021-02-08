@@ -15,7 +15,7 @@
 package predicate
 
 import (
-	"github.com/mikamai/karavel/cli/pkg/utils"
+	"github.com/mikamai/karavel/cli/internal/utils"
 	"strings"
 )
 
