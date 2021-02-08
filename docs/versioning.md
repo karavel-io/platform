@@ -41,13 +41,15 @@ version of both Kubernetes and the Karavel Platform.
 
 ### Kubernetes compatibility matrix
 
-| Karavel Platform Version  | Kubernetes 1.18    | Kubernetes 1.19    | Kubernetes 1.20 (current)    |
-|:--------------------------|:------------------:|:------------------:|:----------------------------:|
-| 0.1.0                     | :material-close:   | :material-alert:   | :material-check:             |
+| Karavel Platform Version  | Kubernetes 1.18         | Kubernetes 1.19         | Kubernetes 1.20 (current)    |
+|:--------------------------|:-----------------------:|:-----------------------:|:----------------------------:|
+| 0.1.0                     |                         |                         | :material-check-bold:        |
+| 0.2.0                     |                         | :material-alert:        | :material-check-bold:        |
+| 0.3.0                     |                         | :material-check-bold:   | :material-check-bold:        |
+| 0.4.0                     | :material-check-bold:   | :material-check-bold:   | :material-check-bold:        |
 
-*:material-check: compatible*  
+*:material-check-bold: compatible*  
 *:material-alert: specific requirements or caveats are present. Consult the release changelog for more information*  
-*:material-close: incompatible or unsupported*  
 
 [Kubernetes]: https://kubernetes.io/docs/setup/release/version-skew-policy/
 [Semantic Versioning]: https://semver.org
