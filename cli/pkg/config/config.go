@@ -19,7 +19,7 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclparse"
-	"github.com/mikamai/karavel/cli/pkg/helmw"
+	"github.com/mikamai/karavel/cli/internal/helmw"
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/json"
 	"io"
