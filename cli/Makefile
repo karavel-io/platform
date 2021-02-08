@@ -26,10 +26,14 @@ LDFLAGS    += $(EXT_LDFLAGS)
 .PHONY: all
 all: build
 
+.PHONY: addlicense
+addlicense:
+	addlicense -c "MIKAMAI s.r.l" -l apache .
+
 .PHONY: build
 build: $(BINDIR)/$(BINNAME)
 
-$(BINDIR)/$(BINNAME): $(SRC)
+$(BINDIR)/$(BINNAME): addlicense $(SRC)
 	GO111MODULE=on go build -ldflags "$(LDFLAGS)" -o $(BINDIR)/$(BINNAME) $(PROJ_DIR)/cmd/karavel
 
 .PHONY: install
