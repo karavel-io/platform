@@ -94,6 +94,17 @@ func Render(log logger.Logger, params RenderParams) error {
 		dirs[i.Name()] = struct{}{}
 	}
 
+	log.Debug("Finding remote git repository URL to configure ArgoCD applications")
+	repoDir, repoUrl, err := gitutils.GetOriginRemote(log, workdir)
+	if err != nil {
+		return err
+	}
+
+	repoPath, err := filepath.Rel(repoDir, workdir)
+	if err != nil {
+		return err
+	}
+
 	// empty line for nice logs
 	log.Info()
 
@@ -129,18 +140,6 @@ func Render(log logger.Logger, params RenderParams) error {
 			// and we don't want to overwrite any changes the user may have made
 			_, err = os.Stat(appfile)
 			if !os.IsNotExist(err) {
-				ch <- utils.NewPair(msg, err)
-				return
-			}
-
-			repoDir, repoUrl, err := gitutils.GetOriginRemote(log, outdir)
-			if err != nil {
-				ch <- utils.NewPair(msg, err)
-				return
-			}
-
-			repoPath, err := filepath.Rel(repoDir, outdir)
-			if err != nil {
 				ch <- utils.NewPair(msg, err)
 				return
 			}
