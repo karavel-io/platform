@@ -16,6 +16,7 @@ package action
 
 import (
 	"fmt"
+	"github.com/mikamai/karavel/cli/internal/gitutils"
 	"github.com/mikamai/karavel/cli/internal/helmw"
 	"github.com/mikamai/karavel/cli/internal/plan"
 	"github.com/mikamai/karavel/cli/internal/utils"
@@ -50,23 +51,24 @@ func Render(log logger.Logger, params RenderParams) error {
 		return errors.Wrap(err, "failed to read config file")
 	}
 
-	log.Debugf("Setting up Karavel Charts repository %s", cfg.HelmRepoUrl)
+	log.Debugf("Updating Karavel Charts repository %s", cfg.HelmRepoUrl)
 	if err := helmw.SetupHelm(cfg.HelmRepoUrl); err != nil {
 		return errors.Wrap(err, "failed to setup Karavel Charts repository")
 	}
 
-	log.Info()
-
+	log.Debug("Creating render plan from config")
 	p, err := plan.NewFromConfig(&cfg)
 	if err != nil {
 		return errors.Wrap(err, "failed to instantiate render plan from config")
 	}
 
+	log.Debug("Validating render plan")
 	if err := p.Validate(); err != nil {
 		return err
 	}
 
-	for _, dir := range []string{appsDir, projsDir} {
+	for _, dir := range []string{vendorDir, appsDir, projsDir} {
+		log.Debugf("Asserting directory %s", dir)
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return errors.Wrapf(err, "failed to create directory %s", dir)
 		}
@@ -92,6 +94,9 @@ func Render(log logger.Logger, params RenderParams) error {
 		dirs[i.Name()] = struct{}{}
 	}
 
+	// empty line for nice logs
+	log.Info()
+
 	for _, c := range p.Components() {
 		appFile := c.Name() + ".yml"
 		apps = append(apps, appFile)
@@ -104,14 +109,14 @@ func Render(log logger.Logger, params RenderParams) error {
 		go func(comp *plan.Component) {
 			defer wg.Done()
 
+			var withAlias string
+			if name := comp.NameOverride(); name != "" {
+				withAlias = fmt.Sprintf(" with alias '%s'", name)
+			}
 			msg := fmt.Sprintf("failed to render component '%s'", comp.Name())
 			outdir := filepath.Join(vendorDir, comp.Name())
-			var alias string
-			if name := comp.NameOverride(); name != "" {
-				alias = fmt.Sprintf(" with alias '%s'", name)
-			}
-			log.Infof("Rendering component '%s' %s%s at %s", comp.ComponentName(), comp.Version(), alias, strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
-			log.Debugf("Component '%s' %s params: %s", comp.Name(), comp.Version(), comp.Params())
+			log.Infof("Rendering component '%s' %s%s at %s", comp.ComponentName(), comp.Version(), withAlias, strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
+			log.Debugf("Component '%s' %s%s params: %s", comp.Name(), comp.Version(), withAlias, comp.Params())
 
 			if err := comp.Render(outdir); err != nil {
 				ch <- utils.NewPair(msg, err)
@@ -122,21 +127,31 @@ func Render(log logger.Logger, params RenderParams) error {
 			appfile := filepath.Join(appsDir, appFile)
 			// if the application file already exists, we skip it. It has already been created
 			// and we don't want to overwrite any changes the user may have made
-			_, err := os.Stat(appfile)
+			_, err = os.Stat(appfile)
 			if !os.IsNotExist(err) {
 				ch <- utils.NewPair(msg, err)
 				return
 			}
 
-			// TODO: git integration to detect repo and path if not provided in config
-			if err := comp.RenderApplication(argoNs, "TODO", "TODO", appfile); err != nil {
+			repoDir, repoUrl, err := gitutils.GetOriginRemote(log, outdir)
+			if err != nil {
+				ch <- utils.NewPair(msg, err)
+				return
+			}
+
+			repoPath, err := filepath.Rel(repoDir, outdir)
+			if err != nil {
+				ch <- utils.NewPair(msg, err)
+				return
+			}
+
+			if err := comp.RenderApplication(argoNs, repoUrl, repoPath, appfile); err != nil {
 				ch <- utils.NewPair(msg, err)
 			}
 		}(c)
 	}
 
 	wg.Add(1)
-
 	go func() {
 		defer wg.Done()
 

@@ -44,7 +44,7 @@ func main() {
 		},
 	}
 
-	app.PersistentFlags().BoolVar(&debug, "debug", false, "Output debug logs")
+	app.PersistentFlags().BoolVarP(&debug, "debug", "d", false, "Output debug logs")
 	app.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "Suppress all logs except errors")
 	app.PersistentFlags().BoolVar(&colors, "colors", true, "Enable colored logs")
 

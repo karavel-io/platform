@@ -37,7 +37,7 @@ $(BINDIR)/$(BINNAME): addlicense $(SRC)
 	GO111MODULE=on go build -ldflags "$(LDFLAGS)" -o $(BINDIR)/$(BINNAME) $(PROJ_DIR)/cmd/karavel
 
 .PHONY: install
-install: build
+install: fmt build
 	@install $(BINDIR)/$(BINNAME) $(INSTALL_PATH)/$(BINNAME)
 
 .PHONY: clean
