@@ -45,7 +45,7 @@ Selector labels
 {{- define "argocd.selectorLabels" -}}
 app.kubernetes.io/part-of: {{ include "argocd.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "argocd.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

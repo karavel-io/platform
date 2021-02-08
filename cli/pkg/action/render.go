@@ -38,6 +38,7 @@ type RenderParams struct {
 func Render(log logger.Logger, params RenderParams) error {
 	cpath := params.ConfigPath
 	workdir := filepath.Dir(cpath)
+	vendorDir := filepath.Join(workdir, "vendor")
 	appsDir := filepath.Join(workdir, "applications")
 	projsDir := filepath.Join(workdir, "projects")
 
@@ -81,6 +82,15 @@ func Render(log logger.Logger, params RenderParams) error {
 	ch := make(chan utils.Pair)
 	var apps []string
 	renderDirs := []string{"applications", "projects"}
+	dirInfos, err := ioutil.ReadDir(vendorDir)
+	if err != nil {
+		return err
+	}
+
+	dirs := make(map[string]struct{}, len(dirInfos))
+	for _, i := range dirInfos {
+		dirs[i.Name()] = struct{}{}
+	}
 
 	for _, c := range p.Components() {
 		appFile := c.Name() + ".yml"
@@ -88,14 +98,19 @@ func Render(log logger.Logger, params RenderParams) error {
 		if c.IsBootstrap() {
 			renderDirs = append(renderDirs, filepath.Join("vendor", c.Name()))
 		}
+		delete(dirs, c.Name())
 
 		wg.Add(1)
 		go func(comp *plan.Component) {
 			defer wg.Done()
 
 			msg := fmt.Sprintf("failed to render component '%s'", comp.Name())
-			outdir := filepath.Join(workdir, "vendor", comp.Name())
-			log.Infof("Rendering component '%s' %s at %s", comp.Name(), comp.Version(), strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
+			outdir := filepath.Join(vendorDir, comp.Name())
+			var alias string
+			if name := comp.NameOverride(); name != "" {
+				alias = fmt.Sprintf(" with alias '%s'", name)
+			}
+			log.Infof("Rendering component '%s' %s%s at %s", comp.ComponentName(), comp.Version(), alias, strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
 			log.Debugf("Component '%s' %s params: %s", comp.Name(), comp.Version(), comp.Params())
 
 			if err := comp.Render(outdir); err != nil {
@@ -119,6 +134,19 @@ func Render(log logger.Logger, params RenderParams) error {
 			}
 		}(c)
 	}
+
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+
+		for dir := range dirs {
+			log.Debugf("deleting extraneous directory '%s' in vendor", dir)
+			if err := os.RemoveAll(filepath.Join(vendorDir, dir)); err != nil {
+				ch <- utils.NewPair(fmt.Sprintf("failed to delete extraneous directory '%s' in vendor", dir), err)
+			}
+		}
+	}()
 
 	go func() {
 		wg.Wait()

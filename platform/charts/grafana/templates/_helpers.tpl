@@ -45,7 +45,7 @@ Selector labels
 {{- define "grafana.selectorLabels" -}}
 app.kubernetes.io/part-of: {{ include "grafana.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "grafana.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

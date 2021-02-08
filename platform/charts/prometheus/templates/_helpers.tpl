@@ -52,7 +52,7 @@ Selector labels
 {{- define "prometheus.selectorLabels" -}}
 app.kubernetes.io/part-of: {{ include "prometheus.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "prometheus.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

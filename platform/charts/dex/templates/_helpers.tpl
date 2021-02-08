@@ -46,7 +46,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "dex.name" . }}
 app.kubernetes.io/part-of: {{ include "dex.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "dex.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

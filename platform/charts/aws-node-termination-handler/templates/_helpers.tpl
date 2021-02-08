@@ -46,7 +46,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "aws-node-termination-handler.name" . }}
 app.kubernetes.io/part-of: {{ include "aws-node-termination-handler.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "aws-node-termination-handler.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

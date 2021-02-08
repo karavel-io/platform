@@ -125,7 +125,7 @@ spec:
                     app.kubernetes.io/component: controller
                     app.kubernetes.io/part-of: ingress-nginx
                     app.kubernetes.io/managed-by: karavel
-                    karavel.io/component-name: {{ include "ingress-nginx.name" . }}
+                    karavel.io/component-name: {{ .Chart.Name }}
                 topologyKey: kubernetes.io/hostname
               weight: 100
       serviceAccountName: ingress-nginx
