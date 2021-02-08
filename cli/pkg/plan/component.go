@@ -49,6 +49,7 @@ var reservedAnnotations = map[string]bool{
 
 type Component struct {
 	name             string
+	component        string
 	namespace        string
 	version          string
 	bootstrap        bool
@@ -93,6 +94,7 @@ func NewComponentFromChartMetadata(meta *chart.Metadata) (Component, error) {
 
 	return Component{
 		name:             meta.Name,
+		component:        meta.Name,
 		version:          meta.Version,
 		bootstrap:        bootstrap,
 		dependencies:     deps,
@@ -102,6 +104,18 @@ func NewComponentFromChartMetadata(meta *chart.Metadata) (Component, error) {
 
 func (c *Component) Name() string {
 	return c.name
+}
+
+func (c *Component) ComponentName() string {
+	return c.component
+}
+
+func (c *Component) NameOverride() string {
+	if c.component != c.name {
+		return c.name
+	}
+
+	return ""
 }
 
 func (c *Component) Namespace() string {
@@ -136,7 +150,16 @@ func (c *Component) Render(outdir string) error {
 		return errors.Wrap(err, deferr)
 	}
 
-	docs, err := helmw.TemplateChart(c.name, c.namespace, c.version, c.jsonParams)
+	if no := c.NameOverride(); no != "" {
+		j, err := sjson.Set(c.jsonParams, "nameOverride", no)
+		if err != nil {
+			return errors.Wrap(err, deferr)
+		}
+
+		c.jsonParams = j
+	}
+
+	docs, err := helmw.TemplateChart(c.component, c.namespace, c.version, c.jsonParams)
 	if err != nil {
 		return errors.Wrap(err, deferr)
 	}

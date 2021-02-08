@@ -46,7 +46,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "external-dns.name" . }}
 app.kubernetes.io/part-of: {{ include "external-dns.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "external-dns.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

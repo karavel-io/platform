@@ -45,7 +45,7 @@ Selector labels
 {{- define "loki.selectorLabels" -}}
 app.kubernetes.io/part-of: {{ include "loki.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "loki.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

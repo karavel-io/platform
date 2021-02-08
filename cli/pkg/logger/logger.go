@@ -24,7 +24,7 @@ import (
 const (
 	debugPrefix = "[DEBUG]"
 	infoPrefix  = "[INFO]"
-	warnPrefix  = "[DEBUG]"
+	warnPrefix  = "[WARN]"
 	errorPrefix = "[ERROR]"
 )
 

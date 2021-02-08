@@ -29,7 +29,12 @@ func NewFromConfig(cfg *config.Config) (*Plan, error) {
 	p := New()
 
 	for _, c := range cfg.Components {
-		meta, err := helmw.GetChartManifest(c.Name)
+		chartName := c.Name
+		if c.ComponentName != "" {
+			chartName = c.ComponentName
+		}
+
+		meta, err := helmw.GetChartManifest(chartName)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to build plan from config")
 		}
@@ -37,9 +42,14 @@ func NewFromConfig(cfg *config.Config) (*Plan, error) {
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to build plan from config")
 		}
+		if c.ComponentName != "" {
+			comp.name = c.Name
+		}
 		comp.namespace = c.Namespace
 		comp.jsonParams = c.JsonParams
-		p.AddComponent(comp)
+		if err := p.AddComponent(comp); err != nil {
+			return nil, err
+		}
 	}
 
 	return &p, nil
@@ -64,8 +74,12 @@ func (p *Plan) GetComponent(name string) *Component {
 	return p.components[name]
 }
 
-func (p *Plan) AddComponent(c Component) {
+func (p *Plan) AddComponent(c Component) error {
+	if p.components[c.name] != nil {
+		return errors.Errorf("duplicate component '%s' found", c.name)
+	}
 	p.components[c.name] = &c
+	return nil
 }
 
 func (p *Plan) HasComponent(name string) bool {

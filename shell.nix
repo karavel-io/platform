@@ -7,7 +7,7 @@ pkgs.mkShell {
     nixpkgs-fmt
     go
     kubectl
-    helm
+    kubernetes-helm
     kustomize
     kind
     addlicense

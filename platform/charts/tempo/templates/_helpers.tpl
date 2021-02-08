@@ -45,7 +45,7 @@ Selector labels
 {{- define "tempo.selectorLabels" -}}
 app.kubernetes.io/part-of: {{ include "tempo.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "tempo.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

@@ -57,5 +57,5 @@ Selector labels
 app.kubernetes.io/name: {{ include "external-secrets.name" . }}
 app.kubernetes.io/part-of: {{ include "external-secrets.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "external-secrets.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
