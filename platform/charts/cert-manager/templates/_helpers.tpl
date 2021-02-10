@@ -45,7 +45,7 @@ Selector labels
 {{- define "cert-manager.selectorLabels" -}}
 app.kubernetes.io/part-of: {{ include "cert-manager.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "cert-manager.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

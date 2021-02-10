@@ -17,7 +17,7 @@ spec:
       - http01:
           ingress:
             class: nginx
-      {{- if .Values.letsencrypt.cloudflare.enabled }}
+      {{- if .Values.letsencrypt.cloudflare.enable }}
       - dns01:
           cloudflare:
             email: {{ .Values.letsencrypt.cloudflare.email }}

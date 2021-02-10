@@ -45,7 +45,7 @@ Selector labels
 {{- define "calico.selectorLabels" -}}
 app.kubernetes.io/part-of: {{ include "calico.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "calico.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

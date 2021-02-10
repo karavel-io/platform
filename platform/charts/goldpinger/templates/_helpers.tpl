@@ -54,7 +54,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "goldpinger.name" . }}
 app.kubernetes.io/part-of: {{ include "goldpinger.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "goldpinger.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

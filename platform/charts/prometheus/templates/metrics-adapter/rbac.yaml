@@ -23,7 +23,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: system:aggregated-metrics-reader
+  name: system-aggregated-metrics-reader
   labels:
     app.kubernetes.io/name: prometheus-adapter
     app.kubernetes.io/component: metrics-adapter
@@ -81,7 +81,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: resource-metrics:system:auth-delegator
+  name: resource-metrics-system-auth-delegator
   labels:
     app.kubernetes.io/name: prometheus-adapter
     app.kubernetes.io/component: metrics-adapter

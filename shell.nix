@@ -1,14 +1,15 @@
 let
-  pkgs = import <nixpkgs> {};
-  openshift = import ./.nix/openshift.nix { pkgs = pkgs; };
-  pypkgs = pkgs.python38Packages;
+  pkgs = import <nixpkgs> { };
+  addlicense = pkgs.callPackage ./.nix/addlicense.nix { };
 in
 pkgs.mkShell {
-    buildInputs = with pkgs; [
-      mkdocs
-      ansible_2_10
-      openshift
-      pypkgs.kubernetes
-      go
-    ];
+  buildInputs = with pkgs; [
+    nixpkgs-fmt
+    go
+    kubectl
+    kubernetes-helm
+    kustomize
+    kind
+    addlicense
+  ];
 }
