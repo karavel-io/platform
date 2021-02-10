@@ -1,7 +1,0 @@
-init_namespaces: true
-vendor_dir: vendor
-
-letsencrypt:
-  provider: '{{ dns.provider }}'
-  email: '{{ dns.email }}'
-  secret_ref: '{{ dns.secret_ref }}'

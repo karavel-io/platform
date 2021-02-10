@@ -1,5 +1,0 @@
-init_namespaces: true
-vendor_dir: vendor
-
-aws_node_termination_handler:
-  processor: imds
