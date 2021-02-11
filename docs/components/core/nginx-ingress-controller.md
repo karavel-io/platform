@@ -1,6 +1,6 @@
 # NGINX Ingress Controller
 
-[![Component version](https://img.shields.io/badge/dynamic/yaml?color=blue&label=component+version&query=$.entries['ingress-nginx'][0].version&url=https%3A%2F%2Fcharts.mikamai.com%2Fkaravel%2Findex.yaml&style=for-the-badge)](./ingress-nginx.md)
+[![Component version](https://img.shields.io/badge/dynamic/yaml?color=blue&label=component+version&query=$.entries['ingress-nginx'][0].version&url=https%3A%2F%2Fcharts.mikamai.com%2Fkaravel%2Findex.yaml&style=for-the-badge)](./nginx-ingress-controller.md)
 [![NGINX Ingress Controller version](https://img.shields.io/badge/dynamic/yaml?color=blue&label=nginx+ingress+controller+version&query=$.entries['ingress-nginx'][0].appVersion&url=https%3A%2F%2Fcharts.mikamai.com%2Fkaravel%2Findex.yaml&style=for-the-badge)](https://example.com)
 ![Bootstrap component](https://img.shields.io/badge/bootstrap-true-orange?style=for-the-badge)
 
