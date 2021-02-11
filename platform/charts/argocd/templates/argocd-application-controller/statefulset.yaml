@@ -50,15 +50,6 @@ spec:
         - name: controller
           containerPort: 8082
           protocol: TCP
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8082
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 1
-          successThreshold: 1
-          failureThreshold: 3
         readinessProbe:
           tcpSocket:
             port: 8082
@@ -68,6 +59,9 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
           limits:
             cpu: '1'
             memory: 2Gi

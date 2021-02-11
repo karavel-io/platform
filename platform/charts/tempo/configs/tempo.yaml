@@ -25,11 +25,13 @@ ingester:
 
 compactor:
   compaction:
-    compaction_window: 1h              # blocks in this time window will be compacted together
-    max_compaction_objects: 1000000    # maximum size of compacted blocks
-    block_retention: 1h
-    compacted_block_retention: 10m
-    flush_size_bytes: 5242880
+    block_retention: 336h               # Optional. Duration to keep blocks.  Default is 14 days (336h).
+    compacted_block_retention: 1h       # Optional. Duration to keep blocks that have been compacted elsewhere
+    compaction_window: 4h               # Optional. Blocks in this time window will be compacted together
+    chunk_size_bytes: 10485760          # Optional. Amount of data to buffer from input blocks. Default is 10 MiB
+    flush_size_bytes: 31457280          # Optional. Flush data to backend when buffer is this large. Default is 30 MiB
+    max_block_bytes: 107374182400       # Optional. Maximum size of a compacted block in bytes.  Default is 100 GiB
+    retention_concurrency: 10           # Optional. Number of tenants to process in parallel during retention. Default is 10.
 
 storage:
   trace:
@@ -45,7 +47,7 @@ storage:
     {{- with .Values.s3 }}
     s3:
       bucket: {{ .bucket }}                    # how to store data in s3
-      endpoint: {{ .enpoint }}
+      endpoint: {{ .endpoint }}
       insecure: {{ .insecure }}
       region: {{ .region }}
     {{- end }}
