@@ -23,6 +23,7 @@ markdown_extensions:
 nav:
   - Overview: index.md
   - quickstart.md
+  - CLI: cli.md
   - versioning.md
   - Components:
       - Overview: components/index.md
@@ -45,6 +46,5 @@ nav:
           - components/aws/aws-node-termination-handler.md
   - Operator Handbook:
       - Introduction: operator-handbook/index.md
-      - operator-handbook/cli.md
       - operator-handbook/customizing.md
 

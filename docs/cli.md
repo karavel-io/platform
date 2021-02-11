@@ -111,6 +111,6 @@ Changing a configuration and redeploying becomes as easy as committing and pushi
 Check the [Quickstart Guide] to see this tool in action.
 
 [ArgoCD]: https://argoproj.github.io/argo-cd
-[Quickstart Guide]: ../quickstart.md
+[Quickstart Guide]: quickstart.md
 [HCL]: https://www.terraform.io/docs/language/syntax/configuration.html
 [ServiceMonitor]: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md
