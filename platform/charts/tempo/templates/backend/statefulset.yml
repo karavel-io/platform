@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/name: tempo
         {{ include "tempo.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: tempo
+      serviceAccountName: {{ include "tempo.name" . }}
       securityContext:
         fsGroup: 10001
         runAsGroup: 10001
@@ -80,6 +80,6 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: tempo
+            name: {{ include "tempo.name" . }}
         - name: storage
           emptyDir: {}

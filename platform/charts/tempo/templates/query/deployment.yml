@@ -31,8 +31,10 @@ spec:
           ports:
             - name: query
               containerPort: 16686
+            - name: grpc
+              containerPort: 9095
       restartPolicy: Always
       volumes:
         - name: config
           configMap:
-            name: tempo
+            name: {{ include "tempo.name" . }}
