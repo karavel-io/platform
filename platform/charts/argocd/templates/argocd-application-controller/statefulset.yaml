@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "argocd.name" . }}-application-controller
   namespace: {{ .Release.Namespace | quote }}
@@ -8,13 +8,14 @@ metadata:
     {{- include "argocd.labels" . | nindent 4 }}
     app.kubernetes.io/component: application-controller
 spec:
+  serviceName: {{ include "argocd.name" . }}-application-controller-headless
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller
       {{- include "argocd.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: application-controller
   revisionHistoryLimit: 5
-  replicas: 1
+  replicas: {{ .Values.applicationController.replicas }}
   template:
     metadata:
       labels:
@@ -42,6 +43,9 @@ spec:
         image: "docker.io/argoproj/argocd:v{{ .Chart.AppVersion }}"
         imagePullPolicy: IfNotPresent
         name: application-controller
+        env:
+          - name: ARGOCD_CONTROLLER_REPLICAS
+            value: {{ .Values.applicationController.replicas | quote }}
         ports:
         - name: controller
           containerPort: 8082
@@ -64,5 +68,7 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         resources:
-          {}
+          limits:
+            cpu: '1'
+            memory: 2Gi
       serviceAccountName: {{ include "argocd.name" . }}-application-controller
