@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tempo-query
+  name: {{ include "tempo.name" . }}-query
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: tempo-query

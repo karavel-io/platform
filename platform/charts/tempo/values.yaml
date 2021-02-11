@@ -1,5 +1,7 @@
 grafana:
+  enable: true
   namespace: ""
+
 store: filesystem  # filesystem | s3
 s3:
   region: ""

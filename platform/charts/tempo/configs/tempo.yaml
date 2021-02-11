@@ -59,4 +59,4 @@ storage:
 memberlist:
   bind_port: 7946
   join_members:
-    - tempo-headless.{{ .Release.Namespace }}.svc.cluster.local:7946
+    - {{ include "tempo.name" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local:7946

@@ -16,4 +16,4 @@ sources:
 annotations:
   karavel.io/dependencies: grafana
   prometheus.enable: prometheus
-  monitoring.enable: grafana, prometheus
+  grafana.enable: grafana
