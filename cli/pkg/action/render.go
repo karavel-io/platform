@@ -57,7 +57,7 @@ func Render(log logger.Logger, params RenderParams) error {
 	}
 
 	log.Debug("Creating render plan from config")
-	p, err := plan.NewFromConfig(&cfg)
+	p, err := plan.NewFromConfig(log, &cfg)
 	if err != nil {
 		return errors.Wrap(err, "failed to instantiate render plan from config")
 	}
@@ -120,21 +120,17 @@ func Render(log logger.Logger, params RenderParams) error {
 		go func(comp *plan.Component) {
 			defer wg.Done()
 
-			var withAlias string
-			if name := comp.NameOverride(); name != "" {
-				withAlias = fmt.Sprintf(" with alias '%s'", name)
-			}
 			msg := fmt.Sprintf("failed to render component '%s'", comp.Name())
 			outdir := filepath.Join(vendorDir, comp.Name())
-			log.Infof("Rendering component '%s' %s%s at %s", comp.ComponentName(), comp.Version(), withAlias, strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
-			log.Debugf("Component '%s' %s%s params: %s", comp.Name(), comp.Version(), withAlias, comp.Params())
+			log.Infof("Rendering component %s at %s", comp.DebugLabel(), strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
+			log.Debugf("Component %s params: %s", comp.DebugLabel(), comp.Params())
 
 			if err := comp.Render(outdir); err != nil {
 				ch <- utils.NewPair(msg, err)
 				return
 			}
 
-			log.Debugf("Rendering application manifest for component '%s' %s", comp.Name(), comp.Version())
+			log.Debugf("Rendering application manifest for component %s", comp.DebugLabel())
 			appfile := filepath.Join(appsDir, appFile)
 			// if the application file already exists, we skip it. It has already been created
 			// and we don't want to overwrite any changes the user may have made
