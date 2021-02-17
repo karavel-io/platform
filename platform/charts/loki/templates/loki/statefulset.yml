@@ -68,11 +68,6 @@ spec:
             - name: gossip
               containerPort: 7946
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /ready
-              port: http-metrics
-            initialDelaySeconds: 45
           readinessProbe:
             httpGet:
               path: /ready

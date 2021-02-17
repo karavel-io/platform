@@ -18,36 +18,62 @@ import (
 	"fmt"
 	"github.com/mikamai/karavel/cli/internal/helmw"
 	"github.com/mikamai/karavel/cli/pkg/config"
+	"github.com/mikamai/karavel/cli/pkg/logger"
 	"github.com/pkg/errors"
+	"sync"
 )
 
 type Plan struct {
 	components map[string]*Component
 }
 
-func NewFromConfig(cfg *config.Config) (*Plan, error) {
+func NewFromConfig(log logger.Logger, cfg *config.Config) (*Plan, error) {
 	p := New()
 
+	var wg sync.WaitGroup
+	ch := make(chan error)
 	for _, c := range cfg.Components {
-		chartName := c.Name
-		if c.ComponentName != "" {
-			chartName = c.ComponentName
-		}
+		wg.Add(1)
+		go func(cc config.Component) {
+			defer wg.Done()
 
-		meta, err := helmw.GetChartManifest(chartName)
+			chartName := cc.Name
+			if cc.ComponentName != "" {
+				chartName = cc.ComponentName
+			}
+
+			log.Debugf("Loading component '%s'", chartName)
+			meta, err := helmw.GetChartManifest(chartName)
+			if err != nil {
+				ch <- errors.Wrap(err, "failed to build plan from config")
+				return
+			}
+			comp, err := NewComponentFromChartMetadata(meta)
+			if err != nil {
+				ch <- errors.Wrap(err, "failed to build plan from config")
+				return
+			}
+			if cc.ComponentName != "" {
+				comp.name = cc.Name
+			}
+			comp.namespace = cc.Namespace
+			comp.jsonParams = cc.JsonParams
+
+			log.Debugf("Loaded component %s", comp.DebugLabel())
+			if err := p.AddComponent(comp); err != nil {
+				ch <- errors.Wrap(err, "failed to build plan from config")
+				return
+			}
+		}(c)
+	}
+
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+
+	for err := range ch {
 		if err != nil {
-			return nil, errors.Wrap(err, "failed to build plan from config")
-		}
-		comp, err := NewComponentFromChartMetadata(meta)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to build plan from config")
-		}
-		if c.ComponentName != "" {
-			comp.name = c.Name
-		}
-		comp.namespace = c.Namespace
-		comp.jsonParams = c.JsonParams
-		if err := p.AddComponent(comp); err != nil {
 			return nil, err
 		}
 	}

@@ -27,7 +27,7 @@ jobs:
 
   docs-build:
     docker:
-      - image: squidfunk/mkdocs-material:6.1.6
+      - image: squidfunk/mkdocs-material:6.2.8
     steps:
       - checkout
       - add_ssh_keys:

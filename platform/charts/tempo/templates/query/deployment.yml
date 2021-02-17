@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tempo-query
+  name: {{ include "tempo.name" . }}-query
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: tempo-query
@@ -31,8 +31,10 @@ spec:
           ports:
             - name: query
               containerPort: 16686
+            - name: grpc
+              containerPort: 9095
       restartPolicy: Always
       volumes:
         - name: config
           configMap:
-            name: tempo
+            name: {{ include "tempo.name" . }}

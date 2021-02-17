@@ -134,6 +134,14 @@ func (c *Component) Params() string {
 	return c.jsonParams
 }
 
+func (c *Component) DebugLabel() string {
+	var withAlias string
+	if name := c.NameOverride(); name != "" {
+		withAlias = fmt.Sprintf(" with alias '%s'", name)
+	}
+	return fmt.Sprintf("'%s' %s%s", c.component, c.version, withAlias)
+}
+
 type routineRes struct {
 	filename string
 	err      error

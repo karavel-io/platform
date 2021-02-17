@@ -1,5 +1,7 @@
 grafana:
+  enable: true
   namespace: ""
+
 store: filesystem  # filesystem | s3
 s3:
   region: ""
@@ -8,5 +10,6 @@ s3:
   encrypted: true
   insecure: false
   pathStyle: false
+
 prometheus:
   enable: true
