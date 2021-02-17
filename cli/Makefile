@@ -31,7 +31,7 @@ addlicense:
 	addlicense -c "MIKAMAI s.r.l" -l apache .
 
 .PHONY: build
-build: $(BINDIR)/$(BINNAME)
+build: fmt vet $(BINDIR)/$(BINNAME)
 
 $(BINDIR)/$(BINNAME): $(SRC)
 	GO111MODULE=on go build -ldflags "$(LDFLAGS)" -o $(BINDIR)/$(BINNAME) $(PROJ_DIR)/cmd/karavel

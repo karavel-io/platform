@@ -28,7 +28,7 @@ ingester:
 
 querier:
   frontend_worker:
-    frontend_address: {{ include "tempo.name" . }}-query:9095
+    frontend_address: {{ include "tempo.name" . }}-query-headless.{{ .Release.Namespace }}:9095
 
 compactor:
   compaction:

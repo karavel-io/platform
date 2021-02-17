@@ -140,14 +140,6 @@ func (c *Component) DebugLabel() string {
 	if name := c.NameOverride(); name != "" {
 		withAlias = fmt.Sprintf(" with alias '%s'", name)
 	}
-	return fmt.Sprintf("'%s' %s%s", c.component, c.version, withAlias)
-}
-
-func (c *Component) DebugLabel() string {
-	var withAlias string
-	if name := c.NameOverride(); name != "" {
-		withAlias = fmt.Sprintf(" with alias '%s'", name)
-	}
 	return fmt.Sprintf("'%s' %s%s", c.ComponentName(), c.Version(), withAlias)
 }
 

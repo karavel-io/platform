@@ -29,8 +29,12 @@ spec:
             - name: config
               mountPath: /etc/tempo
           ports:
-            - name: query
+            - name: jaeger-query
               containerPort: 16686
+            - name: jaeger-metrics
+              containerPort: 16687
+            - name: http-metrics
+              containerPort: 3100
             - name: grpc
               containerPort: 9095
       restartPolicy: Always

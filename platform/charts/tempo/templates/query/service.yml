@@ -12,9 +12,11 @@ spec:
     {{ include "tempo.selectorLabels" . | nindent 4 }}
   type: ClusterIP
   ports:
-    - name: query
+    - name: jaeger-query
       port: 16686
-      targetPort: query
-    - name: grpc
-      port: 9095
-      targetPort: grpc
+      targetPort: jaeger-query
+    - name: http-metrics
+      port: 3100
+      protocol: TCP
+      targetPort: http-metrics
+

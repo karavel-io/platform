@@ -1,1 +1,1 @@
-backend: {{ include "tempo.name" . }}:3100
+backend: {{ include "tempo.name" . }}.{{ .Release.Namespace }}:3100
