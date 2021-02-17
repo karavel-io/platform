@@ -34,10 +34,12 @@ import (
 
 type RenderParams struct {
 	ConfigPath string
+	SkipGit    bool
 }
 
 func Render(log logger.Logger, params RenderParams) error {
 	cpath := params.ConfigPath
+	skipGit := params.SkipGit
 	workdir := filepath.Dir(cpath)
 	vendorDir := filepath.Join(workdir, "vendor")
 	appsDir := filepath.Join(workdir, "applications")
@@ -94,15 +96,20 @@ func Render(log logger.Logger, params RenderParams) error {
 		dirs[i.Name()] = struct{}{}
 	}
 
-	log.Debug("Finding remote git repository URL to configure ArgoCD applications")
-	repoDir, repoUrl, err := gitutils.GetOriginRemote(log, workdir)
-	if err != nil {
-		return err
-	}
+	repoPath, repoUrl := "", ""
+	if !skipGit {
+		log.Debug("Finding remote git repository URL to configure ArgoCD applications")
+		dir, url, err := gitutils.GetOriginRemote(log, workdir)
+		if err != nil {
+			return err
+		}
 
-	repoPath, err := filepath.Rel(repoDir, workdir)
-	if err != nil {
-		return err
+		path, err := filepath.Rel(dir, workdir)
+		if err != nil {
+			return err
+		}
+
+		repoPath, repoUrl = path, url
 	}
 
 	// empty line for nice logs
@@ -125,7 +132,7 @@ func Render(log logger.Logger, params RenderParams) error {
 			log.Infof("Rendering component %s at %s", comp.DebugLabel(), strings.ReplaceAll(outdir, filepath.Dir(workdir)+"/", ""))
 			log.Debugf("Component %s params: %s", comp.DebugLabel(), comp.Params())
 
-			if err := comp.Render(outdir); err != nil {
+			if err := comp.Render(log, outdir); err != nil {
 				ch <- utils.NewPair(msg, err)
 				return
 			}

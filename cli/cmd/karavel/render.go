@@ -27,6 +27,8 @@ const DefaultFileName = "karavel.hcl"
 
 func NewRenderCommand(log logger.Logger) *cobra.Command {
 	var cpath string
+	var skipGit bool
+
 	cmd := &cobra.Command{
 		Use:   "render",
 		Short: "Render a Karavel project",
@@ -63,11 +65,13 @@ It will, however, consider the 'vendor' directory as a fully-managed folder and 
 
 			return action.Render(log, action.RenderParams{
 				ConfigPath: cpath,
+				SkipGit:    skipGit,
 			})
 		},
 	}
 
 	cmd.Flags().StringVarP(&cpath, "file", "f", DefaultFileName, "Specify an alternate config file")
+	cmd.Flags().BoolVar(&skipGit, "skip-git", false, "Skip the git integration to discover remote repositories for Argo. WARNING: this will render the Argo component inoperable")
 
 	return cmd
 }

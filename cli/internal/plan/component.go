@@ -22,6 +22,7 @@ import (
 	"github.com/mikamai/karavel/cli/internal/helmw"
 	"github.com/mikamai/karavel/cli/internal/utils"
 	"github.com/mikamai/karavel/cli/internal/utils/predicate"
+	"github.com/mikamai/karavel/cli/pkg/logger"
 	"github.com/pkg/errors"
 	"github.com/tidwall/sjson"
 	"gopkg.in/yaml.v3"
@@ -142,12 +143,20 @@ func (c *Component) DebugLabel() string {
 	return fmt.Sprintf("'%s' %s%s", c.component, c.version, withAlias)
 }
 
+func (c *Component) DebugLabel() string {
+	var withAlias string
+	if name := c.NameOverride(); name != "" {
+		withAlias = fmt.Sprintf(" with alias '%s'", name)
+	}
+	return fmt.Sprintf("'%s' %s%s", c.ComponentName(), c.Version(), withAlias)
+}
+
 type routineRes struct {
 	filename string
 	err      error
 }
 
-func (c *Component) Render(outdir string) error {
+func (c *Component) Render(log logger.Logger, outdir string) error {
 	deferr := fmt.Sprintf("failed to render component '%s' v%s", c.name, c.version)
 
 	if err := os.RemoveAll(outdir); err != nil {
@@ -171,6 +180,8 @@ func (c *Component) Render(outdir string) error {
 	if err != nil {
 		return errors.Wrap(err, deferr)
 	}
+
+	log.Debugf("component %s: writing %d resources", c.DebugLabel(), len(docs))
 
 	var wg sync.WaitGroup
 	resch := make(chan routineRes)
@@ -206,6 +217,7 @@ func (c *Component) Render(outdir string) error {
 
 			basename := fmt.Sprintf("%s-%s%s.yml", k, meta["name"], ns)
 			filename := filepath.Join(outdir, basename)
+			log.Debugf("component %s writing file %s", c.DebugLabel(), filepath.Join(filepath.Base(outdir), basename))
 			if err := ioutil.WriteFile(filename, buf.Bytes(), 0655); err != nil {
 				resch <- routineRes{err: err}
 			}

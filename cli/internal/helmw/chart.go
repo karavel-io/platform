@@ -22,6 +22,7 @@ import (
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chart/loader"
+	"io"
 )
 
 func GetChartManifest(chartname string) (*chart.Metadata, error) {
@@ -48,7 +49,9 @@ func GetChartManifest(chartname string) (*chart.Metadata, error) {
 type YamlDoc map[string]interface{}
 
 func TemplateChart(name string, namespace string, version string, values string) ([]YamlDoc, error) {
-	hc, err := helmclient.New(&helmclient.Options{})
+	hc, err := helmclient.New(&helmclient.Options{
+		Debug: true,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -72,8 +75,12 @@ func TemplateChart(name string, namespace string, version string, values string)
 	var docs []YamlDoc
 	for {
 		var doc YamlDoc
-		if dec.Decode(&doc) != nil {
-			break
+		if err := dec.Decode(&doc); err != nil {
+			if err == io.EOF {
+				break
+			} else {
+				return nil, err
+			}
 		}
 		docs = append(docs, doc)
 	}
