@@ -1,0 +1,17 @@
+apiVersion: v2
+name: cilium
+description: Cilium component for Karavel
+type: application
+version: 0.1.0
+appVersion: 1.9.4
+maintainers:
+  - name: MatteoJoliveau
+    email: matteo.joliveau@mikamai.com
+
+home: https://github.com/cilium/cilium
+sources:
+  - https://github.com/cilium/cilium
+  - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/bootstrap: 'true'
