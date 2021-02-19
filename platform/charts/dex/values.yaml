@@ -1,4 +1,6 @@
-publicHost: dex.example.com
+publicURL:
 connectors: []
-secrets: []
-clients: []
+secret:
+
+prometheus:
+  enable: false

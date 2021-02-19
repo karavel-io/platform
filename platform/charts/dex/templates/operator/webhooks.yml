@@ -1,0 +1,77 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ include "dex.name" . }}-operator-mutating-webhook-configuration
+  labels:
+    {{ include "dex.labels" . | nindent 4 }}
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "dex.name" . }}-operator-cert
+webhooks:
+  - clientConfig:
+      service:
+        name: {{ include "dex.name" . }}-operator
+        namespace: {{ .Release.Namespace }}
+        path: /mutate-dex-karavel-io-v1alpha1-dex
+    failurePolicy: Fail
+    name: mdex.kb.io
+    rules:
+      - apiGroups:
+          - dex.karavel.io
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - dexes
+    admissionReviewVersions: ["v1beta1"]
+    sideEffects: None
+
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "dex.name" . }}-operator-validating-webhook-configuration
+  labels:
+    {{ include "dex.labels" . | nindent 4 }}
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "dex.name" . }}-operator-cert
+webhooks:
+  - clientConfig:
+      service:
+        name: {{ include "dex.name" . }}-operator
+        namespace: {{ .Release.Namespace }}
+        path: /validate-dex-karavel-io-v1alpha1-dex
+    failurePolicy: Fail
+    name: vdex.kb.io
+    rules:
+      - apiGroups:
+          - dex.karavel.io
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - dexes
+    admissionReviewVersions: ["v1beta1"]
+    sideEffects: None
+  - clientConfig:
+      service:
+        name: {{ include "dex.name" . }}-operator
+        namespace: {{ .Release.Namespace }}
+        path: /validate-dex-karavel-io-v1alpha1-dexclient
+    failurePolicy: Fail
+    name: vdexclient.kb.io
+    rules:
+      - apiGroups:
+          - dex.karavel.io
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - dexclients
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
