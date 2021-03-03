@@ -3,7 +3,7 @@ name: linkerd
 description: Linkerd component for Karavel
 type: application
 version: 0.1.0
-appVersion: 2.9.2
+appVersion: 2.9.4
 maintainers:
   - name: MatteoJoliveau
     email: matteo.joliveau@mikamai.com
@@ -12,3 +12,7 @@ home: https://linkerd.io
 sources:
   - https://github.com/linkerd/linkerd2
   - https://github.com/mikamai/karavel
+
+annotations:
+  monitoring.enable: grafana, prometheus
+  tracing.enable: tempo
