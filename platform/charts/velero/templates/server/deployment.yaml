@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "velero.name" . }}-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "velero.name" . }}
+    {{ include "velero.labels" . | nindent 4 }}
+  {{ with .Values.aws.iamRole }}
+  annotations:
+    iam.amazonaws.com/role: {{ . }}
+  {{ end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "velero.name" . }}
+      {{ include "velero.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "velero.name" . }}
+        {{ include "velero.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Always
+      serviceAccountName: {{ include "velero.name" . }}
+      initContainers:
+        - name: velero-plugin-for-aws
+          image: velero/velero-plugin-for-aws:v1.1.0
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /target
+              name: plugins
+      containers:
+        - name: velero
+          image: "velero/velero:v{{ .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
+          {{- if .Values.prometheus.enable }}
+          ports:
+            - name: monitoring
+              containerPort: 8085
+          {{- end }}
+          command:
+            - /velero
+          args:
+            - server
+            - --log-level=warning
+            - --log-format=text
+          env:
+            - name: VELERO_SCRATCH_DIR
+              value: /scratch
+            - name: VELERO_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: LD_LIBRARY_PATH
+              value: /plugins
+            {{- if .Values.credentialsSecret.key }}
+            - name: AWS_SHARED_CREDENTIALS_FILE
+              value: /credentials/cloud
+            {{- end }}
+            {{- if .Values.backups.enable}}
+            {{- with .Values.backups.s3.accessKeySecret }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .name }}
+                  key: {{ .key }}
+            {{- end }}
+            {{- with .Values.backups.s3.secretKeySecret }}
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .name }}
+                  key: {{ .key }}
+            {{- end }}
+            {{- end }}
+          resources:
+            requests:
+              cpu: 300m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          volumeMounts:
+            - name: plugins
+              mountPath: /plugins
+            - name: scratch
+              mountPath: /scratch
+            {{- if .Values.credentialsSecret.key }}
+            - name: cloud-credentials
+              mountPath: /credentials
+            {{- end }}
+      volumes:
+        {{- if .Values.credentialsSecret.key }}
+        - name: cloud-credentials
+          secret:
+            secretName: {{ include "velero.name" . }}-credentials
+        {{- end }}
+        - name: plugins
+          emptyDir: {}
+        - name: scratch
+          emptyDir: {}

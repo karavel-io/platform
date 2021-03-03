@@ -1,0 +1,19 @@
+{{- if .Values.prometheus.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "velero.name" . }}-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "velero.name" . }}
+    {{ include "velero.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: monitoring
+      port: 8085
+      targetPort: monitoring
+  selector:
+    app.kubernetes.io/name: {{ include "velero.name" . }}
+    {{ include "velero.selectorLabels" . | nindent 4 }}
+{{- end }}
