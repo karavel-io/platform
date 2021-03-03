@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "linkerd.name" . }}-controller-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: controller-api
+    linkerd.io/control-plane-component: controller
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: controller-api
+    linkerd.io/control-plane-component: controller
+    {{ include "linkerd.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: http
+      port: 8085
+      targetPort: http
