@@ -1,5 +1,8 @@
 publicURL:
-connectors: []
+connectors:
+  - type: mockCallback
+    id: mock
+    name: Example
 secret:
 
 prometheus:
