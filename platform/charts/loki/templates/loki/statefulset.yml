@@ -92,5 +92,16 @@ spec:
         - name: config
           configMap:
             name: loki
+        {{- if ne .Values.store "filesystem" }}
         - name: storage
           emptyDir: {}
+        {{- end }}
+  {{- if eq .Values.store "filesystem"}}
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+      spec:
+        resources:
+          requests:
+            storage: 100Gi
+  {{- end }}
