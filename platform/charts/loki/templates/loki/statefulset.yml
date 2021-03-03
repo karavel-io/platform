@@ -6,13 +6,13 @@ metadata:
   labels:
     app.kubernetes.io/name: loki
     {{- include "loki.labels" . | nindent 4 }}
-  {{ with .Values.loki.s3.iamRole }}
+  {{ with .Values.s3.iamRole }}
   annotations:
     iam.amazonaws.com/role: {{ . }}
   {{ end }}
 spec:
   podManagementPolicy: OrderedReady
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: loki
@@ -38,9 +38,9 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/loki/loki.yaml"
-          {{- if .Values.jaeger.enable }}
+          {{- if .Values.tracing.enable }}
             - "-tracing.enabled=true"
-          {{- with .Values.jaeger }}
+          {{- with .Values.tracing }}
           env:
             - name: JAEGER_AGENT_HOST
               value: {{ .host }}
@@ -68,11 +68,6 @@ spec:
             - name: gossip
               containerPort: 7946
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /ready
-              port: http-metrics
-            initialDelaySeconds: 45
           readinessProbe:
             httpGet:
               path: /ready
@@ -97,5 +92,16 @@ spec:
         - name: config
           configMap:
             name: loki
+        {{- if ne .Values.store "filesystem" }}
         - name: storage
           emptyDir: {}
+        {{- end }}
+  {{- if eq .Values.store "filesystem"}}
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+      spec:
+        resources:
+          requests:
+            storage: 100Gi
+  {{- end }}

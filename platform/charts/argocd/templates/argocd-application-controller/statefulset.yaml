@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "argocd.name" . }}-application-controller
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller
+    {{- include "argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: application-controller
+spec:
+  serviceName: {{ include "argocd.name" . }}-application-controller-headless
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller
+      {{- include "argocd.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: application-controller
+  revisionHistoryLimit: 5
+  replicas: {{ .Values.applicationController.replicas }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller
+        {{- include "argocd.labels" . | nindent 8 }}
+        app.kubernetes.io/component: application-controller
+    spec:
+      containers:
+      - command:
+        - argocd-application-controller
+        - --status-processors
+        - "20"
+        - --operation-processors
+        - "10"
+        - --app-resync
+        - "180"
+        - --repo-server
+        - {{ include "argocd.name" . }}-repo-server:8081
+        - --logformat
+        - text
+        - --loglevel
+        - info
+        - --redis
+        - {{ include "argocd.name" . }}-redis:6379
+        image: "docker.io/argoproj/argocd:v{{ .Chart.AppVersion }}"
+        imagePullPolicy: IfNotPresent
+        name: application-controller
+        env:
+          - name: ARGOCD_CONTROLLER_REPLICAS
+            value: {{ .Values.applicationController.replicas | quote }}
+        ports:
+        - name: controller
+          containerPort: 8082
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: '1'
+            memory: 2Gi
+      serviceAccountName: {{ include "argocd.name" . }}-application-controller

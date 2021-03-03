@@ -1,4 +1,9 @@
-publicHost: dex.example.com
-connectors: []
-secrets: []
-clients: []
+publicURL:
+connectors:
+  - type: mockCallback
+    id: mock
+    name: Example
+secret:
+
+prometheus:
+  enable: false

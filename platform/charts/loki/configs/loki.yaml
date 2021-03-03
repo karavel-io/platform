@@ -8,6 +8,7 @@ ingester:
   chunk_block_size: 262144
   chunk_retain_period: 1m
   max_transfer_retries: 0
+  chunk_encoding: snappy
   lifecycler:
     ring:
       kvstore:
@@ -37,7 +38,7 @@ schema_config:
   configs:
     - from: 2020-10-24
       store: boltdb-shipper
-      object_store: {{ .Values.loki.objectStore }}
+      object_store: {{ .Values.store }}
       schema: v11
       index:
         prefix: index_
@@ -48,12 +49,12 @@ storage_config:
     active_index_directory: /data/loki/boltdb-shipper-active
     cache_location: /data/loki/boltdb-shipper-cache
     cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
-    shared_store: {{ .Values.loki.objectStore }}
-{{- if eq .Values.loki.objectStore "filesystem" }}
+    shared_store: {{ .Values.store }}
+{{- if eq .Values.store "filesystem" }}
   filesystem:
     directory: /data/loki/chunks
-{{- else if eq .Values.loki.objectStore "s3" }}
-  {{- with .Values.loki.s3 }}
+{{- else if eq .Values.store "s3" }}
+  {{- with .Values.s3 }}
   aws:
     s3: s3://{{ .region }}/{{ .bucket }}
     endpoint: {{ .endpoint }}
@@ -69,7 +70,7 @@ table_manager:
   retention_period: 0s
 compactor:
   working_directory: /data/loki/boltdb-shipper-compactor
-  shared_store: {{ .Values.loki.objectStore }}
+  shared_store: {{ .Values.store }}
 # Needed for Alerting: https://grafana.com/docs/loki/latest/alerting/
 # This is just a simple example, for more details: https://grafana.com/docs/loki/latest/configuration/#ruler_config
 #  ruler:

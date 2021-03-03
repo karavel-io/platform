@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-adapter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: prometheus-adapter
+    app.kubernetes.io/component: metrics-adapter
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.metricsAdapter.version }}
+spec:
+  ports:
+  - name: https
+    port: 443
+    targetPort: 6443
+  selector:
+    app.kubernetes.io/name: prometheus-adapter
+    app.kubernetes.io/component: metrics-adapter
+    {{- include "prometheus.selectorLabels" . | nindent 4 }}

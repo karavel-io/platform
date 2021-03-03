@@ -13,8 +13,8 @@ vault:
   defaultMountPoint: ""
   defaultRole: ""
   extraCertsSecret:
-    name: "vault-ca"
-    key: "ca.pem"
+    name:
+    key:
 
 prometheus:
-  enable: false
+  enable: true

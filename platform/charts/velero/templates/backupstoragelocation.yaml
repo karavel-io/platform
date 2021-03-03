@@ -1,0 +1,32 @@
+{{- if .Values.backups.enable }}
+apiVersion: velero.io/v1
+kind: BackupStorageLocation
+metadata:
+  name: default
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "velero.name" . }}
+    {{ include "velero.labels" . | nindent 4 }}
+spec:
+  provider: {{ required "parameter 'backups.provider' is required for generating default backup storage location" .Values.backups.provider }}
+{{- with .Values.backups.s3 }}
+  objectStorage:
+    bucket: {{ required "parameter 'backups.s3.bucket' is required for generating default backup storage location" .bucket  }}
+    {{- with .prefix }}
+    prefix: {{ . }}
+    {{- end }}
+    {{- with .caCert }}
+    caCert: {{ . }}
+    {{- end }}
+  config:
+{{- with .pathStyle }}
+    s3ForcePathStyle: {{ . | quote }}
+{{- end }}
+    region: {{ .region }}
+    s3Url: {{ ternary "http" "https" .insecure }}://{{ .endpoint }}
+    {{- if .encrypted }}
+    serverSideEncryption: AES256
+    {{- end }}
+    insecureSkipTLSVerify: {{ .insecure | quote }}
+{{- end }}
+{{- end }}

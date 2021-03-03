@@ -1,7 +1,7 @@
 version: 2.1
 
 workflows:
-  default:
+  platform:
     jobs:
       - helm-lint
       - docs-build:
@@ -11,6 +11,9 @@ workflows:
             branches:
               only:
                 - master
+  cli:
+    jobs:
+      - cli-verify
 
 jobs:
   helm-lint:
@@ -24,7 +27,7 @@ jobs:
 
   docs-build:
     docker:
-      - image: squidfunk/mkdocs-material:6.1.6
+      - image: squidfunk/mkdocs-material:6.2.8
     steps:
       - checkout
       - add_ssh_keys:
@@ -32,4 +35,41 @@ jobs:
             - "95:21:09:e7:b3:a2:00:1a:1e:19:30:69:6b:2f:83:b5"
       - run:
           name: Publish docs to GitHub Pages
-          command: mkdocs gh-deploy --strict --force
+          command: |
+            mkdocs gh-deploy --strict --force --message "[ci skip] Deployed 7881965 with MkDocs version: 1.1.2"
+
+  cli-verify:
+    working_directory: ~/project/cli
+    docker:
+      - image: circleci/golang:1.15
+    steps:
+      - checkout:
+          path: ~/project
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
+      - run:
+          name: Install addlicense
+          command: go get -u github.com/google/addlicense
+      - run:
+          name: Build CLI
+          command: make build
+      - save_cache:
+          key: go-mod-v4-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - run: mkdir -p /tmp/test-results
+      - run:
+          name: Run tests
+          command: |
+            PACKAGE_NAMES=$(go list ./... | circleci tests split --split-by=timings --timings-type=classname)
+            gotestsum --junitfile /tmp/test-results/gotestsum-report.xml -- $PACKAGE_NAMES
+      - run:
+          name: Run linter
+          command: make vet
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
+
+      - store_test_results:
+          path: /tmp/test-results

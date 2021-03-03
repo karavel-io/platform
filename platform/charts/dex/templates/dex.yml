@@ -1,0 +1,29 @@
+apiVersion: dex.karavel.io/v1alpha1
+kind: Dex
+metadata:
+  name: {{ include "dex.name" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  publicURL: {{ required "param publicURL is required for generating Dex instance" .Values.publicURL }}
+  image: quay.io/dexidp/dex:v{{ .Chart.AppVersion }}
+  serviceAccountName: {{ include "dex.name" . }}
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tlsEnabled: true
+  {{- with .Values.secret }}
+  envFrom:
+    - secretRef:
+        name: {{ include "dex.name" $ }}-secrets
+  {{- end }}
+  connectors:
+    {{- range .Values.connectors }}
+    - type: {{ .type }}
+      id: {{ .id }}
+      name: {{ .name }}
+      config: |
+        {{- .config | toYaml | nindent 8 }}
+    {{- else }}
+      {{ fail "param connectors is required for generating Dex instance" }}
+    {{- end }}
+

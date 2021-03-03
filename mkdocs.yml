@@ -2,31 +2,49 @@ site_name: Karavel
 site_url: https://docs.karavel.io
 repo_name: mikamai/karavel
 repo_url: https://github.com/mikamai/karavel
-copyright: © 2020 MIKAMAI | Documentation distributed under CC BY SA 4.0 | All Rights Reserved
+copyright: © 2021 MIKAMAI | Documentation distributed under CC BY SA 4.0
 strict: false
 theme:
   name: material
   palette:
     scheme: slate
 markdown_extensions:
+  - meta
+  - footnotes
   - pymdownx.highlight
+  - pymdownx.tabbed
   - pymdownx.superfences
   - admonition
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
   - toc:
       permalink: true
 nav:
   - Overview: index.md
   - quickstart.md
+  - CLI: cli.md
+  - versioning.md
+  - Components:
+      - Overview: components/index.md
+      - Core:
+          - components/core/calico.md
+          - components/core/argocd.md
+          - components/core/external-secrets.md
+          - components/core/external-dns.md
+          - components/core/cert-manager.md
+          - components/core/nginx-ingress-controller.md
+#      - Security: []
+      - Observability:
+          - components/observability/grafana.md
+          - components/observability/prometheus.md
+          - components/observability/loki.md
+          - components/observability/tempo.md
+          - components/observability/goldpinger.md
+      - AWS:
+          - components/aws/index.md
+          - components/aws/aws-node-termination-handler.md
   - Operator Handbook:
       - Introduction: operator-handbook/index.md
-      - operator-handbook/bootstrap.md
-      - Components:
-          - operator-handbook/components/core.md
-          - operator-handbook/components/aws.md
-          - operator-handbook/components/ingress-controllers.md
-          - operator-handbook/components/logging.md
-      - operator-handbook/variables.md
       - operator-handbook/customizing.md
-  - Developer Handbook:
-      - developer-handbook/bootstrap.md
 

@@ -53,17 +53,13 @@ spec:
             - name: DEFAULT_VAULT_ROLE
               value: {{ .Values.vault.defaultRole }}
             {{- end }}
-            {{- if .Values.vault.enable }}
+            {{- if and .Values.vault.enable .Values.vault.extraCertsSecret.key }}
             - name: NODE_EXTRA_CA_CERTS
               value: "/usr/local/share/ca-certificates/{{ .Values.vault.extraCertsSecret.key }}"
-            {{- end }}
           volumeMounts:
-            {{- if .Values.vault.enable }}
             - name: {{ .Values.vault.extraCertsSecret.name }}
               mountPath: /usr/local/share/ca-certificates
               subPath: {{ .Values.vault.extraCertsSecret.key }}
-            {{- else }}
-            []
             {{- end }}
       securityContext:
         runAsNonRoot: true

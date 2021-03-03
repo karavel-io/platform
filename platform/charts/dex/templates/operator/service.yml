@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dex.name" . }}-operator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "dex.name" . }}-operator
+    {{ include "dex.selectorLabels" . | nindent 4 }}
+spec:
+  ports:
+    - name: https
+      port: 443
+      targetPort: webhook-server
+    - name: metrics
+      port: 8080
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/name: {{ include "dex.name" . }}-operator
+    {{ include "dex.selectorLabels" . | nindent 4 }}

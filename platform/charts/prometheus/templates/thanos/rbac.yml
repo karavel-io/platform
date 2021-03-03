@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: thanos
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/version: {{ .Values.thanos.version }}
+  {{- include "prometheus.labels" . | nindent 4 }}
+  {{- with .Values.s3.eksRole }}
+  annotations:
+    eks.amazonaws.com/role-arn: {{ . }}
+  {{- end }}

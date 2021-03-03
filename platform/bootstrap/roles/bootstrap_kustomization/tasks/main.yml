@@ -1,8 +1,0 @@
-- name: Generate bootstrap kustomization stack
-  delegate_to: localhost
-  vars:
-    components: '{{ ansible_facts["karavel_components"] }}'
-  template:
-    src: kustomization.yml.j2
-    dest: '{{ playbook_dir }}/kustomization.yml'
-    mode: 0644

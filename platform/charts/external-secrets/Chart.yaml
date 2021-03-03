@@ -12,3 +12,7 @@ home: https://github.com/external-secrets/kubernetes-external-secrets
 sources:
   - https://github.com/external-secrets/kubernetes-external-secrets
   - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/bootstrap: 'true'
+  prometheus.enable: prometheus

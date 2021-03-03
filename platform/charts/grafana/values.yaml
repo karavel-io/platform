@@ -1,5 +1,4 @@
-grafana:
-  host: grafana.example.com
+host: grafana.example.com
 
 secret:
   backend: secretsManager

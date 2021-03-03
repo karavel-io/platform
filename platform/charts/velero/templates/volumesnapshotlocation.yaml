@@ -1,0 +1,14 @@
+{{- if .Values.snapshots.enable }}
+apiVersion: velero.io/v1
+kind: VolumeSnapshotLocation
+metadata:
+  name: default
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "velero.name" . }}
+    {{ include "velero.labels" . | nindent 4 }}
+spec:
+  provider: {{ required "parameter 'snapshots.provider' is required for generating default backup storage location" .Values.snapshots.provider }}
+  config:
+    region: {{ .Values.snapshots.region }}
+{{- end }}

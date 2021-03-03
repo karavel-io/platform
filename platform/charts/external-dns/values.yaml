@@ -1,6 +1,6 @@
 domainFilter: ""
 
-provider: cloudflare
+provider: ""
 
 cloudflare:
   proxied: false

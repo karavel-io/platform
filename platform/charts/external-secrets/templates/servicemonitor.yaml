@@ -16,5 +16,5 @@ spec:
     - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      {{- include "external-secrets.selectorLabels" . | nindent 4 }}
+      {{- include "external-secrets.selectorLabels" . | nindent 6 }}
 {{- end }}

@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  labels:
+    alertmanager: operated
+    app.kubernetes.io/component: alert-router
+    app.kubernetes.io/name: alertmanager
+    {{- include "prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/version: {{ .Values.alertmanager.version }}
+  name: alertmanager-operated
+  namespace: {{ .Release.Namespace }}
+spec:
+  image: quay.io/prometheus/alertmanager:v{{ .Values.alertmanager.version }}
+  nodeSelector:
+    kubernetes.io/os: linux
+  podMetadata:
+    labels:
+      app.kubernetes.io/component: alert-router
+      app.kubernetes.io/name: alertmanager
+      {{- include "prometheus.labels" . | nindent 6 }}
+      app.kubernetes.io/version: {{ .Values.alertmanager.version }}
+  replicas: 3
+  resources: {}
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: alertmanager-operated
+  version: {{ .Values.alertmanager.version }}
+  configSecret: alertmanager-operated
+  alertmanagerConfigNamespaceSelector: {}
+  alertmanagerConfigSelector:
+    matchLabels:
+      alertmanager: operated
+
+

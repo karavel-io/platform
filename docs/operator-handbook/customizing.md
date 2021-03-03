@@ -1,20 +1,20 @@
 # Customizing Karavel manifests
 
-If you have used the Karavel Bootstrap Tool to generate
+If you have used the Karavel CLI tool to generate
 a new Karavel GitOps repository, you should find yourself with a huge `vendor` directory.
 
 This folder contains the Kubernetes manifests for every component managed by Karavel.
 These manifests have been carefully configured and crafted to work out-of-the-box, but sometimes
 special configuration must be applied in order to comply with special scenarios or requirements.
 
-Since the `vendor` directory is managed by the Karavel Bootstrap Tool and changes to its files could be overwritten
+Since the `vendor` directory is managed by the Karavel CLI and changes to its files could be overwritten
 by future updates, hand-editing them is not recommended. Instead, each folder is provisioned as a [Kustomize] stack. This allows to edit 
 Karavel manifests by applying a [Kustomize overlay] that patches the Kubernetes objects.
 
 ## Patching a vendored resource
 
 For example, let's say we want to scale the [NGINX Ingress Controller] from the default 3 pods to 6, for increased resiliency.
-The deployment manifests resides in `vendor/ingress-nginx/ingress-nginx-controller-deployment.yml`, and the field
+The deployment manifests resides in `vendor/ingress-nginx/deployment-ingress-nginx-controller.yml`, and the field
 we want to edit is `spec.replicas`.
 
 Let's start by adding a directory where our patch will live. In the root of your Karavel directory add a new folder called `ingress-nginx`, at the same level as the `vendor` directory.
@@ -26,17 +26,17 @@ Let's start by adding a directory where our patch will live. In the root of your
 `-- # rest of the files and folders omitted
 ```
 
-Inside this new directory we'll add our YAML patch. The patch needs to reference the `apiVersion`, `kind` and `metadata.name` of the target
+Inside this new directory we'll add our YAML patch. The patch needs to reference the `apiVersion`, `kind`, `metadata.name` and `metadata.namespace` of the target
 object, as well as any changes to the rest of the manifest we want to merge. In our case, the new `spec.replicas`.
 
 ```yaml
-# ingress-nginx/ingress-nginx-controller-deployment-patch.yml
+# ingress-nginx/deployment-patch.yml
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ingress-nginx-controller
-  namespace: ingress-nginx        # let's add the namespace just for safety
+  namespace: ingress-nginx        
 spec:
   replicas: 6                     # increase replicas from 3 to 6
 ```
@@ -53,11 +53,11 @@ resources:
 - ../vendor/ingress-nginx
 
 patchesStrategicMerge:
-  - ingress-nginx-controller-deployment-patch.yml
+  - deployment-patch.yml
 ``` 
 
 As you can see the Kustomize stack references the vendored `ingress-nginx` directory as a base resource, adding our new file as a patch.
-This imports all the vanilla Karavel manifests, leaving them untouched except for the controller deployment.
+This imports all the base Karavel manifests, leaving them untouched except for the controller deployment.
 
 You can check that the patch is being applied correctly by running the following commands:
 
@@ -71,15 +71,15 @@ replicas: 6
 
 The directory structure should be something like this:
 
-```bash
+```
 .
-|-- ingress-nginx
-|   |-- ingress-nginx-controller-deployment-patch.yml
-|   `-- kustomization.yml
-|-- vendor
-|   |-- ingress-nginx
-|   `-- # rest of the Karavel components omitted
-`-- # rest of the files and folders omitted
+├── ingress-nginx
+│   ├── deployment-patch.yml
+│   └── kustomization.yml
+├── vendor
+│   ├── ingress-nginx
+│   └── # rest of the Karavel components omitted
+└── # rest of the files and folders omitted
 ```
 
 ## Updating the ArgoCD application

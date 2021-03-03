@@ -12,3 +12,8 @@ home: https://cert-manager.io
 sources:
 - https://github.com/jetstack/cert-manager
 - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/bootstrap: 'true'
+  karavel.io/dependencies: external-secrets
+  prometheus.enable: prometheus

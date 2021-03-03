@@ -12,3 +12,9 @@ home: https://grafana.com/oss/loki/
 sources:
   - https://github.com/grafana/loki
   - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/dependencies: cert-manager, external-secrets
+  prometheus.enable: prometheus
+  monitoring.enable: grafana, prometheus
+  tracing.enable: tempo

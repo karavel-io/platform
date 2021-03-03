@@ -12,3 +12,8 @@ home: https://github.com/kubernetes-sigs/external-dns
 sources:
   - https://github.com/kubernetes-sigs/external-dns
   - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/bootstrap: 'true'
+  karavel.io/dependencies: external-secrets
+  monitoring.enable: prometheus, grafana

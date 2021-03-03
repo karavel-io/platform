@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: tempo
+  name: {{ include "tempo.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: tempo
     {{ include "tempo.labels" . | nindent 4 }}
-  {{ with .Values.tempo.s3.iamRole }}
+  {{ with .Values.s3.iamRole }}
   annotations:
     iam.amazonaws.com/role: {{ . }}
   {{ end }}
 spec:
-  serviceName: tempo-headless
-  replicas: 1
+  serviceName: {{ include "tempo.name" . }}-headless
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: tempo
@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/name: tempo
         {{ include "tempo.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: tempo
+      serviceAccountName: {{ include "tempo.name" . }}
       securityContext:
         fsGroup: 10001
         runAsGroup: 10001
@@ -80,6 +80,6 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: tempo
+            name: {{ include "tempo.name" . }}
         - name: storage
           emptyDir: {}

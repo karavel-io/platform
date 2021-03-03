@@ -43,10 +43,9 @@ karavel.io/component-version: {{ .Chart.Version }}
 Selector labels
 */}}
 {{- define "dex.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "dex.name" . }}
 app.kubernetes.io/part-of: {{ include "dex.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "dex.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*
@@ -64,5 +63,5 @@ Create the name of the service account to use
 API hostname
 */}}
 {{- define "dex.apiHost" -}}
-{{- default .Values.apiHost (printf "api.%s" .Values.publicHost) }}
+{{- default .Values.apiHost (printf "api.%s" .Values.publicURL) }}
 {{- end }}

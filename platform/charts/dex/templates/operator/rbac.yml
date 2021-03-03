@@ -1,0 +1,198 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "dex.name" . }}-operator
+  labels:
+    app.kubernetes.io/name: {{ include "dex.name" . }}-operator
+    {{ include "dex.labels" . | nindent 4 }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - events
+      - serviceaccounts
+      - services
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+      - secrets
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - create
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - dex.coreos.com
+    resources:
+      - '*'
+    verbs:
+      - '*'
+  - apiGroups:
+      - dex.karavel.io
+    resources:
+      - dexclients
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - dex.karavel.io
+    resources:
+      - dexclients/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - dex.karavel.io
+    resources:
+      - dexes
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - dex.karavel.io
+    resources:
+      - dexes/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterrolebindings
+      - clusterroles
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "dex.name" . }}-operator
+  labels:
+    app.kubernetes.io/name: {{ include "dex.name" . }}-operator
+    {{ include "dex.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "dex.name" . }}-operator
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "dex.name" . }}-operator
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "dex.name" . }}-operator-leader-election
+  labels:
+    app.kubernetes.io/name: {{ include "dex.name" . }}-operator
+    {{ include "dex.labels" . | nindent 4 }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps/status
+    verbs:
+      - get
+      - update
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "dex.name" . }}-operator-leader-election
+  labels:
+    app.kubernetes.io/name: {{ include "dex.name" . }}-operator
+    {{ include "dex.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "dex.name" . }}-operator-leader-election
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "dex.name" . }}-operator
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "dex.name" . }}-operator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "dex.name" . }}-operator
+    {{ include "dex.labels" . | nindent 4 }}

@@ -1,15 +1,19 @@
 let
   pkgs = import <nixpkgs> {};
-  openshift = pkgs.callPackage .nix/openshift.nix { inherit pkgs; };
   linkerd = pkgs.callPackage .nix/linkerd.nix { inherit pkgs; };
-  pypkgs = pkgs.python38Packages;
+  unstable = import (fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz) { };
+  addlicense = pkgs.callPackage ./.nix/addlicense.nix { };
 in
 pkgs.mkShell {
-    buildInputs = with pkgs; [
-      mkdocs
-      ansible_2_10
-      openshift
-      pypkgs.kubernetes
-      linkerd
-    ];
+  buildInputs = with pkgs; [
+    nixpkgs-fmt
+    go
+    kubectl
+    kubernetes-helm
+    kustomize
+    kind
+    addlicense
+    unstable.velero
+    linkerd
+  ];
 }

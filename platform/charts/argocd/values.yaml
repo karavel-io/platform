@@ -21,8 +21,11 @@ oidc:
     clientSecret: $oidc.clientSecret
     requestedScopes: ["openid", "profile", "email", "groups"]
 
+applicationController:
+  replicas: 1
+
 redis:
   version: 6.0.9
 
 prometheus:
-  enable: false
+  enable: true

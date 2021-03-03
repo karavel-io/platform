@@ -12,3 +12,8 @@ home: https://dexidp.io
 sources:
   - https://github.com/dexidp/dex
   - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/bootstrap: 'true'
+  karavel.io/dependencies: cert-manager, external-secrets
+  prometheus.enable: prometheus

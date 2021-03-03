@@ -1,7 +1,7 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDataSource
 metadata:
-  name: tempo-datasource
+  name: {{ include "tempo.name" . }}-datasource
   namespace: {{ .Values.grafana.namespace | default .Release.Namespace }}
   labels:
     app.kubernetes.io/name: tempo
@@ -10,10 +10,10 @@ metadata:
 spec:
   name: tempo.yaml
   datasources:
-    - name: Tempo
+    - name: {{ title (include "tempo.name" . ) }}
       type: tempo
-      uid: tempo
+      uid: {{ include "tempo.name" . }}
       access: proxy
-      url: http://tempo-query.{{ .Release.Namespace }}:16686
+      url: http://{{ include "tempo.name" . }}-query.{{ .Release.Namespace }}:16686
       version: 1
       editable: false

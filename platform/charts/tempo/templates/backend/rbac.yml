@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: tempo
+  name: {{ include "tempo.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: tempo
     {{ include "tempo.labels" . | nindent 4 }}
-  {{ with .Values.tempo.s3.eksRole }}
+  {{ with .Values.s3.eksRole }}
   annotations:
     eks.amazonaws.com/role-arn: {{ . }}
   {{ end }}

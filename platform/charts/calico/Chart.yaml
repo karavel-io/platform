@@ -12,3 +12,7 @@ home: https://projectcalico.org
 sources:
   - https://github.com/projectcalico.org
   - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/bootstrap: 'true'
+  monitoring.enable: grafana, prometheus

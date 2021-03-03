@@ -1,0 +1,39 @@
+prometheus:
+  version: 2.24.0
+
+thanos:
+  version: 0.18.0
+
+store: filesystem
+s3:
+  bucket:
+  endpoint:
+  region:
+  encrypted: true
+  insecure: false
+  eksRole:
+  iamRole:
+
+operator:
+  version: 0.45.0
+
+kubeRBACProxy:
+  version: 0.8.0
+
+nodeExporter:
+  version: 1.0.1
+
+kubeStateMetrics:
+  version: 1.9.7
+
+blackboxExporter:
+  version: 0.18.0
+
+alertmanager:
+  version: 0.21.0
+
+metricsAdapter:
+  version: 0.8.3
+
+grafana:
+  namespace:

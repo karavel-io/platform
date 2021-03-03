@@ -1,2 +1,2 @@
 prometheus:
-  enable: false
+  enable: true

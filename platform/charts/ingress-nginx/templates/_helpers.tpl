@@ -76,7 +76,7 @@ Selector labels
 {{- define "ingress-nginx.selectorLabels" -}}
 app.kubernetes.io/part-of: {{ include "ingress-nginx.name" . }}
 app.kubernetes.io/managed-by: karavel
-karavel.io/component-name: {{ include "ingress-nginx.name" . }}
+karavel.io/component-name: {{ .Chart.Name }}
 {{- end }}
 
 {{/*

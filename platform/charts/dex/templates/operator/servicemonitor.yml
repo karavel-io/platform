@@ -1,0 +1,18 @@
+{{- if .Values.prometheus.enable }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "dex.name" . }}-operator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "dex.name" . }}-operator
+    {{ include "dex.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - path: /metrics
+      port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "dex.name" . }}-operator
+      {{ include "dex.selectorLabels" . | nindent 6 }}
+{{- end }}
