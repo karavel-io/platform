@@ -1,0 +1,40 @@
+prometheus:
+  enable: false
+
+aws:
+  eksRole:
+  iamRole:
+
+backups:
+  enable: true
+  provider:
+  s3:
+    bucket:
+    endpoint:
+    region:
+    prefix:
+    caCert:
+    encrypted: true
+    insecure: false
+    pathStyle: false
+    accessKeySecret:
+      name:
+      key:
+    secretKeySecret:
+      name:
+      key:
+
+snapshots:
+  enable: true
+  provider:
+  region:
+
+restic:
+  enable: false
+  podVolumePath: /var/lib/kubelet/pods
+  privileged: false
+
+credentialsSecret:
+  backend:
+  key:
+  property:
