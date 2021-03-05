@@ -6,10 +6,10 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-{{.Values.global.namespace}}-proxy-injector
+  name: linkerd-{{ .Release.Namespace }}-proxy-injector
   labels:
     {{.Values.global.controllerComponentLabel}}: proxy-injector
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 rules:
 - apiGroups: [""]
   resources: ["events"]
@@ -30,10 +30,10 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-{{.Values.global.namespace}}-proxy-injector
+  name: linkerd-{{ .Release.Namespace }}-proxy-injector
   labels:
     {{.Values.global.controllerComponentLabel}}: proxy-injector
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 subjects:
 - kind: ServiceAccount
   name: linkerd-proxy-injector
@@ -41,7 +41,7 @@ subjects:
   apiGroup: ""
 roleRef:
   kind: ClusterRole
-  name: linkerd-{{.Values.global.namespace}}-proxy-injector
+  name: linkerd-{{ .Release.Namespace }}-proxy-injector
   apiGroup: rbac.authorization.k8s.io
 ---
 kind: ServiceAccount
@@ -51,7 +51,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{.Values.global.controllerComponentLabel}}: proxy-injector
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 {{- include "partials.image-pull-secrets" . }}
 ---
 {{- $host := printf "linkerd-proxy-injector.%s.svc" .Values.global.namespace }}
@@ -64,7 +64,7 @@ metadata:
   namespace: {{ .Values.global.namespace }}
   labels:
     {{.Values.global.controllerComponentLabel}}: proxy-injector
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
   annotations:
     {{.Values.global.createdByAnnotation}}: {{default (printf "linkerd/helm %s" .Values.global.linkerdVersion) .Values.global.cliVersion}}
 type: kubernetes.io/tls
@@ -79,7 +79,7 @@ metadata:
   name: linkerd-proxy-injector-webhook-config
   labels:
     {{.Values.global.controllerComponentLabel}}: proxy-injector
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 webhooks:
 - name: linkerd-proxy-injector.linkerd.io
   namespaceSelector:

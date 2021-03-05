@@ -1,2 +1,10 @@
-monitoring:
+prometheus:
   enable: false
+  namespace: monitoring
+
+grafana:
+  enable: false
+
+tracing:
+  enable: false
+  namespace: monitoring

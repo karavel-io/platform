@@ -6,10 +6,10 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-{{.Values.global.namespace}}-destination
+  name: linkerd-{{ .Release.Namespace }}-destination
   labels:
     {{.Values.global.controllerComponentLabel}}: destination
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 rules:
 - apiGroups: ["apps"]
   resources: ["replicasets"]
@@ -35,14 +35,14 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-{{.Values.global.namespace}}-destination
+  name: linkerd-{{ .Release.Namespace }}-destination
   labels:
     {{.Values.global.controllerComponentLabel}}: destination
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: linkerd-{{.Values.global.namespace}}-destination
+  name: linkerd-{{ .Release.Namespace }}-destination
 subjects:
 - kind: ServiceAccount
   name: linkerd-destination
@@ -55,5 +55,5 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{.Values.global.controllerComponentLabel}}: destination
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 {{- include "partials.image-pull-secrets" . }}
