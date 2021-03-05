@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+url="https://charts.mikamai.com/karavel-edge"
+bucket="s3://mikamai-charts-repo/karavel-edge"
+
+echo "Releasing all edge components"
+echo ""
+
+dist="$TMPDIR/karavel-edge"
+rm -rf "$dist" && mkdir -p "$dist"
+
+aws s3 cp "$bucket/index.yaml" "$dist/index.yaml" || true
+
+helm package platform/charts/* -d "$dist"
+helm repo index "$dist" --merge "$dist/index.yaml" --url "$url"
+
+aws s3 sync "$dist" "$bucket"
