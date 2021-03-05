@@ -1,7 +1,8 @@
 let
   pkgs = import <nixpkgs> { };
   unstable = import (fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz) { };
-  addlicense = pkgs.callPackage ./.nix/addlicense.nix { };
+  linkerd = pkgs.callPackage .nix/linkerd.nix { inherit pkgs; };
+  addlicense = pkgs.callPackage .nix/addlicense.nix { };
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
@@ -13,5 +14,6 @@ pkgs.mkShell {
     kind
     addlicense
     unstable.velero
+    linkerd
   ];
 }
