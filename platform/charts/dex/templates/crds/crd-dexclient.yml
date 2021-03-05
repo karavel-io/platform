@@ -4,18 +4,9 @@ metadata:
   annotations:
     cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "dex.name" . }}-operator-cert
     controller-gen.kubebuilder.io/version: v0.2.5
+  creationTimestamp: null
   name: dexclients.dex.karavel.io
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: webhook-service
-          namespace: {{ .Release.Namespace }}
-          path: /convert
-      conversionReviewVersions:
-        - v1beta1
   group: dex.karavel.io
   names:
     kind: DexClient
@@ -46,24 +37,42 @@ spec:
           description: DexClient is the Schema for the dexclients API
           properties:
             apiVersion:
-              description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+              description: 'APIVersion defines the versioned schema of this representation
+          of an object. Servers should convert recognized schemas to the latest
+          internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
               type: string
             kind:
-              description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+              description: 'Kind is a string value representing the REST resource this
+          object represents. Servers may infer this from the endpoint the client
+          submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
               type: string
             metadata:
               type: object
             spec:
               description: DexClientSpec defines the desired state of DexClient
               properties:
+                clientIDKey:
+                  default: clientID
+                  description: ClientIDKey allows to override the key used in the generated
+                    Secret for the clientID
+                  type: string
+                clientSecretKey:
+                  default: clientSecret
+                  description: ClientSecretKey allows to override the key used in the
+                    generated Secret for the clientSecret
+                  type: string
                 instanceRef:
-                  description: InstanceRef is used to select the target Dex instance Cannot be updated
+                  description: InstanceRef is used to select the target Dex instance
+                    Cannot be updated
                   properties:
                     name:
-                      description: Name is the object name for the Dex instance Cannot be updated
+                      description: Name is the object name for the Dex instance Cannot
+                        be updated
                       type: string
                     namespace:
-                      description: Namespace is the object name for the Dex instance Cannot be updated If empty will default to the same namespace as the DexClient
+                      description: Namespace is the object name for the Dex instance
+                        Cannot be updated If empty will default to the same namespace
+                        as the DexClient
                       type: string
                   required:
                     - name
@@ -94,13 +103,15 @@ spec:
                   description: ClientID is the generated OAuth client_id for this client
                   type: string
                 message:
-                  description: Message is a human-readable message indicating details about current operator phase or error.
+                  description: Message is a human-readable message indicating details
+                    about current operator phase or error.
                   type: string
                 phase:
                   description: Phase is the current phase of the operator.
                   type: string
                 ready:
-                  description: Ready will be true if the client is in a ready state and available for use.
+                  description: Ready will be true if the client is in a ready state
+                    and available for use.
                   type: boolean
               required:
                 - message
@@ -111,3 +122,10 @@ spec:
       served: true
       storage: true
       subresources:
+        status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

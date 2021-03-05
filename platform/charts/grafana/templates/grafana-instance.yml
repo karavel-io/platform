@@ -13,15 +13,24 @@ spec:
       {{- include "grafana.labels" . | nindent 6 }}
     skipCreateAdminAccount: false
     envFrom:
+      {{ if .Values.secret }}
       - secretRef:
           name: cluster-{{ include "grafana.name" . }}-secrets
+      {{- end }}
+      {{- if .Values.dex.enable }}
+      - secretRef:
+          name: dex-grafana-credentials
+      - configMapRef:
+          name: {{ include "grafana.name" . }}-dex-config
+      {{- end }}
   service:
     labels:
       app.kubernetes.io/name: grafana-operated
       {{- include "grafana.labels" . | nindent 6 }}
   ingress:
     enabled: true
-    hostname: {{ .Values.host }}
+    {{- $url := urlParse .Values.publicURL }}
+    hostname: {{ $url.host }}
     tlsEnabled: true
     tlsSecretName: grafana-operated-tls
     labels:
@@ -35,7 +44,7 @@ spec:
         grafana.integreatly.org/instance: grafana-operated
   config:
     server:
-      root_url: https://{{ .Values.host }}
+      root_url: {{ .Values.publicURL }}
     log:
       mode: console
       level: warn

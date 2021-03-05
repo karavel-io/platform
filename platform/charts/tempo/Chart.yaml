@@ -3,7 +3,7 @@ name: tempo
 description: Grafana Tempo component for Karavel
 type: application
 version: 0.1.0
-appVersion: 40ecbd34
+appVersion: 0.6.0
 maintainers:
   - name: MatteoJoliveau
     email: matteo.joliveau@mikamai.com

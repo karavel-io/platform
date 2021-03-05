@@ -1,9 +1,3 @@
-prometheus:
-  version: 2.24.0
-
-thanos:
-  version: 0.18.0
-
 store: filesystem
 s3:
   bucket:
@@ -16,6 +10,9 @@ s3:
 
 operator:
   version: 0.45.0
+
+thanos:
+  version: 0.18.0
 
 kubeRBACProxy:
   version: 0.8.0
