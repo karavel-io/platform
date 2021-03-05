@@ -20,7 +20,8 @@ import (
 )
 
 const HelmRepoName = "karavel"
-const HelmDefaultRepo = "https://charts.mikamai.com/karavel"
+const HelmDefaultStableRepo = "https://charts.mikamai.com/karavel"
+const HelmDefaultEdgeRepo = "https://charts.mikamai.com/karavel-edge"
 
 func SetupHelm(repoUrl string) error {
 	h, err := helmclient.New(&helmclient.Options{})
@@ -29,7 +30,7 @@ func SetupHelm(repoUrl string) error {
 	}
 
 	if repoUrl == "" {
-		repoUrl = HelmDefaultRepo
+		repoUrl = HelmDefaultStableRepo
 	}
 
 	return h.AddOrUpdateChartRepo(repo.Entry{
