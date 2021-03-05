@@ -14,7 +14,13 @@ workflows:
   cli:
     jobs:
       - cli-verify
-      - cli-docker-edge
+      - cli-docker-edge:
+          requires:
+            - cli-verify
+          filters:
+            branches:
+              only:
+                - master
 
 jobs:
   helm-lint:
