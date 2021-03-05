@@ -53,6 +53,7 @@ func Render(log logger.Logger, params RenderParams) error {
 		return errors.Wrap(err, "failed to read config file")
 	}
 
+	log.Debugf("Using channel '%s'", cfg.Channel)
 	log.Debugf("Updating Karavel Charts repository %s", cfg.HelmRepoUrl)
 	if err := helmw.SetupHelm(cfg.HelmRepoUrl); err != nil {
 		return errors.Wrap(err, "failed to setup Karavel Charts repository")

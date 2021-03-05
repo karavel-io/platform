@@ -1,4 +1,4 @@
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: {{ include "argocd.name" . }}-cert
@@ -8,9 +8,8 @@ metadata:
     {{- include "argocd.labels" . | nindent 4 }}
     app.kubernetes.io/component: server
 spec:
-  commonName: {{ .Values.publicHost }}
   dnsNames:
-    - {{ .Values.publicHost }}
+    - {{ (urlParse .Values.publicURL).host }}
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod

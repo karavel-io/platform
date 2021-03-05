@@ -17,3 +17,6 @@ annotations:
   karavel.io/bootstrap: 'true'
   karavel.io/dependencies: cert-manager, external-secrets
   prometheus.enable: prometheus
+# We need support for this before enabling it:
+# https://github.com/argoproj/argo-cd/pull/4342
+#  dex.enable: dex

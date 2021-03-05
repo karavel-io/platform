@@ -1,8 +1,9 @@
 let
-  pkgs = import <nixpkgs> {};
-  linkerd = pkgs.callPackage .nix/linkerd.nix { inherit pkgs; };
+  pkgs = import <nixpkgs> { };
   unstable = import (fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz) { };
-  addlicense = pkgs.callPackage ./.nix/addlicense.nix { };
+  unstable = import (fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz) { };
+  linkerd = pkgs.callPackage .nix/linkerd.nix { inherit pkgs; };
+  addlicense = pkgs.callPackage .nix/addlicense.nix { };
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [

@@ -3,14 +3,14 @@ name: calico
 description: Calico component for Karavel
 type: application
 version: 0.1.0
-appVersion: 3.16.5
+appVersion: 3.17.3
 maintainers:
   - name: MatteoJoliveau
     email: matteo.joliveau@mikamai.com
 
 home: https://projectcalico.org
 sources:
-  - https://github.com/projectcalico.org
+  - https://github.com/projectcalico/calico
   - https://github.com/mikamai/karavel
 
 annotations:

@@ -225,7 +225,7 @@ the updated documentation, then rerun the `karavel render` command. This command
 [Helm chart]: https://helm.sh
 [NGINX Ingress Controller]: https://kubernetes.github.io/ingress-nginx/
 [ArgoCD Application]: https://argoproj.github.io/argo-cd/core_concepts/
-[Customization guide]: ./operator-handbook/customizing.md
+[Customization guide]: operator-guides/customizing.md
 [Kubernetes release cycle]: https://github.com/kubernetes/sig-release/blob/master/releases/release_phases.md
 [Karavel compatibility matrix]: ./versioning.md#kubernetes-compatibility-matrix
 [HCL]: https://www.terraform.io/docs/language/syntax/configuration.html

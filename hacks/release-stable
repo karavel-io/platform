@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -e
+
+url="https://charts.mikamai.com/karavel"
+bucket="s3://mikamai-charts-repo/karavel"
+chart="${1%/}"
+if [ -z "$chart" ]; then
+    echo "Select a chart to release"
+    exit 1
+fi
+
+echo "Releasing stable component chart '$chart'"
+echo ""
+
+dist="$TMPDIR/karavel-$chart"
+rm -rf "$dist" && mkdir -p "$dist"
+
+aws s3 cp "$bucket/index.yaml" "$dist/index.yaml" || true
+
+helm package "platform/charts/$chart" -d "$dist"
+helm repo index "$dist" --merge "$dist/index.yaml" --url "$url"
+
+aws s3 sync "$dist" "$bucket"

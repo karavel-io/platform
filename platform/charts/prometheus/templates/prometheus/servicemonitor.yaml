@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/name: prometheus
     {{- include "prometheus.labels" . | nindent 4 }}
-    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
   name: prometheus
   namespace: {{ .Release.Namespace }}
 spec:

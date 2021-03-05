@@ -3,7 +3,7 @@ name: prometheus
 description: Prometheus component for Karavel
 type: application
 version: 0.1.0
-appVersion: 0.45.0
+appVersion: 2.25.0
 maintainers:
   - name: MatteoJoliveau
     email: matteo.joliveau@mikamai.com

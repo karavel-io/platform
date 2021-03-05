@@ -1,9 +1,20 @@
 version: 2.1
 
+orbs:
+  helm: circleci/helm@1.2.0
+  aws-cli: circleci/aws-cli@1.4.0
+
 workflows:
   platform:
     jobs:
       - helm-lint
+      - helm-release-edge:
+          requires:
+            - helm-lint
+          filters:
+            branches:
+              only:
+                - master
       - docs-build:
           requires:
             - helm-lint
@@ -14,6 +25,13 @@ workflows:
   cli:
     jobs:
       - cli-verify
+      - cli-docker-edge:
+          requires:
+            - cli-verify
+          filters:
+            branches:
+              only:
+                - master
 
 jobs:
   helm-lint:
@@ -24,6 +42,20 @@ jobs:
       - run:
           name: Lint charts
           command: ct lint --all --chart-dirs platform/charts
+
+  helm-release-edge:
+    executor: aws-cli/default
+    environment:
+      TMPDIR: /tmp
+    steps:
+      - checkout
+      - aws-cli/setup:
+          profile-name: default
+      - helm/install-helm-client:
+          version: v3.3.4
+      - run:
+          name: Release edge charts
+          command: hacks/release-edge-all
 
   docs-build:
     docker:
@@ -73,3 +105,17 @@ jobs:
 
       - store_test_results:
           path: /tmp/test-results
+
+  cli-docker-edge:
+    working_directory: ~/project/cli
+    docker:
+      - image: circleci/golang:1.15
+    steps:
+      - checkout:
+          path: ~/project
+      - setup_remote_docker:
+          version: 19.03.13
+      - run: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin quay.io
+      - run: docker pull quay.io/karavel/cli:edge || true
+      - run: docker build -t quay.io/karavel/cli:edge .
+      - run: docker push quay.io/karavel/cli:edge

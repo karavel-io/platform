@@ -3,7 +3,7 @@ name: aws-node-termination-handler
 description: AWS Node Termination Handler component for Karavel
 type: application
 version: 0.1.0
-appVersion: 1.11.0
+appVersion: 1.12.0
 maintainers:
   - name: MatteoJoliveau
     email: matteo.joliveau@mikamai.com

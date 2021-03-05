@@ -1,0 +1,31 @@
+{{- if .Values.dex.enable }}
+apiVersion: dex.karavel.io/v1alpha1
+kind: DexClient
+metadata:
+  name: {{ include "grafana.name" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- with .Values.dex }}
+  instanceRef:
+    name: {{ .name }}
+    namespace: {{ .namespace }}
+  {{- end }}
+  name: Grafana
+  redirectUris:
+    - {{ .Values.publicURL }}/login/generic_oauth
+  clientIDKey: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
+  clientSecretKey: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "grafana.name" . }}-dex-config
+  namespace: {{ .Release.Namespace }}
+data:
+  {{- $issuer := required "parameter 'dex.issuer' is required for generating grafana-dex-config" .Values.dex.issuer }}
+  GF_AUTH_GENERIC_OAUTH_ENABLED: "true"
+  GF_AUTH_GENERIC_OAUTH_AUTH_URL: {{ $issuer }}/auth
+  GF_AUTH_GENERIC_OAUTH_TOKEN_URL: {{ $issuer }}/token
+  GF_AUTH_GENERIC_OAUTH_API_URL: {{ $issuer }}/userinfo
+  GF_AUTH_GENERIC_OAUTH_SCOPES: openid profile email groups
+{{- end }}
