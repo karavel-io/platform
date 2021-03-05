@@ -3,7 +3,7 @@ name: grafana
 description: Grafana component for Karavel
 type: application
 version: 0.1.0
-appVersion: 7.3.6
+appVersion: 7.4.2
 maintainers:
   - name: MatteoJoliveau
     email: matteo.joliveau@mikamai.com
@@ -15,3 +15,4 @@ sources:
 
 annotations:
   karavel.io/dependencies: cert-manager, external-secrets
+  dex.enable: dex

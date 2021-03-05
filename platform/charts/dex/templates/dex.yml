@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   publicURL: {{ required "param publicURL is required for generating Dex instance" .Values.publicURL }}
-  image: quay.io/dexidp/dex:v{{ .Chart.AppVersion }}
+  image: ghcr.io/dexidp/dex:v{{ .Chart.AppVersion }}
   serviceAccountName: {{ include "dex.name" . }}
   ingress:
     annotations:

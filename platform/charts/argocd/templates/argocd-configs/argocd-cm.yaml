@@ -4,33 +4,44 @@ metadata:
   name: {{ include "argocd.name" . }}-cm # Argo expects this exact name, so we won't template it
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "argocd.labels" . | nindent 4 }}
+  {{- include "argocd.labels" . | nindent 4 }}
 data:
-    application.instanceLabelKey: argocd.argoproj.io/instance
-    url: "https://{{ .Values.publicHost }}"
-    admin.enabled: "false"
-    repositories: |
-      - name: karavel
-        type: helm
-        url: https://charts.mikamai.com/karavel
-      - url: {{ .Values.git.repo }}
-        {{- if eq .Values.credentialsSecret.type "ssh"}}
-        sshPrivateKeySecret:
-          name: infrastructure-repo-secret
-          key: sshPrivateKey
-        {{- else }}
-        usernameSecret:
-          name: infrastructure-repo-secret
-          key: username
-        passwordSecret:
-          name: infrastructure-repo-secret
-          key: password
-        {{- end }}
-    {{- with .Values.oidc.config }}
-    oidc.config: |
-      name: {{ .name }}
-      issuer: {{ .issuer }}
-      clientID: {{ .clientID }}
-      clientSecret: {{ .clientSecret }}
-      requestedScopes: {{ .requestedScopes }}
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  url: {{ .Values.publicURL }}
+  admin.enabled: "false"
+  repositories: |
+    - name: karavel
+      type: helm
+      url: https://charts.mikamai.com/karavel
+    - url: {{ .Values.git.repo }}
+    {{- if eq .Values.credentialsSecret.type "ssh"}}
+      sshPrivateKeySecret:
+        name: infrastructure-repo-secret
+        key: sshPrivateKey
+    {{- else }}
+      usernameSecret:
+        name: infrastructure-repo-secret
+        key: username
+      passwordSecret:
+        name: infrastructure-repo-secret
+        key: password
     {{- end }}
+  {{- if .Values.dex.enable }}
+    {{- with .Values.oidc.config }}
+  oidc.config: |
+    name: Dex
+    issuer: {{ .issuer }}
+    clientID: argocd-argocd
+    clientSecret: {{ .clientSecret }}
+    requestedScopes: {{ .requestedScopes }}
+    {{- end }}
+    {{- else }}
+    {{- with .Values.oidc.config }}
+  oidc.config: |
+    name: {{ .name }}
+    issuer: {{ .issuer }}
+    clientID: {{ .clientID }}
+    clientSecret: {{ .clientSecret }}
+    requestedScopes: {{ .requestedScopes }}
+    {{- end }}
+  {{- end }}

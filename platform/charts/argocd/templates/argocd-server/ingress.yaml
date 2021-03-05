@@ -1,3 +1,4 @@
+{{- $url := urlParse .Values.publicURL}}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -12,7 +13,7 @@ metadata:
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
 spec:
   rules:
-    - host: {{ .Values.publicHost }}
+    - host: {{ $url.host }}
       http:
         paths:
           - path: /
@@ -21,5 +22,5 @@ spec:
               servicePort: server
   tls:
     - hosts:
-        - {{ .Values.publicHost }}
+        - {{ $url.host }}
       secretName: {{ include "argocd.name" . }}-tls

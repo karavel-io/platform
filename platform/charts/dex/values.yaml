@@ -5,5 +5,9 @@ connectors:
     name: Example
 secret:
 
+operator:
+  image: quay.io/karavel/dex-operator
+  tag: latest
+
 prometheus:
   enable: false

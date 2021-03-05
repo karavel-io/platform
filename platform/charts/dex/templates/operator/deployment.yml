@@ -21,13 +21,13 @@ spec:
       serviceAccountName: {{ include "dex.name" . }}-operator
       containers:
         - name: manager
-          image: quay.io/karavel/dex-operator:latest
+          image: "{{ .Values.operator.image }}:{{ .Values.operator.tag }}"
           command:
             - /manager
           args:
             - --enable-leader-election
             - --metrics-addr=0.0.0.0:8080
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ ternary "Always" "IfNotPresent" (eq .Values.operator.tag "latest") }}
           ports:
             - name: webhook-server
               containerPort: 9443
@@ -42,7 +42,7 @@ spec:
           resources:
             limits:
               cpu: 100m
-              memory: 30Mi
+              memory: 50Mi
             requests:
               cpu: 100m
               memory: 20Mi

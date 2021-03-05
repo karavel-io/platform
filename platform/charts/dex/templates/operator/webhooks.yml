@@ -73,5 +73,5 @@ webhooks:
           - UPDATE
         resources:
           - dexclients
-    admissionReviewVersions: ["v1", "v1beta1"]
+    admissionReviewVersions: ["v1beta1"]
     sideEffects: None

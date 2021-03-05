@@ -30,7 +30,16 @@ var (
 	ErrConfigParseFailed = errors.New("failed to parse Karavel config")
 )
 
+type Channel string
+
+var (
+	ChannelNone   Channel
+	ChannelStable Channel = "stable"
+	ChannelEdge   Channel = "edge"
+)
+
 type Config struct {
+	Channel     Channel     `hcl:"channel,optional"`
 	Components  []Component `hcl:"component,block"`
 	HelmRepoUrl string      `hcl:"charts_repo,optional"`
 }
@@ -56,8 +65,17 @@ func ReadFrom(logw io.Writer, filename string) (Config, error) {
 		}
 	}
 
+	if c.Channel == ChannelNone {
+		c.Channel = ChannelStable
+	}
+
 	if c.HelmRepoUrl == "" {
-		c.HelmRepoUrl = helmw.HelmDefaultRepo
+		switch c.Channel {
+		case ChannelStable, ChannelNone:
+			c.HelmRepoUrl = helmw.HelmDefaultStableRepo
+		case ChannelEdge:
+			c.HelmRepoUrl = helmw.HelmDefaultEdgeRepo
+		}
 	}
 
 	for i := range c.Components {

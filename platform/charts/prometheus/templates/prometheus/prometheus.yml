@@ -14,7 +14,7 @@ spec:
       - name: alertmanager-operated
         namespace: {{ .Release.Namespace }}
         port: web
-  image: quay.io/prometheus/prometheus:v{{ .Values.prometheus.version }}
+  image: quay.io/prometheus/prometheus:v{{ .Chart.AppVersion }}
   nodeSelector:
     kubernetes.io/os: linux
   serviceMonitorSelector: {}
@@ -23,7 +23,7 @@ spec:
       app.kubernetes.io/name: prometheus-operated
       app.kubernetes.io/component: prometheus
       {{- include "prometheus.labels" . | nindent 6 }}
-      app.kubernetes.io/version: {{ .Values.prometheus.version }}
+      app.kubernetes.io/version: {{ .Chart.AppVersion }}
     {{- with .Values.s3.iamRole }}
     annotations:
       iam.amazonaws.com/role: {{ . }}
@@ -53,7 +53,7 @@ spec:
     runAsUser: 1000
   serviceAccountName: prometheus-operated
   serviceMonitorNamespaceSelector: {}
-  version: {{ .Values.prometheus.version }}
+  version: {{ .Chart.AppVersion }}
   storage:
     volumeClaimTemplate:
       spec:

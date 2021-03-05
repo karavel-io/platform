@@ -1,4 +1,4 @@
-publicHost: argocd.example.com
+publicURL: https://argocd.example.com
 git:
   repo: git@github.com:example/example.git
 
@@ -12,6 +12,12 @@ credentialsSecret:  # creates the infrastructure-repo-secret from the secure bac
 secret:  # creates the argocd-secret manifest from the secure backend
   backend: secretsManager
   key: ""
+
+dex:
+  enable: false
+  issuer:
+  name: dex
+  namespace: dex
 
 oidc:
   config:

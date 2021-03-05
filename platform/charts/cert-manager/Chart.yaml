@@ -3,7 +3,7 @@ name: cert-manager
 description: Jetstack cert-manager component for Karavel
 type: application
 version: 0.1.0
-appVersion: 1.0.4
+appVersion: 1.1.1
 maintainers:
   - name: MatteoJoliveau
     email: matteo.joliveau@mikamai.com

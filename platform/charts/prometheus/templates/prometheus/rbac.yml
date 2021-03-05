@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/component: prometheus
     {{- include "prometheus.labels" . | nindent 4 }}
-    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
 rules:
   - apiGroups:
       - ""
@@ -44,7 +44,7 @@ metadata:
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/component: prometheus
     {{- include "prometheus.labels" . | nindent 4 }}
-    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -63,7 +63,7 @@ metadata:
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/component: prometheus
     {{- include "prometheus.labels" . | nindent 4 }}
-    app.kubernetes.io/version: {{ .Values.prometheus.version }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
   {{- with .Values.s3.eksRole }}
   annotations:
     eks.amazonaws.com/role-arn: {{ . }}

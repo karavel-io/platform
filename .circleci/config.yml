@@ -14,6 +14,13 @@ workflows:
   cli:
     jobs:
       - cli-verify
+      - cli-docker-edge:
+          requires:
+            - cli-verify
+          filters:
+            branches:
+              only:
+                - master
 
 jobs:
   helm-lint:
@@ -73,3 +80,15 @@ jobs:
 
       - store_test_results:
           path: /tmp/test-results
+  cli-docker-edge:
+    working_directory: ~/project/cli
+    docker:
+      - image: circleci/golang:1.15
+    steps:
+      - checkout:
+          path: ~/project
+      - setup_remote_docker:
+          version: 19.03.13
+      - run: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin quay.io
+      - run: docker build -t quay.io/karavel/cli:edge .
+      - run: docker push quay.io/karavel/cli:edge

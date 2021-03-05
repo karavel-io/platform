@@ -1,0 +1,16 @@
+{{- if .Values.dex.enable }}
+apiVersion: dex.karavel.io/v1alpha1
+kind: DexClient
+metadata:
+  name: argocd
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- with .Values.dex }}
+  instanceRef:
+    name: {{ .name }}
+    namespace: {{ .namespace }}
+  {{- end }}
+  name: ArgoCD
+  redirectUris:
+    - {{ .Values.publicURL }}/auth/callback
+{{- end }}

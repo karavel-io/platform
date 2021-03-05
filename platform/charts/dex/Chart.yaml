@@ -3,7 +3,7 @@ name: dex
 description: Dex component for Karavel
 type: application
 version: 0.1.0
-appVersion: 2.26.0
+appVersion: 2.27.0
 maintainers:
   - name: MatteoJoliveau
     email: matteo.joliveau@mikamai.com
