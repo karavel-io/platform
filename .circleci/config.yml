@@ -50,7 +50,7 @@ jobs:
       - aws-cli/setup:
           profile-name: default
       - helm/install-helm-client:
-          version: v3.34.0
+          version: v3.3.4
       - run:
           name: Release edge charts
           command: hacks/release-edge-all
