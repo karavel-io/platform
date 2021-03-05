@@ -90,5 +90,6 @@ jobs:
       - setup_remote_docker:
           version: 19.03.13
       - run: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin quay.io
+      - run: docker pull quay.io/karavel/cli:edge || true
       - run: docker build -t quay.io/karavel/cli:edge .
       - run: docker push quay.io/karavel/cli:edge
