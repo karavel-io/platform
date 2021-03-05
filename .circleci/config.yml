@@ -82,7 +82,8 @@ jobs:
           path: /tmp/test-results
   cli-docker-edge:
     working_directory: ~/project/cli
-    machine: true
+    docker:
+      - image: circleci/golang:1.15
     steps:
       - checkout:
           path: ~/project
