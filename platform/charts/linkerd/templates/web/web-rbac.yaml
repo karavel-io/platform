@@ -10,7 +10,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{.Values.global.controllerComponentLabel}}: web
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 rules:
 - apiGroups: [""]
   resources: ["configmaps"]
@@ -35,7 +35,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{.Values.global.controllerComponentLabel}}: web
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 roleRef:
   kind: Role
   name: linkerd-web
@@ -49,10 +49,10 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: linkerd-{{.Values.global.namespace}}-web-check
+  name: linkerd-{{ .Release.Namespace }}-web-check
   labels:
     {{.Values.global.controllerComponentLabel}}: web
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 rules:
 - apiGroups: ["rbac.authorization.k8s.io"]
   resources: ["clusterroles", "clusterrolebindings"]
@@ -76,13 +76,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: linkerd-{{.Values.global.namespace}}-web-check
+  name: linkerd-{{ .Release.Namespace }}-web-check
   labels:
     {{.Values.global.controllerComponentLabel}}: web
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole
-  name: linkerd-{{.Values.global.namespace}}-web-check
+  name: linkerd-{{ .Release.Namespace }}-web-check
   apiGroup: rbac.authorization.k8s.io
 subjects:
 - kind: ServiceAccount
@@ -92,14 +92,14 @@ subjects:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-{{.Values.global.namespace}}-web-admin
+  name: linkerd-{{ .Release.Namespace }}-web-admin
   labels:
     {{.Values.global.controllerComponentLabel}}: web
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: linkerd-{{.Values.global.namespace}}-tap-admin
+  name: linkerd-{{ .Release.Namespace }}-tap-admin
 subjects:
 - kind: ServiceAccount
   name: linkerd-web
@@ -113,5 +113,5 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{.Values.global.controllerComponentLabel}}: web
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
 {{- include "partials.image-pull-secrets" . }}

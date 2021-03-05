@@ -10,7 +10,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{.Values.global.controllerComponentLabel}}: web
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
   annotations:
     {{.Values.global.createdByAnnotation}}: {{default (printf "linkerd/helm %s" .Values.global.linkerdVersion) .Values.global.cliVersion}}
 spec:
@@ -39,7 +39,7 @@ metadata:
     app.kubernetes.io/part-of: Linkerd
     app.kubernetes.io/version: {{default .Values.global.linkerdVersion .Values.global.controllerImageVersion}}
     {{.Values.global.controllerComponentLabel}}: web
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
   name: linkerd-web
   namespace: {{ .Release.Namespace }}
 spec:
@@ -47,7 +47,7 @@ spec:
   selector:
     matchLabels:
       {{.Values.global.controllerComponentLabel}}: web
-      {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+      {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
       {{- include "partials.proxy.labels" $tree.Values.global.proxy | nindent 6}}
   template:
     metadata:
@@ -57,8 +57,8 @@ spec:
         {{- with .Values.global.podAnnotations }}{{ toYaml . | trim | nindent 8 }}{{- end }}
       labels:
         {{.Values.global.controllerComponentLabel}}: web
-        {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
-        {{.Values.global.workloadNamespaceLabel}}: {{.Values.global.namespace}}
+        {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
+        {{.Values.global.workloadNamespaceLabel}}: {{ .Release.Namespace }}
         {{- include "partials.proxy.labels" $tree.Values.global.proxy | nindent 8}}
         {{- with .Values.global.podLabels }}{{ toYaml . | trim | nindent 8 }}{{- end }}
     spec:
@@ -68,17 +68,17 @@ spec:
       {{- include "linkerd.node-selector" . | nindent 6 }}
       containers:
       - args:
-        - -api-addr=linkerd-controller-api.{{.Values.global.namespace}}.svc.{{.Values.global.clusterDomain}}:8085
-        - -cluster-domain={{.Values.global.clusterDomain}}
+        - -api-addr=linkerd-controller-api.{{ .Release.Namespace }}.svc.cluster.local:8085
+        - -cluster-domain=cluster.local
         {{- if .Values.global.grafanaUrl }}
         - -grafana-addr={{.Values.global.grafanaUrl}}
         {{- else if .Values.grafana.enabled }}
-        - -grafana-addr=linkerd-grafana.{{.Values.global.namespace}}.svc.{{.Values.global.clusterDomain}}:3000
+        - -grafana-addr=linkerd-grafana.{{ .Release.Namespace }}.svc.cluster.local:3000
         {{- end}}
         {{- if .Values.tracing.enabled }}
-        - -jaeger-addr=linkerd-jaeger.{{.Values.global.namespace}}.svc.{{.Values.global.clusterDomain}}:16686
+        - -jaeger-addr=linkerd-jaeger.{{ .Release.Namespace }}.svc.cluster.local:16686
         {{- end}}
-        - -controller-namespace={{.Values.global.namespace}}
+        - -controller-namespace={{ .Release.Namespace }}
         - -log-level={{.Values.global.controllerLogLevel}}
         {{- if .Values.enforcedHostRegexp }}
         - -enforced-host={{.Values.enforcedHostRegexp}}

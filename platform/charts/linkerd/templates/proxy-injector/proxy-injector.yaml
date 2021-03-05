@@ -17,7 +17,7 @@ metadata:
     app.kubernetes.io/part-of: Linkerd
     app.kubernetes.io/version: {{default .Values.global.linkerdVersion .Values.global.controllerImageVersion}}
     {{.Values.global.controllerComponentLabel}}: proxy-injector
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
   name: linkerd-proxy-injector
   namespace: {{ .Release.Namespace }}
 spec:
@@ -41,8 +41,8 @@ spec:
         {{- with .Values.global.podAnnotations }}{{ toYaml . | trim | nindent 8 }}{{- end }}
       labels:
         {{.Values.global.controllerComponentLabel}}: proxy-injector
-        {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
-        {{.Values.global.workloadNamespaceLabel}}: {{.Values.global.namespace}}
+        {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
+        {{.Values.global.workloadNamespaceLabel}}: {{ .Release.Namespace }}
         {{- include "partials.proxy.labels" $tree.Values.global.proxy | nindent 8}}
         {{- with .Values.global.podLabels }}{{ toYaml . | trim | nindent 8 }}{{- end }}
     spec:
@@ -120,7 +120,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{.Values.global.controllerComponentLabel}}: proxy-injector
-    {{.Values.global.controllerNamespaceLabel}}: {{.Values.global.namespace}}
+    {{.Values.global.controllerNamespaceLabel}}: {{ .Release.Namespace }}
   annotations:
     {{.Values.global.createdByAnnotation}}: {{default (printf "linkerd/helm %s" .Values.global.linkerdVersion) .Values.global.cliVersion}}
 spec:
