@@ -1,0 +1,19 @@
+{{- if .Values.prometheus.enable }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: goldpinger
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{ include "goldpinger.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{ include "goldpinger.selectorLabels" . | nindent 6 }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  endpoints:
+    - port: http
+      path: "/metrics"
+{{- end }}

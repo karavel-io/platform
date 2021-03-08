@@ -1,0 +1,19 @@
+{{- if .Values.prometheus.enable }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: goldpinger
+  namespace: {{ .Release.Namespace }}
+spec:
+  groups:
+    - name: {{ include "goldpinger.name" . }}
+      rules:
+        - alert: goldpinger_nodes_unhealthy
+          expr: sum(goldpinger_nodes_health_total{status="unhealthy"})
+            BY (instance, goldpinger_instance) > 0
+          for: 5m
+          annotations:
+            description: |
+              {{`Goldpinger instance {{ $labels.goldpinger_instance }} has been reporting unhealthy nodes for at least 5 minutes.`}}
+            summary: {{`Instance {{ $labels.instance }} down`}}
+{{- end }}
