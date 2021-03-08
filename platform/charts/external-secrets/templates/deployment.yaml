@@ -59,8 +59,16 @@ spec:
           volumeMounts:
             - name: {{ .Values.vault.extraCertsSecret.name }}
               mountPath: /usr/local/share/ca-certificates
-              subPath: {{ .Values.vault.extraCertsSecret.key }}
             {{- end }}
       securityContext:
         runAsNonRoot: true
         fsGroup: 65534
+    {{- if and .Values.vault.enable .Values.vault.extraCertsSecret.key }}
+      volumes:
+        - name: {{ .Values.vault.extraCertsSecret.name }}
+          secret:
+            secretName: {{ .Values.vault.extraCertsSecret.name }}
+            items:
+              - key: {{ .Values.vault.extraCertsSecret.key }}
+                path: {{ .Values.vault.extraCertsSecret.key }}
+    {{- end }}

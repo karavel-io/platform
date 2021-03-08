@@ -44,6 +44,7 @@ func Render(log logger.Logger, params RenderParams) error {
 	vendorDir := filepath.Join(workdir, "vendor")
 	appsDir := filepath.Join(workdir, "applications")
 	projsDir := filepath.Join(workdir, "projects")
+	argoEnabled := true
 
 	log.Infof("Rendering new Karavel project with config file %s", cpath)
 
@@ -70,23 +71,32 @@ func Render(log logger.Logger, params RenderParams) error {
 		return err
 	}
 
-	for _, dir := range []string{vendorDir, appsDir, projsDir} {
+	argo := p.GetComponent("argocd")
+	if argo == nil {
+		argoEnabled = false
+		log.Warnf("ArgoCD component is missing. GitOps integrations will be disabled")
+	}
+
+	assertDirs := []string{vendorDir}
+	if argoEnabled {
+		assertDirs = append(assertDirs, appsDir, projsDir)
+	}
+
+	for _, dir := range assertDirs {
 		log.Debugf("Asserting directory %s", dir)
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return errors.Wrapf(err, "failed to create directory %s", dir)
 		}
 	}
 
-	argo := p.GetComponent("argocd")
-	if argo == nil {
-		return errors.New("component 'argocd' is required")
-	}
-	argoNs := argo.Namespace()
-
 	var wg sync.WaitGroup
 	ch := make(chan utils.Pair)
+
 	var apps []string
-	renderDirs := []string{"applications", "projects"}
+	var renderDirs []string
+	if argoEnabled {
+		renderDirs = []string{"applications", "projects"}
+	}
 	dirInfos, err := ioutil.ReadDir(vendorDir)
 	if err != nil {
 		return err
@@ -98,7 +108,7 @@ func Render(log logger.Logger, params RenderParams) error {
 	}
 
 	repoPath, repoUrl := "", ""
-	if !skipGit {
+	if !skipGit && argoEnabled {
 		log.Debug("Finding remote git repository URL to configure ArgoCD applications")
 		dir, url, err := gitutils.GetOriginRemote(log, workdir)
 		if err != nil {
@@ -117,8 +127,6 @@ func Render(log logger.Logger, params RenderParams) error {
 	log.Info()
 
 	for _, c := range p.Components() {
-		appFile := c.Name() + ".yml"
-		apps = append(apps, appFile)
 		if c.IsBootstrap() {
 			renderDirs = append(renderDirs, filepath.Join("vendor", c.Name()))
 		}
@@ -138,18 +146,23 @@ func Render(log logger.Logger, params RenderParams) error {
 				return
 			}
 
-			log.Debugf("Rendering application manifest for component %s", comp.DebugLabel())
-			appfile := filepath.Join(appsDir, appFile)
-			// if the application file already exists, we skip it. It has already been created
-			// and we don't want to overwrite any changes the user may have made
-			_, err = os.Stat(appfile)
-			if !os.IsNotExist(err) {
-				ch <- utils.NewPair(msg, err)
-				return
-			}
+			if argoEnabled {
+				log.Debugf("Rendering application manifest for component %s", comp.DebugLabel())
+				appFile := comp.Name() + ".yml"
+				apps = append(apps, appFile)
+				appfile := filepath.Join(appsDir, appFile)
+				// if the application file already exists, we skip it. It has already been created
+				// and we don't want to overwrite any changes the user may have made
+				_, err = os.Stat(appfile)
+				if !os.IsNotExist(err) {
+					ch <- utils.NewPair(msg, err)
+					return
+				}
 
-			if err := comp.RenderApplication(argoNs, repoUrl, repoPath, appfile); err != nil {
-				ch <- utils.NewPair(msg, err)
+				argoNs := argo.Namespace()
+				if err := comp.RenderApplication(argoNs, repoUrl, repoPath, appfile); err != nil {
+					ch <- utils.NewPair(msg, err)
+				}
 			}
 		}(c)
 	}
@@ -178,23 +191,26 @@ func Render(log logger.Logger, params RenderParams) error {
 		}
 	}
 
-	sort.Strings(apps)
-	if err := utils.RenderKustomizeFile(appsDir, apps, predicate.IsStringInSlice(apps)); err != nil {
-		return errors.Wrap(err, "failed to render applications kustomization.yml")
-	}
+	if argoEnabled {
+		argoNs := argo.Namespace()
+		sort.Strings(apps)
+		if err := utils.RenderKustomizeFile(appsDir, apps, predicate.IsStringInSlice(apps)); err != nil {
+			return errors.Wrap(err, "failed to render applications kustomization.yml")
+		}
 
-	infraProj := "infrastructure.yml"
-	if err := ioutil.WriteFile(filepath.Join(projsDir, infraProj), []byte(fmt.Sprintf(argoProject, argoNs)), 0655); err != nil {
-		return errors.Wrap(err, "failed to render infrastructure project file")
-	}
+		infraProj := "infrastructure.yml"
+		if err := ioutil.WriteFile(filepath.Join(projsDir, infraProj), []byte(fmt.Sprintf(argoProject, argoNs)), 0655); err != nil {
+			return errors.Wrap(err, "failed to render infrastructure project file")
+		}
 
-	projs := []string{infraProj}
-	if err := utils.RenderKustomizeFile(projsDir, projs, predicate.IsStringInSlice(projs)); err != nil {
-		return errors.Wrap(err, "failed to render projects kustomization.yml")
+		projs := []string{infraProj}
+		if err := utils.RenderKustomizeFile(projsDir, projs, predicate.IsStringInSlice(projs)); err != nil {
+			return errors.Wrap(err, "failed to render projects kustomization.yml")
+		}
 	}
 
 	if err := utils.RenderKustomizeFile(workdir, renderDirs, predicate.StringOr(predicate.IsStringInSlice(renderDirs), predicate.StringHasPrefix("vendor"))); err != nil {
-		return errors.Wrap(err, "failed to render render kustomization.yml")
+		return errors.Wrap(err, "failed to render kustomization.yml")
 	}
 
 	return nil

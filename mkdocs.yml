@@ -52,3 +52,4 @@ nav:
   - User Guides:
       - Introduction: user-guides/index.md
       - user-guides/applications-deployment.md
+  - FAQ: faq.md

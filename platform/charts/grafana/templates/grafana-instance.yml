@@ -29,7 +29,7 @@ spec:
       {{- include "grafana.labels" . | nindent 6 }}
   ingress:
     enabled: true
-    {{- $url := urlParse .Values.publicURL }}
+    {{- $url := urlParse (required "parameter 'publicURL' is required for generating Grafana instance" .Values.publicURL) }}
     hostname: {{ $url.host }}
     tlsEnabled: true
     tlsSecretName: grafana-operated-tls
