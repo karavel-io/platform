@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-dashboard-goldpinger
+  name: grafana-dashboard-{{ include "goldpinger.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "goldpinger.labels" . | nindent 4 }}

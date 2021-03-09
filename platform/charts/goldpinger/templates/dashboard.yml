@@ -2,7 +2,7 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
-  name: goldpinger
+  name: {{ include "goldpinger.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     grafana.integreatly.org/instance: grafana-operated
@@ -10,6 +10,6 @@ metadata:
 spec:
   name: goldpinger
   configMapRef:
-    name: grafana-dashboard-goldpinger
+    name: grafana-dashboard-{{ include "goldpinger.name" . }}
     key: goldpinger.json
 {{- end }}
