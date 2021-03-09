@@ -21,7 +21,7 @@ spec:
     - type: {{ .type }}
       id: {{ .id }}
       name: {{ .name }}
-      config: |
+      config:
         {{- .config | toYaml | nindent 8 }}
     {{- else }}
       {{ fail "param connectors is required for generating Dex instance" }}
