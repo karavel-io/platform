@@ -16,3 +16,4 @@ sources:
 annotations:
   karavel.io/bootstrap: 'true'
   prometheus.enable: prometheus
+  grafana.enable: grafana

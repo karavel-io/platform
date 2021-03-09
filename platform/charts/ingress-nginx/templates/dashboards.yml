@@ -1,0 +1,29 @@
+{{- if .Values.grafana.enable }}
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: {{ include "ingress-nginx.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana.integreatly.org/instance: grafana-operated
+    {{ include "ingress-nginx.labels" . | nindent 4 }}
+spec:
+  name: nginx
+  configMapRef:
+    name: grafana-dashboard-{{ include "ingress-nginx.name" . }}
+    key: nginx.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: {{ include "ingress-nginx.name" . }}-request-performance
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana.integreatly.org/instance: grafana-operated
+    {{ include "ingress-nginx.labels" . | nindent 4 }}
+spec:
+  name: nginx
+  configMapRef:
+    name: grafana-dashboard-{{ include "ingress-nginx.name" . }}-request-performance
+    key: request-handling-performance.json
+{{- end }}
