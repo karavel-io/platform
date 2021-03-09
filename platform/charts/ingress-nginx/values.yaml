@@ -1,2 +1,4 @@
 prometheus:
-  enable: true
+  enable: false
+grafana:
+  enable: false

@@ -18,7 +18,7 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "ingress-nginx.name" . }}-controller
+      app.kubernetes.io/name: {{ include "ingress-nginx.name" . }}-controller-metrics
       {{- include "ingress-nginx.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: controller
 {{- end }}
