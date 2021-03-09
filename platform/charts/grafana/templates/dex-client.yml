@@ -12,7 +12,7 @@ spec:
   {{- end }}
   name: Grafana
   redirectUris:
-    - {{ .Values.publicURL }}/login/generic_oauth
+    - {{ required "parameter 'publicURL' is required for generating Grafana Dex client" .Values.publicURL }}/login/generic_oauth
   clientIDKey: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
   clientSecretKey: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
 ---

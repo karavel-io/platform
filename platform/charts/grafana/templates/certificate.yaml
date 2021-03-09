@@ -8,7 +8,7 @@ metadata:
     {{- include "grafana.labels" . | nindent 4 }}
 spec:
   dnsNames:
-    - {{ (urlParse .Values.publicURL).host }}
+    - {{ (urlParse (required "parameter 'publicURL' is required for generating Grafana certificate" .Values.publicURL)).host }}
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod
