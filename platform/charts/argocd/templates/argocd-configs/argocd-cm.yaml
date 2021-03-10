@@ -27,13 +27,13 @@ data:
         key: password
     {{- end }}
   {{- if .Values.dex.enable }}
-    {{- with .Values.oidc.config }}
+    {{- with .Values.dex }}
   oidc.config: |
     name: Dex
     issuer: {{ .issuer }}
     clientID: argocd-argocd
-    clientSecret: {{ .clientSecret }}
-    requestedScopes: {{ .requestedScopes }}
+    clientSecret: # TODO(matteojoliveau): we need secret reference support (github.com/argoproj/argo-cd/pull/4342) to reference the DexClient-generated secret
+    requestedScopes: openid profile email groups
     {{- end }}
     {{- else }}
     {{- with .Values.oidc.config }}
