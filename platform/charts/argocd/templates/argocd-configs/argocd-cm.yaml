@@ -32,7 +32,7 @@ data:
     name: Dex
     issuer: {{ .issuer }}
     clientID: argocd-argocd
-    clientSecret: # TODO(matteojolivea): we need secret reference support (github.com/argoproj/argo-cd/pull/4342) to reference the DexClient-generated secret
+    clientSecret: # TODO(matteojoliveau): we need secret reference support (github.com/argoproj/argo-cd/pull/4342) to reference the DexClient-generated secret
     requestedScopes: openid profile email groups
     {{- end }}
     {{- else }}
