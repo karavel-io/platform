@@ -1,0 +1,18 @@
+apiVersion: v2
+name: gatekeeper
+description: Open Policy Agent Gatekeeper component for Karavel
+type: application
+version: 0.1.0
+appVersion: 3.2.2
+maintainers:
+  - name: MatteoJoliveau
+    email: matteo.joliveau@mikamai.com
+
+home: https://open-policy-agent.github.io/gatekeeper/website/docs/
+sources:
+  - https://github.com/open-policy-agent/gatekeeper
+  - https://github.com/mikamai/karavel
+
+annotations:
+  grafana.enable: grafana
+  prometheus.enable: prometheus
