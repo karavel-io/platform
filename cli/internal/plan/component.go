@@ -39,6 +39,7 @@ import (
 const (
 	bootstrapAnnotation    = "karavel.io/bootstrap"
 	dependenciesAnnotation = "karavel.io/dependencies"
+	singletonAnnotation    = "karavel.io/singleton"
 )
 
 // reserved annotations that should not be interpreted as
@@ -54,6 +55,7 @@ type Component struct {
 	namespace        string
 	version          string
 	bootstrap        bool
+	singleton        bool
 	dependencies     []string
 	integrationsDeps map[string][]string
 	integrations     map[string]bool
@@ -93,11 +95,17 @@ func NewComponentFromChartMetadata(meta *chart.Metadata) (Component, error) {
 		bootstrap = false
 	}
 
+	singleton, err := strconv.ParseBool(meta.Annotations[singletonAnnotation])
+	if err != nil {
+		singleton = false
+	}
+
 	return Component{
 		name:             meta.Name,
 		component:        meta.Name,
 		version:          meta.Version,
 		bootstrap:        bootstrap,
+		singleton:        singleton,
 		dependencies:     deps,
 		integrationsDeps: integs,
 	}, nil
@@ -108,6 +116,10 @@ func (c *Component) Name() string {
 }
 
 func (c *Component) ComponentName() string {
+	if c.component == "" {
+		c.component = c.name
+	}
+
 	return c.component
 }
 
