@@ -24,7 +24,8 @@ import (
 )
 
 type Plan struct {
-	components map[string]*Component
+	components     map[string]*Component
+	seenComponents map[string]bool
 }
 
 func NewFromConfig(log logger.Logger, cfg *config.Config) (*Plan, error) {
@@ -104,7 +105,17 @@ func (p *Plan) AddComponent(c Component) error {
 	if p.components[c.name] != nil {
 		return errors.Errorf("duplicate component '%s' found", c.name)
 	}
+
+	if p.seenComponents[c.ComponentName()] {
+		withAlias := ""
+		if name := c.NameOverride(); name != "" {
+			withAlias = fmt.Sprintf(" with alias '%s'", name)
+		}
+		return errors.Errorf("component '%s'%s is a singleton, but another instance is already declared", c.ComponentName(), withAlias)
+	}
+
 	p.components[c.name] = &c
+	p.seenComponents[c.ComponentName()] = true
 	return nil
 }
 
