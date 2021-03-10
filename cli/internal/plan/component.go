@@ -116,10 +116,6 @@ func (c *Component) Name() string {
 }
 
 func (c *Component) ComponentName() string {
-	if c.component == "" {
-		c.component = c.name
-	}
-
 	return c.component
 }
 

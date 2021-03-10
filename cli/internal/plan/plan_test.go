@@ -28,7 +28,7 @@ func TestPlan_GetComponent(t *testing.T) {
 
 	p := New()
 
-	p.AddComponent(c1)
+	assert.NoError(t, p.AddComponent(c1))
 
 	assert.Equal(t, &c1, p.GetComponent("c1"))
 	assert.Nil(t, p.GetComponent("c2"))
@@ -43,7 +43,7 @@ func TestPlan_HasComponent(t *testing.T) {
 
 	p := New()
 
-	p.AddComponent(c1)
+	assert.NoError(t, p.AddComponent(c1))
 
 	assert.True(t, p.HasComponent("c1"))
 	assert.False(t, p.HasComponent("c2"))
@@ -69,9 +69,9 @@ func TestPlan_Validate(t *testing.T) {
 
 	p := New()
 
-	p.AddComponent(c1)
-	p.AddComponent(c2)
-	p.AddComponent(c3)
+	assert.NoError(t, p.AddComponent(c1))
+	assert.NoError(t, p.AddComponent(c2))
+	assert.NoError(t, p.AddComponent(c3))
 
 	assert.NoError(t, p.Validate())
 }
@@ -85,7 +85,7 @@ func TestPlan_ValidateMissingDep(t *testing.T) {
 
 	p := New()
 
-	p.AddComponent(c1)
+	assert.NoError(t, p.AddComponent(c1))
 
 	err := p.Validate()
 	if assert.Error(t, err) {
@@ -112,8 +112,8 @@ func TestPlan_IntegrationsProcessing(t *testing.T) {
 
 	p := New()
 
-	p.AddComponent(c1)
-	p.AddComponent(c2)
+	assert.NoError(t, p.AddComponent(c1))
+	assert.NoError(t, p.AddComponent(c2))
 
 	assert.NoError(t, p.Validate())
 

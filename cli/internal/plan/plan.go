@@ -57,6 +57,7 @@ func NewFromConfig(log logger.Logger, cfg *config.Config) (*Plan, error) {
 			if cc.ComponentName != "" {
 				comp.name = cc.Name
 			}
+
 			comp.namespace = cc.Namespace
 			comp.jsonParams = cc.JsonParams
 
