@@ -15,5 +15,6 @@ sources:
 
 annotations:
   karavel.io/bootstrap: 'true'
+  karavel.io/singleton: 'true'
   karavel.io/dependencies: external-secrets
   prometheus.enable: prometheus
