@@ -31,8 +31,6 @@ spec:
         - /shared/app
         - --repo-server
         - {{ include "argocd.name" . }}-repo-server:8081
-        - --dex-server
-        - http://{{ include "argocd.name" . }}-dex-server:5556
         - --logformat
         - text
         - --loglevel
