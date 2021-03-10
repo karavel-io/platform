@@ -14,6 +14,7 @@ sources:
   - https://github.com/mikamai/karavel
 
 annotations:
+  karavel.io/singleton: "true"
   karavel.io/dependencies: cert-manager
   grafana.enable: grafana
   prometheus.enable: prometheus
