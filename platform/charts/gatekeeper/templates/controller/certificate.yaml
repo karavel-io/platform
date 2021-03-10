@@ -1,0 +1,27 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "gatekeeper.name" . }}-webhook-selfsigned-issuer
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    argocd.argoproj.io/hook: PreSync
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "gatekeeper.name" . }}-webhook-cert
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    argocd.argoproj.io/hook: PreSync
+spec:
+  dnsNames:
+    - {{ include "gatekeeper.name" . }}-webhook.{{ .Release.Namespace }}.svc
+    - {{ include "gatekeeper.name" . }}-webhook.{{ .Release.Namespace }}.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: {{ include "gatekeeper.name" . }}-webhook-selfsigned-issuer
+  secretName: {{ include "gatekeeper.name" . }}-webhook-cert

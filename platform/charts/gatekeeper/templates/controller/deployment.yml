@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gatekeeper.name" . }}-controller
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "gatekeeper.name" . }}-controller-manager
+    {{ include "gatekeeper.labels" . | nindent 4 }}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "gatekeeper.name" . }}-controller-manager
+      {{ include "gatekeeper.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: controller-manager
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "gatekeeper.name" . }}-controller-manager
+        {{ include "gatekeeper.labels" . | nindent 8 }}
+        app.kubernetes.io/component: controller-manager
+      annotations:
+        container.seccomp.security.alpha.kubernetes.io/manager: runtime/default
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                        - controller-manager
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      automountServiceAccountToken: true
+      serviceAccountName: gatekeeper-admin
+      terminationGracePeriodSeconds: 60
+      priorityClassName: system-cluster-critical
+      containers:
+        - name: manager
+          command:
+            - /manager
+          args:
+            - --port=8443
+            - --logtostderr
+            - --emit-admission-events=false
+            - --log-level=INFO
+            - --exempt-namespace={{ .Release.Namespace }}
+            - --operation=webhook
+            - --disable-cert-rotation
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          image: 'openpolicyagent/gatekeeper:v{{ .Chart.AppVersion }}'
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8443
+              name: webhook-server
+              protocol: TCP
+            - containerPort: 8888
+              name: metrics
+              protocol: TCP
+            - containerPort: 9090
+              name: healthz
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 9090
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsGroup: 999
+            runAsNonRoot: true
+            runAsUser: 1000
+          volumeMounts:
+            - mountPath: /certs
+              name: cert
+              readOnly: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+        - name: cert
+          secret:
+            defaultMode: 420
+            secretName: {{ include "gatekeeper.name" . }}-webhook-cert
