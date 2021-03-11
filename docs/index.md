@@ -3,16 +3,16 @@
 Karavel is a project that provides tools and knowledge around the [Kubernetes]
 stack to deploy and manage [private PaaS] in the Cloud and on premise.
 
-The main output of the Karavel project is the [Karavel Platform](#the-karavel-platform), a curated
+The main output of the Karavel project is the [Karavel Container Platform](#the-karavel-platform), a curated
 set of components and services based on the best-in-breed open source projects, carefully configured to deliver
 a production-ready platform for enterprises.
 
-## The Karavel Platform
+## The Karavel Container Platform
 
 Karavel provides many different [components] that together form a cohesive and integrated environment
-called the **Karavel Platform**.
+called the **Karavel Container Platform**.
 
-The Karavel Platform selects specific versions of these components that are tried and tested together
+The Karavel Container Platform selects specific versions of these components that are tried and tested together
 and publishes them as a ready-to-use kit to assemble GitOps-enabled platforms for enterprises. Check out
 our [quickstart guide] for an introductory view to the Platform.
 

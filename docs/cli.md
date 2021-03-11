@@ -1,7 +1,7 @@
 # Karavel CLI
 
-The Karavel CLI tool is a utility that helps managing
-GitOps repositories for installing Karavel on Kubernetes clusters.
+The Karavel CLI tool is a utility that helps to manage GitOps repositories for installing Karavel on Kubernetes
+clusters.
 
 The tool is written in Go and packaged as an single static binary that runs on Linux.
 
@@ -19,7 +19,7 @@ Flags:
       --force                 Overwrite the config file even if it already exists
   -h, --help                  help for init
   -o, --output-file string    Karavel config file name to create (default "karavel.hcl")
-  -v, --version string        Karavel Platform version to initialize (default "latest")
+  -v, --version string        Karavel Container Platform version to initialize (default "latest")
 
 Global Flags:
       --colors   Enable colored logs (default true)
@@ -27,12 +27,15 @@ Global Flags:
   -q, --quiet    Suppress all logs except errors
 ```
 
-The Karavel team regularly publishes recommended selections of components with matching versions that can be used as a starting point for your clusters.
+The Karavel team regularly publishes recommended selections of components with matching versions that can be used as a
+starting point for your clusters.
 
-These starting configurations are completely optional and can be tweaked to accomodate your specific setup, or you could write your own from scratch.
-However, they are a useful starting point as the provided component versions combinations have been carefully tested to ensure they are fully compatible with each other.
+These starting configurations are completely optional and can be tweaked to accomodate your specific setup, or you could
+write your own from scratch. However, they are a useful starting point as the provided component versions combinations
+have been carefully tested to ensure they are fully compatible with each other.
 
 This command will download the recommended base config for the latest version of Karavel to the current directory:
+
 ```bash
 $ cd /tmp/karavel 
 $ karavel init
@@ -49,7 +52,9 @@ Download completed in 991.628µs
 Checksum successfully validated. Writing config file to /tmp/karavel/karavel.hcl
 ```
 
-To download a specific version of the Karavel Platform instead of the latest one, you can pass the `--version` flag to `karavel init` with the desired version.
+To download a specific version of the Karavel Container Platform instead of the latest one, you can pass the `--version`
+flag to `karavel init` with the desired version.
+
 ```bash
 $ cd /tmp/karavel 
 $ karavel init --version 0.1.0
@@ -66,8 +71,9 @@ Download completed in 991.628µs
 Checksum successfully validated. Writing config file to /tmp/karavel/karavel.hcl
 ```
 
-You can now safely edit the `karavel.hcl` file to configure the platform based on your environment. There are a few parameters
-that some component need in order to properly function, like OIDC and Cloud providers credentials. More information is provided in the next pages. 
+You can now safely edit the `karavel.hcl` file to configure the platform based on your environment. There are a few
+parameters that some component need in order to properly function, like OIDC and Cloud providers credentials. More
+information is provided in the next pages.
 
 ## karavel render
 
@@ -92,25 +98,28 @@ Global Flags:
   -q, --quiet    Suppress all logs except errors
 ```
 
-`karavel render` is the primary tool used to manage Karavel GitOps repositories.
-It takes a [HCL] configuration file that describes the required components, their version and their parameters, and
-generates the appropriate Kubernetes manifests for them.  
-These manifests will install all the required components in one go from a set of curated packages maintained
-by the Karavel project. 
+`karavel render` is the primary tool used to manage Karavel GitOps repositories. It takes a [HCL] configuration file
+that describes the required components, their version and their parameters, and generates the appropriate Kubernetes
+manifests for them.  
+These manifests will install all the required components in one go from a set of curated packages maintained by the
+Karavel project.
 
-The command will also enable or disable bits of configuration based on the available components,
-enabling useful integrations without the user having to worry about wiring all the pieces together on its own.  
-One common example would be adding [ServiceMonitor] definitions to all the components that provide Prometheus metrics
-if the `prometheus` component is added to the configuration, so that metrics can be scraped and visualized in Grafana.
+The command will also enable or disable bits of configuration based on the available components, enabling useful
+integrations without the user having to worry about wiring all the pieces together on its own.  
+One common example would be adding [ServiceMonitor] definitions to all the components that provide Prometheus metrics if
+the `prometheus` component is added to the configuration, so that metrics can be scraped and visualized in Grafana.
 
-Once bootstrapped a new cluster is completely self-managed, with [ArgoCD] acting as the GitOps engine
-in charge of maintaining the deployed services in sync with their manifests stored in your Git provider of choice.
+Once bootstrapped a new cluster is completely self-managed, with [ArgoCD] acting as the GitOps engine in charge of
+maintaining the deployed services in sync with their manifests stored in your Git provider of choice.
 
 Changing a configuration and redeploying becomes as easy as committing and pushing to a Git repository.
 
 Check the [Quickstart Guide] to see this tool in action.
 
 [ArgoCD]: https://argoproj.github.io/argo-cd
+
 [Quickstart Guide]: quickstart.md
+
 [HCL]: https://www.terraform.io/docs/language/syntax/configuration.html
+
 [ServiceMonitor]: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md
