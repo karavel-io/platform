@@ -3,6 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: promtail
+  namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: promtail
     {{- include "loki.labels" . | nindent 4 }}
