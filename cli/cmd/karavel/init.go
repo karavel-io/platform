@@ -70,7 +70,7 @@ func NewInitCommand(log logger.Logger) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&ver, "version", "v", "latest", "Karavel Platform version to initialize")
+	cmd.Flags().StringVarP(&ver, "version", "v", "latest", "Karavel Container Platform version to initialize")
 	cmd.Flags().StringVarP(&filename, "output-file", "o", DefaultFileName, "Karavel config file name to create")
 	cmd.Flags().BoolVar(&force, "force", false, "Overwrite the config file even if it already exists")
 	cmd.Flags().StringVar(&cfgUrl, "config-url", "", "Override the official URL pointing to the Karavel config file to download. Requires setting --checksum-url too")

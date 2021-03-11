@@ -1,6 +1,6 @@
 # Versioning
 
-The Karavel Platform aims at supporting the current version of [Kubernetes] plus **two** prior versions. This
+The Karavel Container Platform aims at supporting the current version of [Kubernetes] plus **two** prior versions. This
 provides enough time for operators to maintain their Karavel clusters with confidence and clear upgrade paths.
 
 Karavel maintains two versioning policies: a **per-component policy** and a **platform-wide policy**.
@@ -27,21 +27,21 @@ A backward **incompatible** or otherwise breaking change will increment the **ma
 
 Due to the large amount of components provided by Karavel and the possible interactions between them to compose
 a production-ready Kubernetes platform, the Karavel project regularly picks specific component versions that have been
-extensively tested and verified to work well together. These curated selections compose the **Karavel Platform** and are published
+extensively tested and verified to work well together. These curated selections compose the **Karavel Container Platform** and are published
 under a single version, much like a Linux distribution would do with its packages and repositories. This gives developers working
 on components the freedom to iterate and improve their charts without being tied down to the others, and it gives operators
 the confidence that their clusters will always work at their best, while still being able to update specific components independently
 to leverage new features.
 
-The Karavel team maintains the Karavel Platform in sync with the target [Kubernetes] versions.  
+The Karavel team maintains the Karavel Container Platform in sync with the target [Kubernetes] versions.  
 Karavel supports the **current** K8s version plus **two** prior releases.  
-The Karavel project will drop support for a given Karavel Platform release when the lowest compatible Kubernetes version
+The Karavel project will drop support for a given Karavel Container Platform release when the lowest compatible Kubernetes version
 becomes unsupported. As a general recommendation, operators should strive to keep Karavel clusters on the latest minor
-version of both Kubernetes and the Karavel Platform.
+version of both Kubernetes and the Karavel Container Platform.
 
 ### Kubernetes compatibility matrix
 
-| Karavel Platform Version  | Kubernetes 1.18         | Kubernetes 1.19         | Kubernetes 1.20 (current)    |
+| Karavel Container Platform Version  | Kubernetes 1.18         | Kubernetes 1.19         | Kubernetes 1.20 (current)    |
 |:--------------------------|:-----------------------:|:-----------------------:|:----------------------------:|
 | 0.1.0                     |                         |                         | :material-check-bold:        |
 | 0.2.0                     |                         | :material-alert:        | :material-check-bold:        |

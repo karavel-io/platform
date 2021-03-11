@@ -97,7 +97,7 @@ a plan and render the proper configuration.
 !!! info
     Instead of writing the `karavel.hcl` file from scratch, it is recommended to run `karavel init` to fetch the base config from the official repository.  
     The Karavel team regularly publishes recommended selections of components with matching versions that can be used as a starting point for your clusters.  
-    To download a specific version of the Karavel Platform instead of the latest one, you can pass the `--version` flag to `karavel init` with the desired version.  
+    To download a specific version of the Karavel Container Platform instead of the latest one, you can pass the `--version` flag to `karavel init` with the desired version.  
     See the [CLI reference](cli.md#karavel-init) for more information.
 
 When you're satisfied with your configuration, simply running `karavel render` in the same directory as the file will download the required components from the repository

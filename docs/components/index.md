@@ -8,7 +8,7 @@ to provide a comprehensive and opinionated Kubernetes platform for enterprises t
 
 !!!info
     Components marked with the ![Bootstrap component](https://img.shields.io/badge/bootstrap-true-orange?style=for-the-badge) badge
-    are essential for bootstrapping the Karavel Platform and allow ArgoCD to kick in and start the GitOps loop.
+    are essential for bootstrapping the Karavel Container Platform and allow ArgoCD to kick in and start the GitOps loop.
 
 ## Core components
 
