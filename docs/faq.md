@@ -1,15 +1,15 @@
 # Frequently Asked Questions
 
-## Karavel Platform
+## Karavel Container Platform
 
-### Q: Is the Karavel Platform a certified Kubernetes distribution?
+### Q: Is the Karavel Container Platform a certified Kubernetes distribution?
 
 **A:** No, we do not bundle Kubernetes nor provide any means of installing it as part of the platform offering. 
-The Karavel Platform expects a conformant Kubernetes cluster with enough spare capacity to be present before deploying. 
+The Karavel Container Platform expects a conformant Kubernetes cluster with enough spare capacity to be present before deploying. 
 We only provide software components and addons that are deployed on top of the cluster to build up a comprehensive and 
 production-grade environment for developers to run and operate their workloads.
 
-The Karavel Platform is virtually compatible with any Kubernetes cluster, although there may be some cases where existing addons
+The Karavel Container Platform is virtually compatible with any Kubernetes cluster, although there may be some cases where existing addons
 may conflict with the Karavel components (for example, Red Hat OpenShift already provides the Prometheus Operator as part of its
 core). A bare, upstream Kubernetes without any extra component (not even a CNI) is the ideal starting point for deploying the Platform.
 
@@ -30,7 +30,7 @@ instead.
 
 ### Q: Can I swap component X for alternative Y?
 
-**A:** The Karavel Platform builds on a set of principles and assumptions based on the team's experience running Kubernetes in production.
+**A:** The Karavel Container Platform builds on a set of principles and assumptions based on the team's experience running Kubernetes in production.
 The available components have been selected and their configuration carefully crafted to integrate with each other and compose a robust
 production-grade platform with a great developer experience out of the box, so while a few of them have alternative implementations that can be swapped
 in and out to accomodate specific scenarios, it is unlikely that we'll provide other solutions for the core components.
