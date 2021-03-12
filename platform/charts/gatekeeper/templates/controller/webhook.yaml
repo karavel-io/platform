@@ -1,0 +1,55 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "gatekeeper.name" . }}-validating-webhook-configuration
+  labels:
+    app.kubernetes.io/name: {{ include "gatekeeper.name" . }}-webhook-configuration
+    {{ include "gatekeeper.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controller-manager
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "gatekeeper.name" . }}-webhook-cert
+webhooks:
+- clientConfig:
+    service:
+      name: {{ include "gatekeeper.name" . }}-webhook
+      namespace: {{ .Release.Namespace }}
+      path: /v1/admit
+  failurePolicy: Ignore
+  name: validation.gatekeeper.sh
+  namespaceSelector:
+    matchExpressions:
+    - key: admission.gatekeeper.sh/ignore
+      operator: DoesNotExist
+  rules:
+  - apiGroups:
+    - '*'
+    apiVersions:
+    - '*'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - '*'
+  sideEffects: None
+  timeoutSeconds: 3
+  admissionReviewVersions: ["v1beta1"]
+- clientConfig:
+    service:
+      name: {{ include "gatekeeper.name" . }}-webhook
+      namespace: {{ .Release.Namespace }}
+      path: /v1/admitlabel
+  failurePolicy: Fail
+  name: check-ignore-label.gatekeeper.sh
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - '*'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - namespaces
+  sideEffects: None
+  timeoutSeconds: 3
+  admissionReviewVersions: ["v1beta1"]

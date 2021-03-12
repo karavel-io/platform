@@ -14,5 +14,6 @@ sources:
   - https://github.com/mikamai/karavel
 
 annotations:
+  karavel.io/singleton: 'true'
   karavel.io/bootstrap: 'true'
   monitoring.enable: grafana, prometheus
