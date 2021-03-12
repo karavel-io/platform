@@ -23,7 +23,9 @@ spec:
     s3ForcePathStyle: {{ . | quote }}
 {{- end }}
     region: {{ .region }}
+    {{- if .endpoint }}
     s3Url: {{ ternary "http" "https" .insecure }}://{{ .endpoint }}
+    {{- end }}
     {{- if .encrypted }}
     serverSideEncryption: AES256
     {{- end }}
