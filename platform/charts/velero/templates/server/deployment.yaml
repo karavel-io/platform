@@ -59,6 +59,9 @@ spec:
             {{- if .Values.credentialsSecret.key }}
             - name: AWS_SHARED_CREDENTIALS_FILE
               value: /credentials/cloud
+            {{- else if .Values.credentialsPath }}
+            - name: AWS_SHARED_CREDENTIALS_FILE
+              value: {{ .Values.credentialsPath }}
             {{- end }}
             {{- if .Values.backups.enable}}
             {{- with .Values.backups.s3.accessKeySecret }}

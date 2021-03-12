@@ -18,11 +18,7 @@ backups:
     insecure: false
     pathStyle: false
     accessKeySecret:
-      name:
-      key:
     secretKeySecret:
-      name:
-      key:
 
 snapshots:
   enable: true
@@ -38,3 +34,5 @@ credentialsSecret:
   backend:
   key:
   property:
+
+credentialsPath:
