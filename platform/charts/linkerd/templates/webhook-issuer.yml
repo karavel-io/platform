@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "linkerd.name" . }}-webhook-issuer
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    argocd.argoproj.io/hook: PreSync
+  labels:
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  selfSigned: {}

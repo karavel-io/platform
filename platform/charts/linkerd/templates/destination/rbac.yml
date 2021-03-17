@@ -1,10 +1,12 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-destination
+  name: {{ include "linkerd.name" . }}-destination
   labels:
     linkerd.io/control-plane-component: destination
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-destination
+    {{ include "linkerd.labels" . | nindent 4 }}
 rules:
   - apiGroups: ["apps"]
     resources: ["replicasets"]
@@ -25,24 +27,28 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-destination
+  name: {{ include "linkerd.name" . }}-destination
   labels:
     linkerd.io/control-plane-component: destination
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-destination
+    {{ include "linkerd.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: linkerd-destination
+  name: {{ include "linkerd.name" . }}-destination
 subjects:
   - kind: ServiceAccount
-    name: linkerd-destination
-    namespace: linkerd
+    name: {{ include "linkerd.name" . }}-destination
+    namespace: {{ .Release.Namespace }}
 ---
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: linkerd-destination
-  namespace: linkerd
+  name: {{ include "linkerd.name" . }}-destination
+  namespace: {{ .Release.Namespace }}
   labels:
     linkerd.io/control-plane-component: destination
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-destination
+    {{ include "linkerd.labels" . | nindent 4 }}

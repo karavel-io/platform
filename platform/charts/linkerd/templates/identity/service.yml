@@ -1,19 +1,19 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ include "linkerd.name" . }}-controller-api
+  name: {{ include "linkerd.name" . }}-identity
   namespace: {{ .Release.Namespace }}
   labels:
-    linkerd.io/control-plane-component: controller
+    linkerd.io/control-plane-component: identity
     linkerd.io/control-plane-ns: {{ .Release.Namespace }}
-    app.kubernetes.io/name: {{ include "linkerd.name" . }}-controller-api
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-identity
     {{ include "linkerd.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   selector:
-    linkerd.io/control-plane-component: controller
+    linkerd.io/control-plane-component: identity
     {{ include "linkerd.selectorLabels" . | nindent 4 }}
   ports:
-    - name: http
-      port: 8085
-      targetPort: http
+    - name: grpc
+      port: 8080
+      targetPort: grpc

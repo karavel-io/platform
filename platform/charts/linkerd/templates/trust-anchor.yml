@@ -1,0 +1,42 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "linkerd.name" . }}-trust-anchor
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    argocd.argoproj.io/hook: PreSync
+  labels:
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+  {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "linkerd.name" . }}-trust-anchor
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    argocd.argoproj.io/hook: PreSync
+  labels:
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+  {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  dnsNames:
+    - root.{{ .Release.Namespace }}.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: {{ include "linkerd.name" . }}-trust-anchor
+  duration: 17520h
+  renewBefore: 1440h
+  isCA: true
+  privateKey:
+    algorithm: ECDSA
+  usages:
+    - cert sign
+    - crl sign
+    - server auth
+    - client auth
+  secretName: {{ include "linkerd.name" . }}-trust-anchor

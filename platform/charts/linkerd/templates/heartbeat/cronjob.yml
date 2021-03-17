@@ -1,0 +1,50 @@
+{{- if .Values.prometheus.enable }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "linkerd.name" . }}-heartbeat
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: heartbeat
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-heartbeat
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  schedule: "33 9 * * * "
+  successfulJobsHistoryLimit: 0
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            linkerd.io/control-plane-component: heartbeat
+            linkerd.io/workload-ns: linkerd
+            app.kubernetes.io/name: {{ include "linkerd.name" . }}-heartbeat
+            {{ include "linkerd.labels" . | nindent 12 }}
+        spec:
+          nodeSelector:
+            beta.kubernetes.io/os: linux
+          serviceAccountName: {{ include "linkerd.name" . }}-heartbeat
+          restartPolicy: Never
+          containers:
+            - name: heartbeat
+              image: "cr.l5d.io/linkerd/controller:{{ include "linkerd.version" . }}"
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: LINKERD_DISABLED
+                  value: "the heartbeat controller does not use the proxy"
+              args:
+                - heartbeat
+                - -controller-namespace={{ .Release.Namespace }}
+                - -log-level=info
+                - -log-format=plain
+                - -prometheus-url=http://prometheus-operated.{{ .Values.prometheus.namespace }}.svc.cluster.local:9090
+              resources:
+                limits:
+                  memory: "250Mi"
+                requests:
+                  cpu: "100m"
+                  memory: "50Mi"
+              securityContext:
+                runAsUser: 2103
+{{- end }}

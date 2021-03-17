@@ -1,0 +1,93 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ include "linkerd.name" . }}-tap
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: tap
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-tap
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      linkerd.io/control-plane-component: tap
+      app.kubernetes.io/name: {{ include "linkerd.name" . }}-tap
+      {{ include "linkerd.selectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        linkerd.io/control-plane-component: tap
+        linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+        app.kubernetes.io/name: {{ include "linkerd.name" . }}-tap
+        {{ include "linkerd.labels" . | nindent 8 }}
+    spec:
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: linkerd.io/control-plane-component
+                      operator: In
+                      values:
+                        - tap
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+              weight: 100
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: linkerd.io/control-plane-component
+                    operator: In
+                    values:
+                      - tap
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - args:
+            - api
+            - -api-namespace={{ .Release.Namespace }}
+            - -log-level=info
+            - -identity-trust-domain=cluster.local
+          image: "cr.l5d.io/linkerd/tap:{{ include "linkerd.version" . }}"
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 9998
+            initialDelaySeconds: 10
+          name: tap
+          ports:
+            - containerPort: 8088
+              name: grpc
+            - containerPort: 8089
+              name: apiserver
+            - containerPort: 9998
+              name: admin-http
+          readinessProbe:
+            failureThreshold: 7
+            httpGet:
+              path: /ready
+              port: 9998
+          resources:
+            limits:
+              memory: "250Mi"
+            requests:
+              cpu: "100m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser: 2103
+          volumeMounts:
+            - mountPath: /var/run/linkerd/tls
+              name: tls
+              readOnly: true
+      serviceAccountName: {{ include "linkerd.name" . }}-tap
+      volumes:
+        - name: tls
+          secret:
+            secretName: {{ include "linkerd.name" . }}-tap-k8s-tls

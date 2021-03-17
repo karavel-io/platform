@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "linkerd.name" . }}-sp-validator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: sp-validator
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-sp-validator
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    linkerd.io/control-plane-component: sp-validator
+    {{ include "linkerd.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: sp-validator
+      port: 443
+      targetPort: sp-validator

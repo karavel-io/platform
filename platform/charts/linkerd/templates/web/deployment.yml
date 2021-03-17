@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "linkerd.name" . }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: web
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      linkerd.io/control-plane-component: web
+      app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+      {{ include "linkerd.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        linkerd.io/control-plane-component: web
+        linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+        app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+        {{ include "linkerd.labels" . | nindent 8 }}
+    spec:
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+      containers:
+        - args:
+            - -linkerd-controller-api-addr={{ include "linkerd.name" . }}-controller-api.{{ .Release.Namespace }}.svc.cluster.local:8085
+            {{- if .Values.prometheus.enable }}
+            - -linkerd-metrics-api-addr=prometheus-adapter.{{ .Values.prometheus.namespace }}.svc.cluster.local:8085
+            {{- end }}
+            - -cluster-domain=cluster.local
+            {{- if .Values.grafana.enable }}
+            - -grafana-addr=grafana-operated.{{ .Values.grafana.namespace }}.svc.cluster.local:3000
+            {{- end }}
+            - -controller-namespace={{ .Release.Namespace }}
+            - -viz-namespace={{ .Release.Namespace }}
+            - -log-level=info
+            - -enforced-host=^(localhost|127\.0\.0\.1|web\.{{ .Release.Namespace }}\.svc\.cluster\.local|web\.{{ .Release.Namespace }}\.svc|\[::1\])(:\d+)?$
+          image: cr.l5d.io/linkerd/web:stable-2.10.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 9994
+            initialDelaySeconds: 10
+          name: web
+          ports:
+            - containerPort: 8084
+              name: http
+            - containerPort: 9994
+              name: admin-http
+          readinessProbe:
+            failureThreshold: 7
+            httpGet:
+              path: /ready
+              port: 9994
+          resources:
+            limits:
+              memory: "250Mi"
+            requests:
+              cpu: "100m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser: 2103
+      serviceAccountName: {{ include "linkerd.name" . }}-web

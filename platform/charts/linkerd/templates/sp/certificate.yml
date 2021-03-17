@@ -1,21 +1,20 @@
----
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ include "linkerd.name" . }}-proxy-injector-k8s-tls
+  name: {{ include "linkerd.name" . }}-sp-validator-k8s-tls
   namespace: {{ .Release.Namespace }}
   annotations:
     helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
     argocd.argoproj.io/hook: PreSync
   labels:
-    linkerd.io/control-plane-component: proxy-injector
+    linkerd.io/control-plane-component: sp-validator
     linkerd.io/control-plane-ns: {{ .Release.Namespace }}
     {{ include "linkerd.labels" . | nindent 4 }}
 spec:
   dnsNames:
-  - {{ include "linkerd.name" . }}--proxy-injector.{{ .Release.Namespace }}.svc
-  - {{ include "linkerd.name" . }}--proxy-injector.{{ .Release.Namespace }}.svc.cluster.local
+  - {{ include "linkerd.name" . }}--sp-validator.{{ .Release.Namespace }}.svc
+  - {{ include "linkerd.name" . }}--sp-validator.{{ .Release.Namespace }}.svc.cluster.local
   issuerRef:
     kind: Issuer
     name: {{ include "linkerd.name" . }}-webhook-issuer
-  secretName: {{ include "linkerd.name" . }}-proxy-injector-k8s-tls
+  secretName: {{ include "linkerd.name" . }}-sp-validator-k8s-tls

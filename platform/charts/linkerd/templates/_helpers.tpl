@@ -35,7 +35,7 @@ Version tag
 */}}
 
 {{- define "linkerd.version" -}}
-v{{ .Chart.AppVersion }}
+stable-{{ .Chart.AppVersion }}
 {{- end }}
 
 {{/*
@@ -43,7 +43,7 @@ Common labels
 */}}
 {{- define "linkerd.labels" -}}
 {{ include "linkerd.selectorLabels" . }}
-app.kubernetes.io/version: {{ .Chart.AppVersion }}
+app.kubernetes.io/version: {{ include "linkerd.version" . }}
 karavel.io/component-version: {{ .Chart.Version }}
 {{- end }}
 

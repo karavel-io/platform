@@ -4,6 +4,7 @@ prometheus:
 
 grafana:
   enable: false
+  namespace: monitoring
 
 tracing:
   enable: false

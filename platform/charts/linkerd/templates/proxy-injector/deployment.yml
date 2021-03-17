@@ -1,21 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "linkerd.name" . }}-controller
+  name: {{ include "linkerd.name" . }}-proxy-injector
   namespace: {{ .Release.Namespace }}
   labels:
-    linkerd.io/control-plane-component: controller
+    linkerd.io/control-plane-component: proxy-injector
     linkerd.io/control-plane-ns: {{ .Release.Namespace }}
-    app.kubernetes.io/name: {{ include "linkerd.name" . }}-controller
-  {{ include "linkerd.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-proxy-injector
+    {{ include "linkerd.labels" . | nindent 4 }}
 spec:
   replicas: 3
   selector:
     matchLabels:
-      linkerd.io/control-plane-component: controller
-      linkerd.io/proxy-deployment: {{ include "linkerd.name" . }}-controller
-      app.kubernetes.io/name: {{ include "linkerd.name" . }}-controller
-  {{ include "linkerd.selectorLabels" . | nindent 6 }}
+      linkerd.io/control-plane-component: proxy-injector
+      app.kubernetes.io/name: {{ include "linkerd.name" . }}-proxy-injector
+      {{ include "linkerd.selectorLabels" . | nindent 6 }}
   strategy:
     rollingUpdate:
       maxUnavailable: 1
@@ -25,12 +24,12 @@ spec:
         linkerd.io/identity-mode: default
         linkerd.io/proxy-version: {{ include "linkerd.version" . }}
       labels:
-        linkerd.io/control-plane-component: controller
+        linkerd.io/control-plane-component: proxy-injector
         linkerd.io/control-plane-ns: {{ .Release.Namespace }}
         linkerd.io/workload-ns: {{ .Release.Namespace }}
-        linkerd.io/proxy-deployment: {{ include "linkerd.name" . }}-controller
-        app.kubernetes.io/name: {{ include "linkerd.name" . }}-controller
-    {{ include "linkerd.labels" . | nindent 8 }}
+        linkerd.io/proxy-deployment: {{ include "linkerd.name" . }}-proxy-injector
+        app.kubernetes.io/name: {{ include "linkerd.name" . }}-proxy-injector
+        {{ include "linkerd.labels" . | nindent 8 }}
     spec:
       nodeSelector:
         beta.kubernetes.io/os: linux
@@ -43,7 +42,7 @@ spec:
                     - key: linkerd.io/control-plane-component
                       operator: In
                       values:
-                        - controller
+                        - proxy-injector
                 topologyKey: failure-domain.beta.kubernetes.io/zone
               weight: 100
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -52,16 +51,13 @@ spec:
                   - key: linkerd.io/control-plane-component
                     operator: In
                     values:
-                      - controller
+                      - proxy-injector
               topologyKey: kubernetes.io/hostname
       containers:
         - args:
-            - public-api
-            - -destination-addr={{ include "linkerd.name" . }}-dst.{{ .Release.Namespace }}.svc.cluster.local:8086
-            - -controller-namespace={{ .Release.Namespace }}
+            - proxy-injector
             - -log-level=info
             - -log-format=plain
-            - -cluster-domain=cluster.local
           image: "cr.l5d.io/linkerd/controller:{{ include "linkerd.version" . }}"
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -69,10 +65,10 @@ spec:
               path: /ping
               port: 9995
             initialDelaySeconds: 10
-          name: public-api
+          name: proxy-injector
           ports:
-            - containerPort: 8085
-              name: http
+            - containerPort: 8443
+              name: proxy-injector
             - containerPort: 9995
               name: admin-http
           readinessProbe:
@@ -88,6 +84,12 @@ spec:
               memory: "50Mi"
           securityContext:
             runAsUser: 2103
+          volumeMounts:
+            - mountPath: /var/run/linkerd/config
+              name: config
+            - mountPath: /var/run/linkerd/tls
+              name: tls
+              readOnly: true
         - env:
             - name: LINKERD2_PROXY_LOG
               value: "warn,linkerd=info"
@@ -221,9 +223,15 @@ spec:
           volumeMounts:
             - mountPath: /run
               name: linkerd-proxy-init-xtables-lock
-      serviceAccountName: {{ include "linkerd.name" . }}-controller
+      serviceAccountName: {{ include "linkerd.name" . }}-proxy-injector
       volumes:
-        - emptyDir: { }
+        - configMap:
+            name: {{ include "linkerd.name" . }}-config
+          name: config
+        - name: tls
+          secret:
+            secretName: {{ include "linkerd.name" . }}-proxy-injector-k8s-tls
+        - emptyDir: {}
           name: linkerd-proxy-init-xtables-lock
         - emptyDir:
             medium: Memory

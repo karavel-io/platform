@@ -1,10 +1,11 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-tap
+  name: {{ include "linkerd.name" . }}-tap
   labels:
     linkerd.io/control-plane-component: tap
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
 rules:
   - apiGroups: [""]
     resources: ["pods", "services", "replicationcontrollers", "namespaces", "nodes"]
@@ -19,11 +20,15 @@ rules:
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-tap-admin
+  name: {{ include "linkerd.name" . }}-tap-admin
   labels:
     linkerd.io/control-plane-component: tap
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
 rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["list"]
   - apiGroups: ["tap.linkerd.io"]
     resources: ["*"]
     verbs: ["watch"]
@@ -31,57 +36,61 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-tap
+  name: {{ include "linkerd.name" . }}-tap
   labels:
     linkerd.io/control-plane-component: tap
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: linkerd-tap
+  name: {{ include "linkerd.name" . }}-tap
 subjects:
   - kind: ServiceAccount
-    name: linkerd-tap
-    namespace: linkerd
+    name: {{ include "linkerd.name" . }}-tap
+    namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: linkerd-tap-auth-delegator
+  name: {{ include "linkerd.name" . }}-tap-auth-delegator
   labels:
     linkerd.io/control-plane-component: tap
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: system:auth-delegator
 subjects:
   - kind: ServiceAccount
-    name: linkerd-tap
-    namespace: linkerd
----
-kind: ServiceAccount
-apiVersion: v1
-metadata:
-  name: linkerd-tap
-  namespace: linkerd
-  labels:
-    linkerd.io/control-plane-component: tap
-    linkerd.io/control-plane-ns: linkerd
+    name: {{ include "linkerd.name" . }}-tap
+    namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: linkerd-tap-auth-reader
+  name: {{ include "linkerd.name" . }}-tap-auth-reader
   namespace: kube-system
   labels:
     linkerd.io/control-plane-component: tap
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: extension-apiserver-authentication-reader
 subjects:
   - kind: ServiceAccount
-    name: linkerd-tap
-    namespace: linkerd
+    name: {{ include "linkerd.name" . }}-tap
+    namespace: {{ .Release.Namespace }}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: {{ include "linkerd.name" . }}-tap
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: tap
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}

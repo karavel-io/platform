@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "linkerd.name" . }}-tap-injector
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: tap-injector
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-tap-injector
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    linkerd.io/control-plane-component: tap-injector
+    {{ include "linkerd.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: tap-injector
+      port: 443
+      targetPort: tap-injector

@@ -1,10 +1,12 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-identity
+  name: {{ include "linkerd.name" . }}-identity
   labels:
     linkerd.io/control-plane-component: identity
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-identity
+    {{ include "linkerd.labels" . | nindent 4 }}
 rules:
   - apiGroups: ["authentication.k8s.io"]
     resources: ["tokenreviews"]
@@ -19,24 +21,28 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-identity
+  name: {{ include "linkerd.name" . }}-identity
   labels:
     linkerd.io/control-plane-component: identity
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-identity
+    {{ include "linkerd.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: linkerd-identity
+  name: {{ include "linkerd.name" . }}-identity
 subjects:
   - kind: ServiceAccount
-    name: linkerd-identity
-    namespace: linkerd
+    name: {{ include "linkerd.name" . }}-identity
+    namespace: {{ .Release.Namespace }}
 ---
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: linkerd-identity
-  namespace: linkerd
+  name: {{ include "linkerd.name" . }}-identity
+  namespace: {{ .Release.Namespace }}
   labels:
     linkerd.io/control-plane-component: identity
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-identity
+    {{ include "linkerd.labels" . | nindent 4 }}

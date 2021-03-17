@@ -1,0 +1,39 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "linkerd.name" . }}-tap-injector
+  labels:
+    linkerd.io/control-plane-component: tap-injector
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list", "watch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "linkerd.name" . }}-tap-injector
+  labels:
+    linkerd.io/control-plane-component: tap-injector
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name:  {{ include "linkerd.name" . }}-tap-injector
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name:  {{ include "linkerd.name" . }}-tap-injector
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name:  {{ include "linkerd.name" . }}-tap-injector
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: tap-injector
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}

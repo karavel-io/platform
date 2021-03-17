@@ -1,11 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: linkerd-web
-  namespace: linkerd
+  name: {{ include "linkerd.name" . }}-web
+  namespace: {{ .Release.Namespace }}
   labels:
     linkerd.io/control-plane-component: web
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+    {{ include "linkerd.labels" . | nindent 4 }}
 rules:
   - apiGroups: [""]
     resources: ["configmaps"]
@@ -24,27 +26,31 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: linkerd-web
-  namespace: linkerd
+  name: {{ include "linkerd.name" . }}-web
+  namespace: {{ .Release.Namespace }}
   labels:
     linkerd.io/control-plane-component: web
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+    {{ include "linkerd.labels" . | nindent 4 }}
 roleRef:
   kind: Role
-  name: linkerd-web
+  name: {{ include "linkerd.name" . }}-web
   apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
-    name: linkerd-web
-    namespace: linkerd
+    name: {{ include "linkerd.name" . }}-web
+    namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: linkerd-web-check
+  name: {{ include "linkerd.name" . }}-web-check
   labels:
     linkerd.io/control-plane-component: web
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+    {{ include "linkerd.labels" . | nindent 4 }}
 rules:
   - apiGroups: ["rbac.authorization.k8s.io"]
     resources: ["clusterroles", "clusterrolebindings"]
@@ -68,40 +74,78 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: linkerd-web-check
+  name: {{ include "linkerd.name" . }}-web-check
   labels:
     linkerd.io/control-plane-component: web
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+    {{ include "linkerd.labels" . | nindent 4 }}
 roleRef:
   kind: ClusterRole
-  name: linkerd-web-check
+  name: {{ include "linkerd.name" . }}-web-check
   apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
-    name: linkerd-web
-    namespace: linkerd
+    name: {{ include "linkerd.name" . }}-web
+    namespace: {{ .Release.Namespace }}
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: linkerd-web-admin
+  name: {{ include "linkerd.name" . }}-web-admin
   labels:
     linkerd.io/control-plane-component: web
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+    {{ include "linkerd.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: linkerd-tap-admin
+  name: {{ include "linkerd.name" . }}-tap-admin
 subjects:
   - kind: ServiceAccount
-    name: linkerd-web
-    namespace: linkerd
+    name: {{ include "linkerd.name" . }}-web
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "linkerd.name" . }}-web-api
+  labels:
+    linkerd.io/control-plane-component: web
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+    {{ include "linkerd.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "linkerd.name" . }}-web-api
+  labels:
+    linkerd.io/control-plane-component: web
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+    {{ include "linkerd.labels" . | nindent 4 }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "linkerd.name" . }}-web-api
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "linkerd.name" . }}-web
+    namespace: {{ .Release.Namespace }}
 ---
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: linkerd-web
-  namespace: linkerd
+  name: {{ include "linkerd.name" . }}-web
+  namespace: {{ .Release.Namespace }}
   labels:
     linkerd.io/control-plane-component: web
-    linkerd.io/control-plane-ns: linkerd
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-web
+    {{ include "linkerd.labels" . | nindent 4 }}

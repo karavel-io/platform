@@ -1,21 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "linkerd.name" . }}-controller
+  name: {{ include "linkerd.name" . }}-sp-validator
   namespace: {{ .Release.Namespace }}
   labels:
-    linkerd.io/control-plane-component: controller
+    linkerd.io/control-plane-component: sp-validator
     linkerd.io/control-plane-ns: {{ .Release.Namespace }}
-    app.kubernetes.io/name: {{ include "linkerd.name" . }}-controller
-  {{ include "linkerd.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-sp-validator
+    {{ include "linkerd.labels" . | nindent 4 }}
 spec:
   replicas: 3
   selector:
     matchLabels:
-      linkerd.io/control-plane-component: controller
-      linkerd.io/proxy-deployment: {{ include "linkerd.name" . }}-controller
-      app.kubernetes.io/name: {{ include "linkerd.name" . }}-controller
-  {{ include "linkerd.selectorLabels" . | nindent 6 }}
+      linkerd.io/control-plane-component: sp-validator
+      app.kubernetes.io/name: {{ include "linkerd.name" . }}-sp-validator
+      {{ include "linkerd.selectorLabels" . | nindent 6 }}
   strategy:
     rollingUpdate:
       maxUnavailable: 1
@@ -25,12 +24,12 @@ spec:
         linkerd.io/identity-mode: default
         linkerd.io/proxy-version: {{ include "linkerd.version" . }}
       labels:
-        linkerd.io/control-plane-component: controller
+        linkerd.io/control-plane-component: sp-validator
         linkerd.io/control-plane-ns: {{ .Release.Namespace }}
         linkerd.io/workload-ns: {{ .Release.Namespace }}
-        linkerd.io/proxy-deployment: {{ include "linkerd.name" . }}-controller
-        app.kubernetes.io/name: {{ include "linkerd.name" . }}-controller
-    {{ include "linkerd.labels" . | nindent 8 }}
+        linkerd.io/proxy-deployment: {{ include "linkerd.name" . }}-sp-validator
+        app.kubernetes.io/name: {{ include "linkerd.name" . }}-sp-validator
+        {{ include "linkerd.labels" . | nindent 8 }}
     spec:
       nodeSelector:
         beta.kubernetes.io/os: linux
@@ -43,7 +42,7 @@ spec:
                     - key: linkerd.io/control-plane-component
                       operator: In
                       values:
-                        - controller
+                        - sp-validator
                 topologyKey: failure-domain.beta.kubernetes.io/zone
               weight: 100
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -52,34 +51,31 @@ spec:
                   - key: linkerd.io/control-plane-component
                     operator: In
                     values:
-                      - controller
+                      - sp-validator
               topologyKey: kubernetes.io/hostname
       containers:
         - args:
-            - public-api
-            - -destination-addr={{ include "linkerd.name" . }}-dst.{{ .Release.Namespace }}.svc.cluster.local:8086
-            - -controller-namespace={{ .Release.Namespace }}
+            - sp-validator
             - -log-level=info
             - -log-format=plain
-            - -cluster-domain=cluster.local
           image: "cr.l5d.io/linkerd/controller:{{ include "linkerd.version" . }}"
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
               path: /ping
-              port: 9995
+              port: 9997
             initialDelaySeconds: 10
-          name: public-api
+          name: sp-validator
           ports:
-            - containerPort: 8085
-              name: http
-            - containerPort: 9995
+            - containerPort: 8443
+              name: sp-validator
+            - containerPort: 9997
               name: admin-http
           readinessProbe:
             failureThreshold: 7
             httpGet:
               path: /ready
-              port: 9995
+              port: 9997
           resources:
             limits:
               memory: "250Mi"
@@ -88,6 +84,10 @@ spec:
               memory: "50Mi"
           securityContext:
             runAsUser: 2103
+          volumeMounts:
+            - mountPath: /var/run/linkerd/tls
+              name: tls
+              readOnly: true
         - env:
             - name: LINKERD2_PROXY_LOG
               value: "warn,linkerd=info"
@@ -138,7 +138,7 @@ spec:
             - name: LINKERD2_PROXY_IDENTITY_TOKEN_FILE
               value: /var/run/secrets/kubernetes.io/serviceaccount/token
             - name: LINKERD2_PROXY_IDENTITY_SVC_ADDR
-              value: {{ include "linkerd.name" . }}-identity-headless.{{ .Release.Namespace }}.svc.cluster.local.:8080
+              value: linkerd-identity-headless.linkerd.svc.cluster.local.:8080
             - name: _pod_sa
               valueFrom:
                 fieldRef:
@@ -221,9 +221,12 @@ spec:
           volumeMounts:
             - mountPath: /run
               name: linkerd-proxy-init-xtables-lock
-      serviceAccountName: {{ include "linkerd.name" . }}-controller
+      serviceAccountName: {{ include "linkerd.name" . }}-sp-validator
       volumes:
-        - emptyDir: { }
+        - name: tls
+          secret:
+            secretName: {{ include "linkerd.name" . }}-sp-validator-k8s-tls
+        - emptyDir: {}
           name: linkerd-proxy-init-xtables-lock
         - emptyDir:
             medium: Memory

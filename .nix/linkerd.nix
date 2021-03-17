@@ -2,14 +2,14 @@
 
 let
   name = "linkerd";
-  version = "2.9.2";
+  version = "2.10.0";
 in
 stdenv.mkDerivation {
   name = "${name}";
 
   src = fetchurl {
     url = "https://github.com/linkerd/linkerd2/releases/download/stable-${version}/linkerd2-cli-stable-${version}-linux-amd64";
-    sha256 = "1gihjhlvcz3fhxnknaq039ys14ix1p40k5pnkxgwc4j147l2qc1g";
+    sha256 = "0qvrj373501wp81mzy23hi9y15ccmfybi1z52gddspzpp9ga5k9v";
     executable = true;
   };
 

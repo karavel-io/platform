@@ -1,0 +1,15 @@
+kind: PodDisruptionBudget
+apiVersion: policy/v1beta1
+metadata:
+  name: {{ include "linkerd.name" . }}-controller-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: controller
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      linkerd.io/control-plane-component: controller
+      {{ include "linkerd.selectorLabels" . | nindent 6 }}

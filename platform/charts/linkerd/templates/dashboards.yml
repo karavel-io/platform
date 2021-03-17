@@ -1,0 +1,29 @@
+{{- if .Values.grafana.enable }}
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: {{ include "linkerd.name" . }}-health
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana.integreatly.org/instance: grafana-operated
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  name: linkerd
+  configMapRef:
+    name: grafana-dashboard-{{ include "linkerd.name" . }}-health
+    key: linkerd-health.json
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: {{ include "linkerd.name" . }}-viz
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana.integreatly.org/instance: grafana-operated
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  name: linkerd
+  configMapRef:
+    name: grafana-dashboard-{{ include "linkerd.name" . }}-viz
+    key: linkerd-viz.json
+{{- end }}

@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "linkerd.name" . }}-identity-headless
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: identity
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-identity-headless
+  {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    linkerd.io/control-plane-component: identity
+  {{ include "linkerd.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: grpc
+      port: 8080
+      targetPort: grpc

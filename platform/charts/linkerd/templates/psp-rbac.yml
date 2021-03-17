@@ -1,0 +1,52 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "linkerd.name" . }}-psp
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
+rules:
+  - apiGroups: ['policy', 'extensions']
+    resources: ['podsecuritypolicies']
+    verbs: ['use']
+    resourceNames:
+      - {{ include "linkerd.name" . }}-control-plane
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "linkerd.name" . }}-psp
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    {{ include "linkerd.labels" . | nindent 4 }}
+roleRef:
+  kind: Role
+  name: {{ include "linkerd.name" . }}-psp
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "linkerd.name" . }}-controller
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: {{ include "linkerd.name" . }}-destination
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: {{ include "linkerd.name" . }}-heartbeat
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: {{ include "linkerd.name" . }}-identity
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: {{ include "linkerd.name" . }}-proxy-injector
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: {{ include "linkerd.name" . }}-sp-validator
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: {{ include "linkerd.name" . }}-tap
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: {{ include "linkerd.name" . }}-web
+    namespace: {{ .Release.Namespace }}

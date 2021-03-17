@@ -1,0 +1,84 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ include "linkerd.name" . }}-tap-injector
+  namespace: {{ .Release.Namespace }}
+  labels:
+    linkerd.io/control-plane-component: tap-injector
+    linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+    app.kubernetes.io/name: {{ include "linkerd.name" . }}-tap-injector
+    {{ include "linkerd.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      linkerd.io/control-plane-component: tap-injector
+      app.kubernetes.io/name: {{ include "linkerd.name" . }}-tap-injector
+      {{ include "linkerd.selectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        linkerd.io/control-plane-component: tap-injector
+        linkerd.io/control-plane-ns: {{ .Release.Namespace }}
+        app.kubernetes.io/name: {{ include "linkerd.name" . }}-tap-injector
+        {{ include "linkerd.labels" . | nindent 8 }}
+    spec:
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: linkerd.io/control-plane-component
+                      operator: In
+                      values:
+                        - tap-injector
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+              weight: 100
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: linkerd.io/control-plane-component
+                    operator: In
+                    values:
+                      - tap-injector
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - args:
+            - injector
+            - -tap-service-name={{ include "linkerd.name" . }}-tap.{{ .Release.Namespace }}.serviceaccount.identity.$(_l5d_ns).$(_l5d_trustdomain)
+            - -log-level=info
+          image: cr.l5d.io/linkerd/tap:stable-2.10.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 9995
+            initialDelaySeconds: 10
+          name: tap-injector
+          ports:
+            - containerPort: 8443
+              name: tap-injector
+            - containerPort: 9995
+              name: admin-http
+          readinessProbe:
+            failureThreshold: 7
+            httpGet:
+              path: /ready
+              port: 9995
+          securityContext:
+            runAsUser: 2103
+          volumeMounts:
+            - mountPath: /var/run/linkerd/tls
+              name: tls
+              readOnly: true
+      serviceAccountName: {{ include "linkerd.name" . }}-tap-injector
+      volumes:
+        - name: tls
+          secret:
+            secretName: {{ include "linkerd.name" . }}-tap-injector-k8s-tls
