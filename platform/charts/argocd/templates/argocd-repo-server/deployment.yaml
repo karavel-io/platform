@@ -24,8 +24,13 @@ spec:
     spec:
       containers:
       - name: repo-server
-        image: "docker.io/argoproj/argocd:v{{ .Chart.AppVersion }}"
+        image: "quay.io/argoproj/argocd:v{{ .Chart.AppVersion }}"
         imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - all
         command:
         - uid_entrypoint.sh
         - argocd-repo-server
@@ -46,21 +51,18 @@ spec:
           containerPort: 8084
           protocol: TCP
         livenessProbe:
-          tcpSocket:
-            port: 8081
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 1
-          successThreshold: 1
+          httpGet:
+            path: /healthz?full=true
+            port: 8084
+          initialDelaySeconds: 30
+          periodSeconds: 5
           failureThreshold: 3
         readinessProbe:
-          tcpSocket:
-            port: 8081
-          initialDelaySeconds: 10
+          httpGet:
+            path: /healthz
+            port: 8084
+          initialDelaySeconds: 5
           periodSeconds: 10
-          timeoutSeconds: 1
-          successThreshold: 1
-          failureThreshold: 3
         resources:
           limits:
             cpu: 100m

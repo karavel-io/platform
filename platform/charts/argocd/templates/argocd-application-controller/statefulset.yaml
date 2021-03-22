@@ -40,7 +40,7 @@ spec:
         - info
         - --redis
         - {{ include "argocd.name" . }}-redis:6379
-        image: "docker.io/argoproj/argocd:v{{ .Chart.AppVersion }}"
+        image: "quay.io/argoproj/argocd:v{{ .Chart.AppVersion }}"
         imagePullPolicy: IfNotPresent
         name: application-controller
         env:

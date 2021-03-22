@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: "docker.io/argoproj/argocd:v{{ .Chart.AppVersion }}"
+        image: "quay.io/argoproj/argocd:v{{ .Chart.AppVersion }}"
         imagePullPolicy: IfNotPresent
         command:
         - argocd-server
