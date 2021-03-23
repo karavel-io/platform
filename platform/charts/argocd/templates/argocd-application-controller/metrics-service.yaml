@@ -4,7 +4,7 @@ metadata:
   name: {{ include "argocd.name" . }}-application-controller-metrics
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller-metrics
     {{- include "argocd.labels" . | nindent 4 }}
     app.kubernetes.io/component: application-controller
 spec:

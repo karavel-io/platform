@@ -1,4 +1,4 @@
-{{- $url := urlParse .Values.publicURL}}
+{{- $url := urlParse (required "parameter publicURL is required for generating certificate" .Values.publicURL) }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:

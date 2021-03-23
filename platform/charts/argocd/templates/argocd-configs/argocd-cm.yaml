@@ -7,7 +7,7 @@ metadata:
   {{- include "argocd.labels" . | nindent 4 }}
 data:
   application.instanceLabelKey: argocd.argoproj.io/instance
-  url: {{ .Values.publicURL }}
+  url: {{ required "parameter publicURL is required for generating certificate" .Values.publicURL }}
   admin.enabled: "false"
   repositories: |
     - name: karavel

@@ -11,11 +11,11 @@ spec:
     singular: grafana
   scope: Namespaced
   subresources:
-    status: {}
+    status: { }
   version: v1alpha1
   validation:
     openAPIV3Schema:
-      required: ["spec"]
+      required: [ "spec" ]
       properties:
         spec:
           properties:
@@ -64,9 +64,15 @@ spec:
                 enabled:
                   type: boolean
                   description: Create an ingress / route
+                ingressClassName:
+                  type: string
+                  description: Ingress class name
                 path:
                   type: string
                   description: Ingress path
+                pathType:
+                  type: string
+                  description: pathType specifies how ingress paths should be matched
                 hostname:
                   type: string
                   description: The hostname of the ingress / route
@@ -82,6 +88,9 @@ spec:
             service:
               type: object
               properties:
+                name:
+                  type: string
+                  description: Override default service name
                 ports:
                   type: array
                   description: Override default ports
@@ -124,9 +133,13 @@ spec:
                 priorityClassName:
                   type: string
                   description: Pod priority class name
+
             serviceAccount:
               type: object
               properties:
+                skip:
+                  type: boolean
+                  description: Disable ServiceAccount creation for grafana
                 annotations:
                   type: object
                   description: Additional annotations for the serviceaccount
@@ -147,3 +160,78 @@ spec:
             jsonnet:
               type: object
               description: Jsonnet library configuration
+            livenessProbeSpec:
+              type: object
+              properties:
+                initialDelaySeconds:
+                  description: >-
+                    Number of seconds after the container has
+                    started before liveness probes are initiated. More info:
+                    https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+                  format: int32
+                  type: integer
+                timeoutSeconds:
+                  description: Number of seconds after which the probe times out. Defaults to 1 second.
+                    Minimum value is 1.
+                  format: int32
+                  type: integer
+                periodSeconds:
+                  description: >-
+                    How often (in seconds) to perform the probe.
+                    Default to 10 seconds. Minimum value is 1.
+                  format: int32
+                  type: integer
+                successThreshold:
+                  description: >-
+                    Minimum consecutive successes for the probe
+                    to be considered successful after having failed. Defaults
+                    to 1. Must be 1 for liveness and startup. Minimum value
+                    is 1.
+                  format: int32
+                  type: integer
+                failureThreshold:
+                  description: >-
+                    When a probe fails, Kubernetes will try failureThreshold times before giving up.
+                    Giving up in case of liveness probe means restarting the container.
+                    In case of readiness probe the Pod will be marked Unready.
+                    Defaults to 3. Minimum value is 1.
+                  format: int32
+                  type: integer
+            readinessProbeSpec:
+              type: object
+              properties:
+                initialDelaySeconds:
+                  description: >-
+                    Number of seconds after the container has
+                    started before liveness probes are initiated. More info
+                    https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+                  format: int32
+                  type: integer
+                timeoutSeconds:
+                  description: >-
+                    Number of seconds after which the probe times out. Defaults to 1 second.
+                    Minimum value is 1.
+                  format: int32
+                  type: integer
+                periodSeconds:
+                  description: >-
+                    How often (in seconds) to perform the probe.
+                    Default to 10 seconds. Minimum value is 1.
+                  format: int32
+                  type: integer
+                successThreshold:
+                  description: >-
+                    Minimum consecutive successes for the probe
+                    to be considered successful after having failed. Defaults
+                    to 1. Must be 1 for liveness and startup. Minimum value
+                    is 1.
+                  format: int32
+                  type: integer
+                failureThreshold:
+                  description: >-
+                    When a probe fails, Kubernetes will try failureThreshold times before giving up.
+                    Giving up in case of liveness probe means restarting the container.
+                    In case of readiness probe the Pod will be marked Unready.
+                    Defaults to 3. Minimum value is 1.
+                  format: int32
+                  type: integer

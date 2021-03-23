@@ -1,3 +1,4 @@
+{{- $url := required "parameter publicURL is required for generating certificate" .Values.publicURL -}}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -9,7 +10,7 @@ metadata:
     app.kubernetes.io/component: server
 spec:
   dnsNames:
-    - {{ (urlParse .Values.publicURL).host }}
+    - {{ (urlParse $url).host }}
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod

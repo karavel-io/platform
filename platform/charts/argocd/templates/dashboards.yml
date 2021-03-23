@@ -1,0 +1,15 @@
+{{- if and .Values.prometheus.enable .Values.grafana.enable }}
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: {{ include "argocd.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana.integreatly.org/instance: grafana-operated
+    {{ include "argocd.labels" . | nindent 4 }}
+spec:
+  name: argocd
+  configMapRef:
+    name: grafana-dashboard-{{ include "argocd.name" . }}
+    key: argocd.json
+{{- end }}

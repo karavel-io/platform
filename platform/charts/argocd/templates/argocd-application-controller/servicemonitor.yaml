@@ -2,12 +2,12 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "argocd.name" . }}-server
+  name: {{ include "argocd.name" . }}-application-controller
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "argocd.name" . }}-server
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller
     {{- include "argocd.labels" . | nindent 4 }}
-    app.kubernetes.io/component: server
+    app.kubernetes.io/component: application-controller
 spec:
   endpoints:
     - port: metrics
@@ -18,7 +18,7 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "argocd.name" . }}-server-metrics
+      app.kubernetes.io/name: {{ include "argocd.name" . }}-application-controller-metrics
       {{- include "argocd.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: server
+      app.kubernetes.io/component: application-controller
 {{- end }}

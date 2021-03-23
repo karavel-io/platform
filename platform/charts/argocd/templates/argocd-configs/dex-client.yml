@@ -12,5 +12,5 @@ spec:
   {{- end }}
   name: ArgoCD
   redirectUris:
-    - {{ .Values.publicURL }}/auth/callback
+    - {{ required "parameter publicURL is required for generating certificate" .Values.publicURL }}/auth/callback
 {{- end }}

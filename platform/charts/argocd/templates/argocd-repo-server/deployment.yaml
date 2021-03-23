@@ -43,6 +43,8 @@ spec:
         volumeMounts:
         - mountPath: /app/config/ssh
           name: ssh-known-hosts
+        - mountPath: /tmp
+          name: tmp
         ports:
         - name: repo-server
           containerPort: 8081
@@ -50,25 +52,28 @@ spec:
         - name: metrics
           containerPort: 8084
           protocol: TCP
-        livenessProbe:
-          httpGet:
-            path: /healthz?full=true
-            port: 8084
-          initialDelaySeconds: 30
-          periodSeconds: 5
-          failureThreshold: 3
+        env:
+          - name: TMPDIR
+            value: /tmp
         readinessProbe:
           httpGet:
             path: /healthz
             port: 8084
           initialDelaySeconds: 5
           periodSeconds: 10
+          failureThreshold: 2
         resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
           limits:
-            cpu: 100m
-            memory: 128Mi
+            cpu: 500m
+            memory: 512Mi
       serviceAccountName: default
       volumes:
       - configMap:
           name: {{ include "argocd.name" . }}-ssh-known-hosts-cm
         name: ssh-known-hosts
+      - name: tmp
+        emptyDir:
+          medium: Memory
