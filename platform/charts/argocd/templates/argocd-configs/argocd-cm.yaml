@@ -45,3 +45,13 @@ data:
     requestedScopes: {{ .requestedScopes }}
     {{- end }}
   {{- end }}
+  # Until Velero v1.6.0 is released we've to ignore the Backup resource, 
+  # because there is no owner reference between the schedule and the backup.
+  # When the prune is active, or flagged during a sync, ArgoCD will delete the backup without this exclusion
+  resource.exclusions: |
+    - apiGroups:
+      - "velero.io"
+      kinds:
+      - Backup
+      clusters:
+      - "*"
