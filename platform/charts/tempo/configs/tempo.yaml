@@ -26,10 +26,6 @@ ingester:
   max_block_bytes: 1_000_000_000  # maximum size of a block before cutting it
   max_block_duration: 1h
 
-querier:
-  frontend_worker:
-    frontend_address: {{ include "tempo.name" . }}-query-headless.{{ .Release.Namespace }}:9095
-
 compactor:
   compaction:
     block_retention: 336h               # Optional. Duration to keep blocks.  Default is 14 days (336h).
