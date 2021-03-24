@@ -1,3 +1,4 @@
+{{- if .Values.prometheus.enable }}
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
@@ -23,3 +24,4 @@ spec:
       resource:
         name: cpu
         targetAverageUtilization: 50
+{{- end }}

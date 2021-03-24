@@ -8,6 +8,9 @@ metadata:
     {{- include "argocd.labels" . | nindent 4 }}
     app.kubernetes.io/component: server
 spec:
+  {{- if not .Values.prometheus.enable }}
+  replicas: 2
+  {{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "argocd.name" . }}-server
