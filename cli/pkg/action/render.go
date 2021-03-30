@@ -26,6 +26,7 @@ import (
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -109,8 +110,9 @@ func Render(log logger.Logger, params RenderParams) error {
 
 	repoPath, repoUrl := "", ""
 	if !skipGit && argoEnabled {
+		res := argo.GetParam("git.repo")
 		log.Debug("Finding remote git repository URL to configure ArgoCD applications")
-		dir, url, err := gitutils.GetOriginRemote(log, workdir)
+		dir, url, err := gitutils.GetOriginRemote(log, workdir, res.String())
 		if err != nil {
 			return err
 		}
@@ -160,7 +162,8 @@ func Render(log logger.Logger, params RenderParams) error {
 				}
 
 				argoNs := argo.Namespace()
-				if err := comp.RenderApplication(argoNs, repoUrl, repoPath, appfile); err != nil {
+				vendorPath := path.Join(repoPath, "vendor", comp.Name())
+				if err := comp.RenderApplication(argoNs, repoUrl, vendorPath, appfile); err != nil {
 					ch <- utils.NewPair(msg, err)
 				}
 			}

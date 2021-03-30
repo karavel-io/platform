@@ -1,6 +1,6 @@
 publicURL:
 git:
-  repo: git@github.com:example/example.git
+  repo:
 
 adminGroup: ""
 

@@ -4,6 +4,9 @@ metadata:
   name: {{ include "dex.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
+  {{- if not .Values.prometheus.enable }}
+  replicas: 1
+  {{- end }}
   publicURL: {{ required "param publicURL is required for generating Dex instance" .Values.publicURL }}
   image: ghcr.io/dexidp/dex:v{{ .Chart.AppVersion }}
   serviceAccountName: {{ include "dex.name" . }}

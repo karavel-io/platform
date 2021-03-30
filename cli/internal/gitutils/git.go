@@ -25,7 +25,7 @@ import (
 	"path/filepath"
 )
 
-func GetOriginRemote(log logger.Logger, cwd string) (string, string, error) {
+func GetOriginRemote(log logger.Logger, cwd string, urlOverride string) (string, string, error) {
 	path, err := findGitRepoPath(log, cwd)
 	if err != nil {
 		return "", "", err
@@ -47,6 +47,9 @@ func GetOriginRemote(log logger.Logger, cwd string) (string, string, error) {
 
 	// remove the .git step
 	path = filepath.Dir(path)
+	if urlOverride != "" {
+		return path, urlOverride, nil
+	}
 
 	rems, err := r.Remotes()
 	if err != nil {

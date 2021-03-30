@@ -24,6 +24,7 @@ import (
 	"github.com/mikamai/karavel/cli/internal/utils/predicate"
 	"github.com/mikamai/karavel/cli/pkg/logger"
 	"github.com/pkg/errors"
+	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"gopkg.in/yaml.v3"
 	"helm.sh/helm/v3/pkg/chart"
@@ -141,6 +142,10 @@ func (c *Component) IsBootstrap() bool {
 
 func (c *Component) Params() string {
 	return c.jsonParams
+}
+
+func (c *Component) GetParam(path string) gjson.Result {
+	return gjson.Get(c.jsonParams, path)
 }
 
 func (c *Component) DebugLabel() string {

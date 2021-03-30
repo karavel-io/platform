@@ -13,6 +13,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.1
 	github.com/stretchr/testify v1.6.1
+	github.com/tidwall/gjson v1.6.8
 	github.com/tidwall/sjson v1.1.5
 	github.com/zclconf/go-cty v1.2.0
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
