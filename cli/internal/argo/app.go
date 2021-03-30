@@ -73,6 +73,9 @@ func NewApplication(name string, namespace string, argoNs string, repoUrl string
 		ObjectMeta: ObjectMeta{
 			Name:      name,
 			Namespace: argoNs,
+			Annotations: map[string]string{
+				"argocd.argoproj.io/manifest-generate-paths": ".",
+			},
 		},
 		Spec: ApplicationSpec{
 			Source: Source{
@@ -93,6 +96,7 @@ func NewApplication(name string, namespace string, argoNs string, repoUrl string
 				SyncOptions: []string{
 					"Validate=false",
 					"CreateNamespace=true",
+					"ApplyOutOfSyncOnly=try",
 				},
 				Retry: Retry{
 					Limit: 5,
