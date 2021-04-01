@@ -34,6 +34,11 @@ data:
     clientID: argocd-argocd
     clientSecret: # TODO(matteojoliveau): we need secret reference support (github.com/argoproj/argo-cd/pull/4342) to reference the DexClient-generated secret
     requestedScopes: openid profile email groups
+    requestedIDTokenClaims:
+      email:
+        essential: true
+      groups:
+        essential: true
     {{- end }}
     {{- else }}
     {{- with .Values.oidc.config }}
@@ -43,9 +48,14 @@ data:
     clientID: {{ .clientID }}
     clientSecret: {{ .clientSecret }}
     requestedScopes: {{ .requestedScopes }}
+    requestedIDTokenClaims:
+      email:
+        essential: true
+      groups:
+        essential: true
     {{- end }}
   {{- end }}
-  # Until Velero v1.6.0 is released we've to ignore the Backup resource, 
+  # Until Velero v1.6.0 is released we've to ignore the Backup resource,
   # because there is no owner reference between the schedule and the backup.
   # When the prune is active, or flagged during a sync, ArgoCD will delete the backup without this exclusion
   resource.exclusions: |

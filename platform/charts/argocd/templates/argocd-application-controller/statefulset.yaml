@@ -64,5 +64,5 @@ spec:
             memory: 512Mi
           limits:
             cpu: '1'
-            memory: 2Gi
+            memory: 1512Mi
       serviceAccountName: {{ include "argocd.name" . }}-application-controller
