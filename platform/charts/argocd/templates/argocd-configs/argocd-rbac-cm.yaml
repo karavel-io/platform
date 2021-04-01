@@ -6,5 +6,10 @@ metadata:
   labels:
     {{- include "argocd.labels" . | nindent 4 }}
 data:
+  {{- with .Values.adminGroup }}
+  policy.default: role:readonly
   policy.csv: |
-    g, {{ .Values.adminGroup }}, role:admin
+    g, {{ . }}, role:admin
+  {{- else }}
+  policy.default: role:admin
+  {{- end }}
