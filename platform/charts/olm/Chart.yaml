@@ -1,0 +1,19 @@
+apiVersion: v2
+name: olm
+description: Operator Lifecycle Manager component for Karavel
+type: application
+version: 0.1.0
+appVersion: 0.17.0
+maintainers:
+  - name: MatteoJoliveau
+    email: matteo.joliveau@mikamai.com
+
+home: https://operatorhub.io
+sources:
+  - https://github.com/operator-framework/operator-lifecycle-manager
+  - https://github.com/mikamai/karavel
+
+annotations:
+  karavel.io/singleton: "true"
+  grafana.enable: grafana
+  prometheus.enable: prometheus

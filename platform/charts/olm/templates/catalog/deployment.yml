@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "olm.name" . }}-catalog-operator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "olm.name" . }}-catalog-operator
+    {{ include "olm.labels" . | nindent 4 }}
+spec:
+  strategy:
+    type: RollingUpdate
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "olm.name" . }}-catalog-operator
+      {{ include "olm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "olm.name" . }}-catalog-operator
+        {{ include "olm.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "olm.name" . }}-operator
+      containers:
+        - name: catalog-operator
+          command:
+            - /bin/catalog
+          args:
+            - '-namespace'
+            - olm
+            - -configmapServerImage=quay.io/operator-framework/configmap-operator-registry:latest
+            - -util-image
+            -  quay.io/operator-framework/olm:v{{ .Chart.AppVersion }}
+          image: quay.io/operator-framework/olm:v{{ .Chart.AppVersion }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: operator
+              containerPort: 8080
+              protocol: TCP
+            - name: metrics
+              containerPort: 8081
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 10m
+              memory: 80Mi
+      nodeSelector:
+        kubernetes.io/os: linux
