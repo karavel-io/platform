@@ -10,5 +10,5 @@ metadata:
 spec:
   provider: {{ required "parameter 'snapshots.provider' is required for generating default backup storage location" .Values.snapshots.provider }}
   config:
-    region: {{ .Values.snapshots.region }}
+    region: {{ required "parameter 'snapshots.region' is required for generating default backup storage location" .Values.snapshots.region }}
 {{- end }}
