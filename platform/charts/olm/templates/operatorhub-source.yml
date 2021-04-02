@@ -1,7 +1,7 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
-  name: {{ include "olm.name" . }}-operatorhubio-catalog
+  name: operatorhubio-catalog
   namespace: {{ .Release.Namespace }}
 spec:
   sourceType: grpc
