@@ -1,0 +1,15 @@
+{{- if .Values.grafana.enable }}
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: {{ include "olm.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana.integreatly.org/instance: grafana-operated
+    {{ include "olm.labels" . | nindent 4 }}
+spec:
+  name: olm
+  configMapRef:
+    name: grafana-dashboard-{{ include "olm.name" . }}
+    key: olm.json
+{{- end }}

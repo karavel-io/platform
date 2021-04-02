@@ -1,0 +1,13 @@
+{{- if .Values.grafana.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-{{ include "olm.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "olm.labels" . | nindent 4 }}
+data:
+  olm.json: |
+    {{ .Files.Get "dashboards/olm.json" | nindent 4 }}
+
+{{- end }}

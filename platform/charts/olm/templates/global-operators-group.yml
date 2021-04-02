@@ -1,0 +1,14 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: global-operators
+  namespace: operators
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: {{ include "olm.name" . }}-operators
+  namespace: {{ .Release.Namespace }}
+spec:
+  targetNamespaces:
+    - {{ .Release.Namespace }}
