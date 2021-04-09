@@ -22,7 +22,7 @@ spec:
         iam.amazonaws.com/role: {{ . }}
       {{- end}}
     spec:
-      serviceAccountName: external-dns
+      serviceAccountName: {{ include "external-dns.name" . }}
       containers:
         - name: external-dns
           image: k8s.gcr.io/external-dns/external-dns:v{{.Chart.AppVersion}}
