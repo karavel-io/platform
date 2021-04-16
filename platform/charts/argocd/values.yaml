@@ -27,7 +27,11 @@ oidc:
     issuer: https://samples.auth0.com
     clientID: argocd
     clientSecret: $oidc.clientSecret
-    requestedScopes: [ "openid", "profile", "email", "groups" ]
+    requestedScopes:
+      - openid
+      - profile
+      - email
+      - groups
 
 applicationController:
   replicas: 1
