@@ -30,6 +30,16 @@ oidc:
 applicationController:
   replicas: 1
 
+notifications:
+  enable: true
+  version: 1.1.0
+  secret: # creates the argocd-notifications-secret manifest from the secure backend
+    backend: secretsManager
+    key: ""
+  bot:
+    enable: false
+    publicURL:
+
 redis:
   version: 6.0.9
 

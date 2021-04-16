@@ -1,0 +1,27 @@
+{{- if and .Values.notifications.enable .Values.notifications.bot.enable }}
+{{- $url := urlParse (required "parameter notifications.bot.publicURL is required for generating ingress" .Values.notifications.bot.publicURL) }}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "argocd.name" . }}-notifications-bot
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-notifications
+    {{- include "argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: bot
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: {{ $url.host }}
+      http:
+        paths:
+          - path: /slack
+            backend:
+              serviceName: {{ include "argocd.name" . }}-notifications-bot
+              servicePort: http
+  tls:
+    - hosts:
+        - {{ $url.host }}
+      secretName: {{ include "argocd.name" . }}-notifications-bot-tls
+{{- end }}

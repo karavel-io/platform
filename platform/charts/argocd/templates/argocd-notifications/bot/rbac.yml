@@ -1,0 +1,59 @@
+{{- if and .Values.notifications.enable .Values.notifications.bot.enable }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "argocd.name" . }}-notifications-bot
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-notifications
+    {{- include "argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: bot
+rules:
+  - apiGroups:
+      - ''
+    resources:
+      - secrets
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+      - appprojects
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "argocd.name" . }}-notifications-bot
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-notifications
+    {{- include "argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: bot
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "argocd.name" . }}-notifications-bot
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "argocd.name" . }}-notifications-bot
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "argocd.name" . }}-notifications-bot
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-notifications
+    {{- include "argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: bot
+{{- end }}

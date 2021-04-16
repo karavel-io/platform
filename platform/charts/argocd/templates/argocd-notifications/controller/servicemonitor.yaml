@@ -1,0 +1,24 @@
+{{- if and .Values.prometheus.enable .Values.notifications.enable }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "argocd.name" . }}-notifications
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-notifications
+    {{- include "argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controller
+spec:
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "argocd.name" . }}-notifications-metrics
+      {{- include "argocd.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: controller
+{{- end }}
