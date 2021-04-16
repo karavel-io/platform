@@ -37,7 +37,7 @@ applicationController:
   replicas: 1
 
 notifications:
-  enable: true
+  enable: false
   version: 1.1.0
   # creates the argocd-notifications-secret manifest from the secure backend
   secret:
