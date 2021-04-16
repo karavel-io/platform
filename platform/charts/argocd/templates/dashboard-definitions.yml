@@ -7,6 +7,19 @@ metadata:
   labels:
   {{- include "argocd.labels" . | nindent 4 }}
 data:
-  argocd.json: |
+  dashboard.json: |
     {{- .Files.Get "dashboards/argocd.json" | nindent 4 }}
+---
+{{- if .Values.notifications.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-{{ include "argocd.name" . }}-notifications
+  namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "argocd.labels" . | nindent 4 }}
+data:
+  dashboard.json: |
+    {{- .Files.Get "dashboards/notifications.json" | nindent 4 }}
+{{- end }}
 {{- end }}
