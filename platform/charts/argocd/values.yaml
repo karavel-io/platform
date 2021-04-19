@@ -55,3 +55,6 @@ prometheus:
 
 grafana:
   enable: true
+
+applicationSetController:
+  version: v0.1.0

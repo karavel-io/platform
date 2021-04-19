@@ -1,0 +1,24 @@
+{{- if .Values.prometheus.enable }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "argocd.name" . }}-applicationset-controller
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "argocd.name" . }}-applicationset-controller
+    {{- include "argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: applicationset
+spec:
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "argocd.name" . }}-applicationset-controller-metrics
+      {{- include "argocd.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: applicationset
+{{- end }}

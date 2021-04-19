@@ -78,7 +78,7 @@ spec:
           limits:
             cpu: 100m
             memory: 128Mi
-      serviceAccountName: argocd-server
+      serviceAccountName: {{ include "argocd.name" . }}-server
       volumes:
       - emptyDir: {}
         name: static-files

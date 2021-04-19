@@ -69,7 +69,6 @@ spec:
           limits:
             cpu: 500m
             memory: 512Mi
-      serviceAccountName: default
       volumes:
       - configMap:
           name: {{ include "argocd.name" . }}-ssh-known-hosts-cm
