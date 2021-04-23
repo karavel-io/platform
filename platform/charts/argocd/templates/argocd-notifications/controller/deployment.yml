@@ -30,10 +30,6 @@ spec:
           command:
             - /app/argocd-notifications-backend
             - controller
-            - --config-map
-            - {{ include "argocd.name" . }}-notifications-cm
-            - --secret
-            - {{ include "argocd.name" . }}-notifications-secret
           workingDir: /app
           ports:
             - name: metrics
