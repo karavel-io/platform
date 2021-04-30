@@ -68,3 +68,12 @@ data:
       - Backup
       clusters:
       - "*"
+  resource.customizations: |
+    admissionregistration.k8s.io/MutatingWebhookConfiguration:
+      ignoreDifferences: |
+        jsonPointers:
+        - /webhooks/0/clientConfig/caBundle
+    admissionregistration.k8s.io/ValidatingWebhookConfiguration:
+      ignoreDifferences: |
+        jsonPointers:
+        - /webhooks/0/clientConfig/caBundle
