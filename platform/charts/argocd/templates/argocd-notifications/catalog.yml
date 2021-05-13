@@ -9,6 +9,8 @@ metadata:
     {{- include "argocd.labels" . | nindent 4 }}
     app.kubernetes.io/component: controller
 data:
+  context: |
+    argocdUrl: {{- required "parameter publicURL is required for generating certificate" .Values.publicURL }}
   {{- range $path, $_ :=  .Files.Glob  "notifications/templates/*.yaml" }}
   template.{{ trimSuffix ($path | ext) ($path | base) }}: |
   {{- $.Files.Get $path | nindent 4 -}}
