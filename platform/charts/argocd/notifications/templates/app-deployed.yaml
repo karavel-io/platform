@@ -77,3 +77,42 @@ teams:
             "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
           }]
         }]
+webhook:
+  discord:
+    method: POST
+    body: |
+      {
+        "username": "ArgoCD",
+        "avatar_url": "https://cncf-branding.netlify.app/img/projects/argo/icon/color/argo-icon-color.png",
+        "color": "#18be52",
+        "url":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+        "embeds": [{
+          "title": ":white_check_mark: Application {{.app.metadata.name}} is now running new version of deployments manifests.",
+          "fields": [
+            {
+              "name": "Sync Status",
+              "value": "{{.app.status.sync.status}}",
+              "inline": true
+            },
+            {
+              "name": "Repository",
+              "value": "{{.app.spec.source.repoURL}}",
+              "inline": true
+            },
+            {
+              "name": "Revision",
+              "value": "{{.app.status.sync.revision}}",
+              "inline": true
+            }
+            {{range $index, $c := .app.status.conditions}}
+            {{if not $index}},{{end}}
+            {{if $index}},{{end}}
+            {
+              "name": "{{$c.type}}",
+              "value": "{{$c.message}}",
+              "inline": true
+            }
+            {{end}}
+          ]
+        }]
+      }

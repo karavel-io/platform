@@ -69,3 +69,37 @@ teams:
             "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
           }]
         }]
+webhook:
+  discord:
+    method: POST
+    body: |
+      {
+        "username": "ArgoCD",
+        "avatar_url": "https://cncf-branding.netlify.app/img/projects/argo/icon/color/argo-icon-color.png",
+        "color": "#f4c030",
+        "url":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+        "embeds": [{
+          "title": ":exclamation: Application {{.app.metadata.name}} has degraded.",
+          "fields": [
+            {
+              "name": "Sync Status",
+              "value": "{{.app.status.sync.status}}",
+              "inline": true
+            },
+            {
+              "name": "Repository",
+              "value": "{{.app.spec.source.repoURL}}",
+              "inline": true
+            }
+            {{range $index, $c := .app.status.conditions}}
+            {{if not $index}},{{end}}
+            {{if $index}},{{end}}
+            {
+              "name": "{{$c.type}}",
+              "value": "{{$c.message}}",
+              "inline": true
+            }
+            {{end}}
+          ]
+        }]
+      }

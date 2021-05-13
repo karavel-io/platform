@@ -3,3 +3,12 @@ email:
     subject: *message
 teams:
     title: *message
+webhook:
+  discord:
+    method: POST
+    body: |
+      {
+        "content": "Application {{.app.metadata.name}} has been created.",
+        "username": "ArgoCD",
+        "avatar_url": "https://cncf-branding.netlify.app/img/projects/argo/icon/color/argo-icon-color.png"
+      }
