@@ -80,9 +80,6 @@ teams:
 webhook:
   discord:
     method: POST
-    headers:
-      - name: Content-Type
-        value: application/json
     body: |
       {
         "username": "ArgoCD",

@@ -76,9 +76,6 @@ teams:
 webhook:
   discord:
     method: POST
-    headers:
-      - name: Content-Type
-        value: application/json
     body: |
       {
         "username": "ArgoCD",
@@ -98,7 +95,7 @@ webhook:
               "name": "Repository",
               "value": "{{.app.spec.source.repoURL}}",
               "inline": true
-            },
+            }
             {{range $index, $c := .app.status.conditions}}
             {{if not $index}},{{end}}
             {{if $index}},{{end}}
