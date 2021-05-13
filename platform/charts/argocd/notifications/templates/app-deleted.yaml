@@ -6,6 +6,9 @@ teams:
 webhook:
   discord:
     method: POST
+    headers:
+      - name: Content-Type
+        value: application/json
     body: |
       {
         "content": "Application {{.app.metadata.name}} has been deleted.",
