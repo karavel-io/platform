@@ -23,6 +23,7 @@ spec:
         {{- include "argocd.labels" . | nindent 8 }}
         app.kubernetes.io/component: application-controller
     spec:
+      priorityClassName: system-cluster-critical
       containers:
       - command:
         - argocd-application-controller

@@ -22,6 +22,7 @@ spec:
         {{- include "argocd.labels" . | nindent 8 }}
         app.kubernetes.io/component: repo-server
     spec:
+      priorityClassName: system-cluster-critical
       containers:
       - name: repo-server
         image: "quay.io/argoproj/argocd:v{{ .Chart.AppVersion }}"

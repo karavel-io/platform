@@ -19,6 +19,7 @@ spec:
       labels:
         {{- include "external-secrets.labels" . | nindent 8 }}
     spec:
+      priorityClassName: system-cluster-critical
       serviceAccountName: external-secrets
       containers:
         - name: external-secrets

@@ -22,6 +22,7 @@ spec:
         {{- include "cert-manager.labels" . | nindent 8 }}
         app.kubernetes.io/component: webhook
     spec:
+      priorityClassName: system-cluster-critical
       serviceAccountName: cert-manager-webhook
       containers:
         - name: {{ include "cert-manager.name" . }}

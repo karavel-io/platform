@@ -31,6 +31,7 @@ spec:
         karavel.io/component-name: {{ .Chart.Name }}
         karavel.io/component-version: {{ .Chart.Version }}
     spec:
+      priorityClassName: system-cluster-critical
       automountServiceAccountToken: false
       securityContext:
         fsGroup: 1000

@@ -21,6 +21,7 @@ spec:
         {{- include "cert-manager.labels" . | nindent 8 }}
         app.kubernetes.io/component: cainjector
     spec:
+      priorityClassName: system-cluster-critical
       serviceAccountName: cert-manager-cainjector
       containers:
         - name: {{ include "cert-manager.name" . }}
