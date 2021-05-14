@@ -7,6 +7,13 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+Create the name of the ingress class.
+*/}}
+{{- define "ingress-nginx.ingressClassName" -}}
+{{- default "nginx" .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "ingress-nginx.chart" -}}
