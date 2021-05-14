@@ -2,3 +2,5 @@ prometheus:
   enable: false
 grafana:
   enable: false
+
+defaultIngress: true
