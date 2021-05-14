@@ -27,6 +27,7 @@ oidc:
     issuer: https://samples.auth0.com
     clientID: argocd
     clientSecret: $oidc.clientSecret
+    cliClientID:
     requestedScopes:
       - openid
       - profile

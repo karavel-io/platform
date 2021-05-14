@@ -53,6 +53,9 @@ data:
         essential: true
       groups:
         essential: true
+    {{- with .cliClientID }}
+    cliClientID: {{ . }}
+    {{- end }}
     {{- end }}
   {{- end }}
   # Until Velero v1.6.0 is released we've to ignore the Backup resource,
