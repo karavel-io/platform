@@ -5,9 +5,9 @@ metadata:
   labels:
     app.kubernetes.io/name: {{ include "ingress-nginx.ingressClassName" . }}
   {{- include "ingress-nginx.labels" . | nindent 4 }}
-  {{- if .Values.defaultIngress -}}
+  {{- if .Values.defaultIngress }}
   annotations:
     ingressclass.kubernetes.io/is-default-class: 'true'
-  {{- end -}}
+  {{- end }}
 spec:
   controller: k8s.io/ingress-nginx
