@@ -9,28 +9,28 @@ s3:
   iamRole:
 
 operator:
-  version: 0.45.0
+  version: 0.47.1
 
 thanos:
-  version: 0.18.0
+  version: 0.20.1
 
 kubeRBACProxy:
   version: 0.8.0
 
 nodeExporter:
-  version: 1.0.1
+  version: 1.1.2
 
 kubeStateMetrics:
   version: 1.9.7
 
 blackboxExporter:
-  version: 0.18.0
+  version: 0.19.0
 
 alertmanager:
   version: 0.21.0
 
 metricsAdapter:
-  version: 0.8.3
+  version: 0.8.4
 
 grafana:
   namespace:
