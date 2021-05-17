@@ -7,7 +7,7 @@ config:
 type: S3
 config:
   bucket: {{ .bucket }}
-  endpoint: {{ .endpoint | default (printf "s3.dualstack.%s.amazonaws.com" .region ) }}
+  endpoint: {{ .endpoint | default (printf "s3.%s.amazonaws.com" .region ) }}
   insecure: {{ .insecure }}
   {{- if .encrypted }}
   sse_config:
