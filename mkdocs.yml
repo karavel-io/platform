@@ -1,8 +1,8 @@
 site_name: Karavel
 site_url: https://docs.karavel.io
-repo_name: mikamai/karavel
-repo_url: https://github.com/mikamai/karavel
-copyright: © 2021 MIKAMAI | Documentation distributed under CC BY SA 4.0
+repo_name: projectkaravel/platform
+repo_url: https://github.com/projectkaravel/platform
+copyright: © 2021 The Karavel Project | Documentation distributed under CC BY SA 4.0
 strict: false
 theme:
   name: material

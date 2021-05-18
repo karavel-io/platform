@@ -41,7 +41,7 @@ jobs:
       - checkout
       - run:
           name: Lint charts
-          command: ct lint --all --chart-dirs platform/charts
+          command: ct lint --all --chart-dirs components
 
   helm-release-edge:
     executor: aws-cli/default

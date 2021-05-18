@@ -1,5 +1,4 @@
 # Karavel <img align="right" width=384 src="https://via.placeholder.com/384x200.png?text=Karavel%20Logo%20Here">
-[![Karavel](https://circleci.com/gh/mikamai/karavel/tree/master.svg?style=svg)](https://circleci.com/gh/mikamai/karavel/tree/master)
 
 ## What is Karavel?
 
@@ -52,8 +51,8 @@ You can get up and running quickly and efficiently with our [Quickstart Guide].
 
 [Kubernetes]: https://kubernetes.io
 [private Containers-as-a-Service platforms]: https://www.redhat.com/en/topics/cloud-computing/what-is-caas
-[components]: ./components/index.md
-[quickstart guide]: ./quickstart.md
+[components]: https://docs.karavel.io/components
+[quickstart guide]: https://docs.karavel.io/quickstart
 [conformant Kubernetes cluster]: https://www.cncf.io/certification/software-conformance/
 [ArgoCD]: https://docs.karavel.io/components/core/argocd
 [Calico]: https://docs.karavel.io/components/core/calico

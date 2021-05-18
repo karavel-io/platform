@@ -13,7 +13,7 @@ rm -rf "$dist" && mkdir -p "$dist"
 
 aws s3 cp "$bucket/index.yaml" "$dist/index.yaml" || true
 
-helm package platform/charts/* -d "$dist"
+helm package components/* -d "$dist"
 helm repo index "$dist" --merge "$dist/index.yaml" --url "$url"
 
 aws s3 sync "$dist" "$bucket"

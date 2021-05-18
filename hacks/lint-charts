@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+docker run --rm -it -v $PWD:/platform quay.io/helmpack/chart-testing:v3.3.1 sh -c "cd /platform && ct lint --all --chart-dirs components"
