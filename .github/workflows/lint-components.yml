@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "components/**"
+#    paths:
+#      - "components/**"
 
 jobs:
   lint:
