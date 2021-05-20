@@ -21,10 +21,10 @@ jobs:
         with:
           version: v3.4.0
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.2.1
-        with:
-          charts_dir: components
+      - name: Release charts
+        run: hacks/release-edge-all
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'eu-west-1'
 
