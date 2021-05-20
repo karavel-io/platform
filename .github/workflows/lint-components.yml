@@ -3,13 +3,13 @@ on:
   push:
     branches:
       - main
-#    paths:
-#      - "components/**"
+    paths:
+      - "components/**"
   pull_request:
     branches:
       - main
-#    paths:
-#      - "components/**"
+    paths:
+      - "components/**"
 
 jobs:
   lint:
