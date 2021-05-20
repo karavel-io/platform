@@ -13,7 +13,7 @@ fi
 echo "Releasing edge component chart '$chart'"
 echo ""
 
-dist="$TMPDIR/karavel-edge-$chart"
+dist="dist/karavel-edge-$chart"
 rm -rf "$dist" && mkdir -p "$dist"
 
 aws s3 cp "$bucket/index.yaml" "$dist/index.yaml" || true

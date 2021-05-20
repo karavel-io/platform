@@ -8,7 +8,7 @@ bucket="s3://mikamai-charts-repo/karavel-edge"
 echo "Releasing all edge components"
 echo ""
 
-dist="$TMPDIR/karavel-edge"
+dist="dist/karavel-edge"
 rm -rf "$dist" && mkdir -p "$dist"
 
 aws s3 cp "$bucket/index.yaml" "$dist/index.yaml" || true

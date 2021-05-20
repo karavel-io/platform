@@ -8,7 +8,7 @@ bucket="s3://mikamai-charts-repo/karavel"
 echo "Releasing all stable components"
 echo ""
 
-dist="$TMPDIR/karavel"
+dist="dist/karavel"
 rm -rf "$dist" && mkdir -p "$dist"
 
 aws s3 cp "$bucket/index.yaml" "$dist/index.yaml" || true
