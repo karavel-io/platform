@@ -1,0 +1,18 @@
+name: Lint Components
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "components/**"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/helmpack/chart-testing:v3.3.1
+    steps:
+      - uses: actions/checkout@v2
+      - name: Lint component charts
+        run: ct lint --all --chart-dirs components
+
