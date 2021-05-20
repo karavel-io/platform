@@ -11,7 +11,7 @@ maintainers:
 home: https://operatorhub.io
 sources:
   - https://github.com/operator-framework/operator-lifecycle-manager
-  - https://github.com/mikamai/karavel
+  - https://github.com/projectkaravel/platform
 
 annotations:
   karavel.io/singleton: "true"

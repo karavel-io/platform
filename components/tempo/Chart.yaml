@@ -11,7 +11,7 @@ maintainers:
 home: https://grafana.com/oss/tempo/
 sources:
   - https://github.com/grafana/tempo
-  - https://github.com/mikamai/karavel
+  - https://github.com/projectkaravel/platform
 
 annotations:
   karavel.io/dependencies: grafana

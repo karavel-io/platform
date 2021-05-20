@@ -16,7 +16,7 @@ core). A bare, upstream Kubernetes without any extra component (not even a CNI) 
 ### Q: Are components available as Helm charts?
 
 **A:** Well yes, but actually no. While the platform components are indeed 
-[packaged as Helm charts](https://github.com/mikamai/karavel/tree/master/components), they are not meant to be installed
+[packaged as Helm charts](https://github.com/projectkaravel/platform/tree/master/components), they are not meant to be installed
 with Helm (e.g. via `helm install`). Instead, they are consumed by the [Karavel CLI], templated based on the provided
 Karavel configuration file, and then wrote to disk in a specific directory structure (documented [here](quickstart.md#bootstrap)) that
 will be set-up as Kustomize stacks. These Kustomize stacks are then deployed by [ArgoCD] onto the target cluster.  
@@ -40,4 +40,4 @@ If you have a specific need that is not satisfied by the platform current state,
 [ArgoCD]: components/core/argocd.md
 [Karavel CLI]: cli.md
 [Prometheus]: https://prometheus.io
-[maintainers]: https://github.com/mikamai/karavel/graphs/contributors
+[maintainers]: https://github.com/projectkaravel/platform/graphs/contributors

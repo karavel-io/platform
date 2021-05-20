@@ -12,7 +12,7 @@ of Git and Kubernetes and know your way around a command shell.
 - [git], [kubectl], [kustomize] installed on your local machine
 - admin access to a running Kubernetes cluster. Minikube is fine for a simple, local deployment for testing purposes.
 
-The `karavel` CLI can be downloaded from [GitHub](https://github.com/mikamai/karavel/releases).  
+The `karavel` CLI can be downloaded from [GitHub](https://github.com/projectkaravel/cli/releases).  
 Alternatively, you can build it from source. You need Golang 1.15+ installed to build it.
 
 `go get -u github.com/mikamai/karavel/cli`
@@ -214,7 +214,7 @@ updated consequently.
 To do so, simply change the required component versions and update the parameters if necessary based on
 the updated documentation, then rerun the `karavel render` command. This command is idempotent, so it is safe to run multiple times.
 
-[karavel]: https://github.com/mikamai/karavel/tree/master/cli
+[karavel]: https://github.com/projectkaravel/cli
 [git]: https://git-scm.com/
 [cert-manager]: https://cert-manager.io
 [kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/

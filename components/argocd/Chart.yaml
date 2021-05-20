@@ -11,7 +11,7 @@ maintainers:
 home: https://argoproj.github.io/argo-cd
 sources:
   - https://github.com/argoproj/argo-cd
-  - https://github.com/mikamai/karavel
+  - https://github.com/projectkaravel/platform
 
 annotations:
   karavel.io/bootstrap: 'true'

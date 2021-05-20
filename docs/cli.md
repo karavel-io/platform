@@ -3,7 +3,7 @@
 The Karavel CLI tool is a utility that helps to manage GitOps repositories for installing Karavel on Kubernetes
 clusters.
 
-The tool is written in Go and packaged as an single static binary that runs on Linux.
+The tool is written in Go and packaged as a single static binary that runs on Linux.
 
 ## karavel init
 
@@ -41,12 +41,12 @@ $ cd /tmp/karavel
 $ karavel init
 Initializing new Karavel latest project at /tmp/karavel
 
-Fetching bootstrap config from https://github.com/mikamai/karavel/releases/latest/download/karavel.hcl with checksum https://github.com/mikamai/karavel/releases/latest/download/karavel.hcl.sha256
+Fetching bootstrap config from https://github.com/projectkaravel/platform/releases/latest/download/karavel.hcl with checksum https://github.com/projectkaravel/platform/releases/latest/download/karavel.hcl.sha256
 
-Downloading file karavel.hcl from https://github.com/mikamai/karavel/releases/latest/download/karavel.hcl
+Downloading file karavel.hcl from https://github.com/projectkaravel/platform/releases/latest/download/karavel.hcl
 Download completed in 1.995229ms
 
-Downloading file karavel.hcl.sha256 from https://github.com/mikamai/karavel/releases/latest/download/karavel.hcl.sha256
+Downloading file karavel.hcl.sha256 from https://github.com/projectkaravel/platform/releases/latest/download/karavel.hcl.sha256
 Download completed in 991.628µs
 
 Checksum successfully validated. Writing config file to /tmp/karavel/karavel.hcl
@@ -60,12 +60,12 @@ $ cd /tmp/karavel
 $ karavel init --version 0.1.0
 Initializing new Karavel v0.1.0 project at /tmp/karavel
 
-Fetching bootstrap config from https://github.com/mikamai/karavel/releases/v0.1.0/download/karavel.hcl with checksum https://github.com/mikamai/karavel/releases/v0.1.0/download/karavel.hcl.sha256
+Fetching bootstrap config from https://github.com/projectkaravel/platform/releases/v0.1.0/download/karavel.hcl with checksum https://github.com/projectkaravel/platform/releases/v0.1.0/download/karavel.hcl.sha256
 
-Downloading file karavel.hcl from https://github.com/mikamai/karavel/releases/v0.1.0/download/karavel.hcl
+Downloading file karavel.hcl from https://github.com/projectkaravel/platform/releases/v0.1.0/download/karavel.hcl
 Download completed in 1.995229ms
 
-Downloading file karavel.hcl.sha256 from https://github.com/mikamai/karavel/releases/v0.1.0/download/karavel.hcl.sha256
+Downloading file karavel.hcl.sha256 from https://github.com/projectkaravel/platform/releases/v0.1.0/download/karavel.hcl.sha256
 Download completed in 991.628µs
 
 Checksum successfully validated. Writing config file to /tmp/karavel/karavel.hcl
