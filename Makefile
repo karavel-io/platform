@@ -1,15 +1,14 @@
-TEST_COVERAGE_DIR=$(shell pwd)/coverage
+E2E_TEST_NAME=*
 .PHONY: e2e
 e2e:
-	mkdir -p ${TEST_COVERAGE_DIR}
-	go test ./... -ginkgo.v -test.v -coverprofile ${TEST_COVERAGE_DIR}/cover.out
+	bats -t e2e/${E2E_TEST_NAME}.bats
 
 .PHONY: start-kind
-start-kind:
-	kind create cluster --name karavel-platform-e2e
+kind-start:
+	kind create cluster --name karavel-platform-e2e --config e2e/fixtures/kind.yml
 
 .PHONY: stop-kind
-stop-kind:
+kind-stop:
 	kind delete cluster --name karavel-platform-e2e
 
 
