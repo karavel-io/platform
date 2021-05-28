@@ -28,7 +28,7 @@ jobs:
         env:
           GOPRIVATE: github.com/projectkaravel/*
           GO111MODULE: on
-        run: go get -u github.com/projectkaravel/cli/cmd/karavel
+        run: go get github.com/projectkaravel/cli/cmd/karavel
       - name: Create test cluster
         uses: helm/kind-action@v1.1.0
         with:
