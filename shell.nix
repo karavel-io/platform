@@ -12,5 +12,6 @@ pkgs.mkShell {
     pkgs.unstable.kind
     addlicense
     pkgs.unstable.velero
+    bats
   ];
 }

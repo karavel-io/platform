@@ -1,7 +1,7 @@
 {{- if eq .Values.store "filesystem" }}
 type: FILESYSTEM
 config:
-  directory: ""
+  directory: "/var/thanos/store"
 {{- else if eq .Values.store "s3" }}
 {{- with .Values.s3 }}
 type: S3
