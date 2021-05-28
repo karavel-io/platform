@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - feature/e2e
   pull_request:
     branches:
       - main
@@ -29,6 +28,10 @@ jobs:
           GOPRIVATE: github.com/projectkaravel/*
           GO111MODULE: on
         run: go get github.com/projectkaravel/cli/cmd/karavel
+      - name: Setup BATS
+        uses: mig4/setup-bats@v1
+        with:
+          bats-version: 1.2.1
       - name: Create test cluster
         uses: helm/kind-action@v1.1.0
         with:
