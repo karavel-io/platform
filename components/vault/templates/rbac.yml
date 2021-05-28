@@ -1,0 +1,58 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "vault.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}
+  {{- include "vault.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["*"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "update", "patch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "vault.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}
+  {{- include "vault.labels" . | nindent 4 }}
+roleRef:
+  kind: Role
+  name: {{ include "vault.name" . }}
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "vault.name" . }}
+    namespace: {{ .Release.Namespace }}
+---
+# This binding allows the deployed Vault instance to authenticate clients
+# through Kubernetes ServiceAccounts (if configured so).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "vault.name" . }}-auth-delegator
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}
+  {{- include "vault.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "vault.name" . }}
+    namespace: {{ .Release.Namespace }}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: {{ include "vault.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}
+  {{- include "vault.labels" . | nindent 4 }}

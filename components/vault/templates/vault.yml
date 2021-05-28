@@ -1,0 +1,207 @@
+{{- $url := urlParse (required "parameter 'publicURL' is required for generating Vault instance" .Values.publicURL) }}
+apiVersion: vault.banzaicloud.com/v1alpha1
+kind: Vault
+metadata:
+  name: {{ include "vault.name" . }}
+spec:
+  size: 3
+  image: {{ .Values.vault.image }}:{{ default .Chart.AppVersion .Values.vault.tag }}
+  bankVaultsImage: {{ .Values.bankVaults.image }}:{{ .Values.bankVaults.tag }}
+  vaultLabels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}
+  {{- include "vault.labels" . | nindent 4 }}
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values: {{ include "vault.name" . }}
+  serviceAccount: {{ include "vault.name" . }}
+  serviceType: ClusterIP
+  watchedSecretsAnnotations:
+    - cert-manager.io/certificate-name: {{ include "vault.name" . }}-public-tls
+    - cert-manager.io/certificate-name: {{ include "vault.name" . }}-tls
+  tlsExpiryThreshold: 168h
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    spec:
+      rules:
+        - host: {{ $url.host }}
+          http:
+            paths:
+              - backend:
+                  serviceName: {{ include "vault.name" . }}
+                  servicePort: api-port
+      tls:
+        - secretName: {{ include "vault.name" . }}-public-tls
+          hosts:
+            - {{ $url.host }}
+  vaultInitContainers:
+    - name: raft-permission
+      image: busybox
+      command:
+        - /bin/sh
+        - -c
+        - |
+          chown -R 100:1000 /vault/file
+      volumeMounts:
+        - name: vault-raft
+          mountPath: /vault/file
+  volumeClaimTemplates:
+    - metadata:
+        name: vault-raft
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        volumeMode: Filesystem
+        resources:
+          requests:
+            storage: 50Gi
+
+  volumeMounts:
+    - name: vault-raft
+      mountPath: /vault/file
+
+  caNamespaces: ["*"]
+
+  # Describe where you would like to store the Vault unseal keys and root token.
+  unsealConfig:
+    options:
+      # The preFlightChecks flag enables unseal and root token storage tests
+      # This is true by default
+      preFlightChecks: true
+    kubernetes:
+      secretNamespace: vault
+
+  # A YAML representation of a final vault config file.
+  # See https://www.vaultproject.io/docs/configuration/ for more information.
+  config:
+    storage:
+      raft:
+        path: /vault/file
+    listener:
+      tcp:
+        address: "[::]:8200"
+        # Uncommenting the following line and deleting tls_cert_file and tls_key_file disables TLS
+        # tls_disable: true
+        tls_cert_file: /vault/tls/server.crt
+        tls_key_file: /vault/tls/server.key
+        proxy_protocol_behavior: use_always
+        telemetry:
+          unauthenticated_metrics_access: true
+    telemetry:
+      statsd_address: localhost:9125
+      prometheus_retention_time: "24h"
+      disable_hostname: true
+    ui: true
+
+  # See: https://banzaicloud.com/docs/bank-vaults/cli-tool/#example-external-vault-configuration
+  # The repository also contains a lot examples in the deploy/ and operator/deploy directories.
+  externalConfig:
+    policies:
+      - name: allow_secrets
+        rules: path "secret/*" {
+          capabilities = ["create", "read", "update", "delete", "list"]
+          }
+      - name: allow_self
+        rules: path "secret/*" {
+          capabilities = ["create", "read", "update", "delete", "list"]
+          }
+      - name: allow_all
+        rules: path "*" {
+          capabilities = ["create", "read", "update", "delete", "list"]
+          }
+    auth:
+      - type: kubernetes
+        config:
+          disable_iss_validation: true
+        roles:
+          - name: karavel
+            bound_service_account_names: [ "external-secrets" ]
+            bound_service_account_namespaces: [ "external-secrets" ]
+            policies: [ "allow_secrets" ]
+            ttl: 1h
+      - type: oidc
+        config:
+          oidc_discovery_url: {{ .Values.dex.issuer }}
+          oidc_client_id: '${ env `VAULT_OIDC_CLIENT_ID` }'
+          oidc_client_secret: '${ env `VAULT_OIDC_CLIENT_SECRET` }'
+          default_role: user
+        roles:
+          - name: admin
+            user_claim: sub
+            groups_claim: groups
+            allowed_redirect_uris: {{ $url }}/ui/vault/auth/oidc/oidc/callback,http://localhost:8250/oidc/callback
+            role_type: oidc
+            oidc_scopes: openid profile email groups
+            policies: allow_all
+            ttl: 1h
+          - name: user
+            user_claim: sub
+            groups_claim: groups
+            allowed_redirect_uris: {{ $url }}/ui/vault/auth/oidc/oidc/callback,http://localhost:8250/oidc/callback
+            role_type: oidc
+            oidc_scopes: openid profile email groups
+            policies: allow_self
+            ttl: 1h
+    groups:
+    - name: admin
+      policies:
+        - allow_all
+      type: external
+    group-aliases:
+    - name: {{ .Values.dex.adminGroup }}
+      mountpath: oidc
+      group: admin
+
+    secrets:
+      - path: secret
+        type: kv
+        description: General secrets
+        options:
+          version: 2
+
+    # Allows writing some secrets to Vault (useful for development purposes).
+    # See https://www.vaultproject.io/docs/secrets/kv/index.html for more information.
+    startupSecrets: [ ]
+  #      - type: kv
+  #        path: secret/data/accounts/aws
+  #        data:
+  #          data:
+  #            AWS_ACCESS_KEY_ID: secretId
+  #            AWS_SECRET_ACCESS_KEY: s3cr3t
+  #      - type: kv
+  #        path: secret/data/dockerrepo
+  #        data:
+  #          data:
+  #            DOCKER_REPO_USER: dockerrepouser
+  #            DOCKER_REPO_PASSWORD: dockerrepopassword
+  #      - type: kv
+  #        path: secret/data/mysql
+  #        data:
+  #          data:
+  #            MYSQL_ROOT_PASSWORD: s3cr3t
+  #            MYSQL_PASSWORD: 3xtr3ms3cr3t
+
+  envsConfig:
+    - name: VAULT_OIDC_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: dex-{{ include "vault.name" . }}-credentials
+          key: clientID
+    - name: VAULT_OIDC_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: dex-{{ include "vault.name" . }}-credentials
+          key: clientSecret
+
+  vaultEnvsConfig:
+    - name: VAULT_LOG_LEVEL
+      value: info
+  istioEnabled: false

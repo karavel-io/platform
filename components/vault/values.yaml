@@ -1,0 +1,33 @@
+publicURL:
+
+secret:
+
+vault:
+  image: vault
+  tag:
+
+operator:
+  image: ghcr.io/banzaicloud/vault-operator
+  tag: 1.13.0
+
+bankVaults:
+  image: ghcr.io/banzaicloud/bank-vaults
+  tag: 1.13.0
+
+webhook:
+  image: ghcr.io/banzaicloud/vault-secrets-webhook
+  tag: 1.13.0
+
+vaultEnv:
+  image: ghcr.io/banzaicloud/vault-env
+  tag: 1.13.0
+
+dex:
+  enable: false
+  name: dex
+  namespace: dex
+  issuer:
+  adminGroup:
+
+unseal:
+  provider: local # local | aws

@@ -1,0 +1,105 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "vault.name" . }}-operator
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}
+  {{- include "vault.labels" . | nindent 4 }}
+rules:
+  - apiGroups:
+      - vault.banzaicloud.com
+    resources:
+      - "*"
+    verbs:
+      - "*"
+  - apiGroups:
+      - ""
+    resources:
+      - events
+      - pods
+      - services
+      - configmaps
+      - secrets
+    verbs:
+      - "*"
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apps
+      - extensions
+    resources:
+      - replicasets
+    verbs:
+      - get
+  - apiGroups:
+      - apps
+      - extensions
+    resources:
+      - deployments
+      - deployments/finalizers
+      - statefulsets
+    verbs:
+      - "*"
+  - apiGroups:
+      - etcd.database.coreos.com
+    resources:
+      - "*"
+    verbs:
+      - "*"
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - get
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - list
+      - get
+      - create
+      - update
+      - watch
+  - apiGroups:
+      - monitoring.coreos.com
+    resources:
+      - servicemonitors
+    verbs:
+      - update
+      - list
+      - get
+      - create
+      - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "vault.name" . }}-operator
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}
+  {{- include "vault.labels" . | nindent 4 }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "vault.name" . }}-operator
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "vault.name" . }}-operator
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "vault.name" . }}-operator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}
+  {{- include "vault.labels" . | nindent 4 }}

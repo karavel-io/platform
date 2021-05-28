@@ -1,0 +1,70 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ include "vault.name" . }}-secrets-webhook
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "vault.name" . }}-secrets-webhook-webhook-tls
+webhooks:
+  - name: pods.{{ include "vault.name" . }}-secrets-webhook.admission.banzaicloud.com
+    admissionReviewVersions: ["v1beta1"]
+    clientConfig:
+      service:
+        namespace: {{ .Release.Namespace }}
+        name: {{ include "vault.name" . }}-secrets-webhook
+        path: /pods
+    rules:
+      - operations:
+          - CREATE
+        apiGroups:
+          - "*"
+        apiVersions:
+          - "*"
+        resources:
+          - pods
+    failurePolicy: Ignore
+    namespaceSelector:
+      matchExpressions:
+        - key: name
+          operator: NotIn
+          values:
+            - kube-system
+        - key: name
+          operator: NotIn
+          values:
+            - default
+    objectSelector:
+      matchExpressions:
+        - key: security.banzaicloud.io/mutate
+          operator: NotIn
+          values:
+            - skip
+    sideEffects: NoneOnDryRun
+  - name: secrets.{{ include "vault.name" . }}-secrets-webhook.admission.banzaicloud.com
+    admissionReviewVersions: ["v1beta1"]
+    clientConfig:
+      service:
+        namespace: {{ .Release.Namespace }}
+        name: {{ include "vault.name" . }}-secrets-webhook
+        path: /secrets
+    rules:
+      - operations:
+          - CREATE
+          - UPDATE
+        apiGroups:
+          - "*"
+        apiVersions:
+          - "*"
+        resources:
+          - secrets
+    failurePolicy: Ignore
+    namespaceSelector:
+      matchExpressions:
+        - key: name
+          operator: NotIn
+          values:
+            - kube-system
+        - key: name
+          operator: NotIn
+          values:
+            - {{ .Release.Namespace }}
+    sideEffects: NoneOnDryRun

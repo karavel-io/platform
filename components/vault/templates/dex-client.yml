@@ -1,0 +1,19 @@
+{{- if .Values.dex.enable }}
+apiVersion: dex.karavel.io/v1alpha1
+kind: DexClient
+metadata:
+  name: {{ include "vault.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}
+  {{- include "vault.labels" . | nindent 4 }}
+spec:
+  {{- with .Values.dex }}
+  instanceRef:
+    name: {{ .name }}
+    namespace: {{ .namespace }}
+{{- end }}
+  name: Vault
+  redirectUris:
+  - {{ required "parameter 'publicURL' is required for generating Vault Dex client" .Values.publicURL }}/ui/vault/auth/oidc/oidc/callback
+  - http://localhost:8250/oidc/callback
+{{- end }}

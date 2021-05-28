@@ -1,0 +1,20 @@
+apiVersion: v2
+name: vault
+description: Grafana component for Karavel
+type: application
+version: 0.1.0
+appVersion: 1.7.2
+maintainers:
+  - name: MatteoJoliveau
+    email: matteo.joliveau@mikamai.com
+
+home: https://vault.com
+sources:
+  - https://github.com/hashicorp/vault
+  - https://github.com/banzaicloud/bank-vaults/
+  - https://github.com/projectkaravel/platform
+
+annotations:
+  karavel.io/bootstrap: 'true'
+  karavel.io/dependencies: cert-manager
+  dex.enable: dex

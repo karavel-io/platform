@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vault.name" . }}-secrets-webhook
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}-secrets-webhook
+  {{- include "vault.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "vault.name" . }}-secrets-webhook
+  {{- include "vault.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "vault.name" . }}-secrets-webhook
+    {{- include "vault.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: vault-secrets-webhook
+      volumes:
+        - name: serving-cert
+          secret:
+            defaultMode: 420
+            secretName: vault-secrets-webhook-webhook-tls
+      containers:
+        - name: {{ include "vault.name" . }}-secrets-webhook
+          image: {{ .Values.webhook.image }}:{{ .Values.webhook.tag }}
+          env:
+            - name: TLS_CERT_FILE
+              value: /var/serving-cert/tls.crt
+            - name: TLS_PRIVATE_KEY_FILE
+              value: /var/serving-cert/tls.key
+            - name: LISTEN_ADDRESS
+              value: ":8443"
+            - name: VAULT_ENV_IMAGE
+              value: {{ .Values.vaultEnv.image }}:{{ .Values.vaultEnv.tag }}
+            - name: VAULT_IMAGE
+              value: "vault:1.6.3"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /healthz
+              port: 8443
+          volumeMounts:
+            - mountPath: /var/serving-cert
+              name: serving-cert
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 65534

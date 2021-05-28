@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "vault.name" . }}-secrets-webhook
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}-secrets-webhook
+  {{- include "vault.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 443
+      targetPort: https
+      protocol: TCP
+      name: {{ include "vault.name" . }}-secrets-webhook
+  selector:
+    app.kubernetes.io/name: {{ include "vault.name" . }}-secrets-webhook
+  {{- include "vault.selectorLabels" . | nindent 4 }}

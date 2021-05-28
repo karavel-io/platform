@@ -1,0 +1,33 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "vault.name" . }}-secrets-webhook-selfsigned-issuer
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}-secrets-webhook
+  {{- include "vault.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+spec:
+  selfSigned: { }
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "vault.name" . }}-secrets-webhook-webhook-tls
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "vault.name" . }}-secrets-webhook
+  {{- include "vault.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+spec:
+  dnsNames:
+    - {{ include "vault.name" . }}-secrets-webhook.{{ .Release.Namespace }}.svc
+    - {{ include "vault.name" . }}-secrets-webhook.{{ .Release.Namespace }}.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: {{ include "vault.name" . }}-secrets-webhook-selfsigned-issuer
+  secretName: {{ include "vault.name" . }}-secrets-webhook-webhook-tls
