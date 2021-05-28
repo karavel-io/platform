@@ -1,17 +1,16 @@
 let
   pkgs = import <nixpkgs> { };
-  unstable = import (fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz) { };
   addlicense = pkgs.callPackage ./.nix/addlicense.nix { };
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
     nixpkgs-fmt
-    go
+    go_1_16
     kubectl
     kubernetes-helm
     kustomize
-    kind
+    pkgs.unstable.kind
     addlicense
-    unstable.velero
+    pkgs.unstable.velero
   ];
 }

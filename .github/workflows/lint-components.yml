@@ -1,13 +1,9 @@
 name: Lint Components
 on:
   push:
-    branches:
-      - main
     paths:
       - "components/**"
   pull_request:
-    branches:
-      - main
     paths:
       - "components/**"
 
