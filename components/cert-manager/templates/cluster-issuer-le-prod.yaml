@@ -23,8 +23,8 @@ spec:
             region: {{ .Values.letsencrypt.route53.region }}
             hostedZoneID: {{ .Values.letsencrypt.route53.zoneId }}
         selector:
-          matchLabels:
-            "use-route53-solver": "true"
+          dnsZones:
+            {{- toYaml .Values.letsencrypt.route53.domains | nindent 12 }}
       {{- end }}
       {{- if .Values.letsencrypt.cloudflare.enable }}
       - dns01:
@@ -34,6 +34,6 @@ spec:
               name: {{ include "cert-manager.name" . }}-cloudflare-secret
               key: cf-api-token
         selector:
-          matchLabels:
-            "use-cloudflare-solver": "true"
+          dnsZones:
+          {{- toYaml .Values.letsencrypt.cloudflare.domains | nindent 12 }}
       {{- end }}

@@ -3,12 +3,14 @@ letsencrypt:
   route53:
     enable: false
     region: eu-west-1
+    domains: []
     zoneId: ""
     eksRole: ""
     iamRole: ""
   cloudflare:
     enable: false
     email: ""
+    domains: []
     secret:
       backend: secretsManager
       key: ""
