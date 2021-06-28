@@ -17,6 +17,12 @@ spec:
       - http01:
           ingress:
             class: nginx
+      {{- if .Values.letsencrypt.route53.enable }}
+      - dns01:
+          route53:
+            region: {{ .Values.letsencrypt.route53.region }}
+            hostedZoneID: {{ .Values.letsencrypt.route53.zoneId }}
+      {{- end }}
       {{- if .Values.letsencrypt.cloudflare.enable }}
       - dns01:
           cloudflare:

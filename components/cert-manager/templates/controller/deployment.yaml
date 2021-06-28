@@ -21,6 +21,10 @@ spec:
         app.kubernetes.io/name: {{ include "cert-manager.name" . }}
         {{- include "cert-manager.labels" . | nindent 8 }}
         app.kubernetes.io/component: controller
+      {{- with .Values.letsencrypt.route53.iamRole }}
+      annotations:
+        iam.amazonaws.com/role: {{ . }}
+    {{- end}}
     spec:
       priorityClassName: system-cluster-critical
       serviceAccountName: cert-manager

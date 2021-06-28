@@ -8,6 +8,10 @@ metadata:
     app.kubernetes.io/name: {{ include "cert-manager.name" . }}
     {{- include "cert-manager.labels" . | nindent 4 }}
     app.kubernetes.io/component: controller
+  {{- with .Values.letsencrypt.route53.eksRole }}
+  annotations:
+    eks.amazonaws.com/role-arn: {{ . }}
+  {{- end}}
 ---
 # Issuer controller role
 apiVersion: rbac.authorization.k8s.io/v1
