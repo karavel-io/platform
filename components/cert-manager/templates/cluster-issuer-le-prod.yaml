@@ -22,6 +22,9 @@ spec:
           route53:
             region: {{ .Values.letsencrypt.route53.region }}
             hostedZoneID: {{ .Values.letsencrypt.route53.zoneId }}
+        selector:
+          matchLabels:
+            "use-route53-solver": "true"
       {{- end }}
       {{- if .Values.letsencrypt.cloudflare.enable }}
       - dns01:
