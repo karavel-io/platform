@@ -35,6 +35,7 @@ spec:
   resources:
     requests:
       memory: 400Mi
+  ruleNamespaceSelector: {}
   ruleSelector:
     matchLabels:
       prometheus: prometheus-operated

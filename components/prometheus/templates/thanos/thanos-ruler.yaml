@@ -11,8 +11,12 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   image: quay.io/thanos/thanos:v{{ .Values.thanos.version }}
+  ruleNamespaceSelector: {}
   ruleSelector:
     matchLabels:
       role: alert-rules
+  alertmanagersConfig:
+    name: thanos-ruler-config
+    key: config.yml
   queryEndpoints:
     - dnssrv+_http._tcp.thanos-query.{{ .Release.Namespace }}.svc.cluster.local

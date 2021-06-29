@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: kube-state-metrics
+  namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
     {{- include "prometheus.labels" . | nindent 4 }}
     app.kubernetes.io/version: {{ .Values.kubeStateMetrics.version }}
-  name: kube-state-metrics
-  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -23,14 +23,32 @@ spec:
         {{- include "prometheus.labels" . | nindent 8 }}
         app.kubernetes.io/version: {{ .Values.kubeStateMetrics.version }}
     spec:
+      securityContext:
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: kube-state-metrics
       containers:
-      - args:
-        - --host=127.0.0.1
-        - --port=8081
-        - --telemetry-host=127.0.0.1
-        - --telemetry-port=8082
-        image: quay.io/coreos/kube-state-metrics:v{{ .Values.kubeStateMetrics.version }}
-        name: kube-state-metrics
+      - name: kube-state-metrics
+        image: k8s.gcr.io/kube-state-metrics/kube-state-metrics:v{{ .Values.kubeStateMetrics.version }}
+        args:
+          - --host=127.0.0.1
+          - --port=8081
+          - --telemetry-host=127.0.0.1
+          - --telemetry-port=8082
+        ports:
+          - name: http-metrics
+            containerPort: 8081
+          - name: telemetry
+            containerPort: 8082
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
         resources:
           limits:
             cpu: 100m
@@ -38,13 +56,13 @@ spec:
           requests:
             cpu: 10m
             memory: 190Mi
-      - args:
+      - name: kube-rbac-proxy-main
+        args:
         - --logtostderr
         - --secure-listen-address=:8443
         - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
         - --upstream=http://127.0.0.1:8081/
         image: quay.io/brancz/kube-rbac-proxy:v{{ .Values.kubeRBACProxy.version }}
-        name: kube-rbac-proxy-main
         ports:
         - containerPort: 8443
           name: https-main
@@ -59,13 +77,13 @@ spec:
           runAsGroup: 65532
           runAsNonRoot: true
           runAsUser: 65532
-      - args:
+      - name: kube-rbac-proxy-self
+        args:
         - --logtostderr
         - --secure-listen-address=:9443
         - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
         - --upstream=http://127.0.0.1:8082/
         image: quay.io/brancz/kube-rbac-proxy:v{{ .Values.kubeRBACProxy.version }}
-        name: kube-rbac-proxy-self
         ports:
         - containerPort: 9443
           name: https-self
@@ -76,10 +94,3 @@ spec:
           requests:
             cpu: 10m
             memory: 20Mi
-        securityContext:
-          runAsGroup: 65532
-          runAsNonRoot: true
-          runAsUser: 65532
-      nodeSelector:
-        kubernetes.io/os: linux
-      serviceAccountName: kube-state-metrics

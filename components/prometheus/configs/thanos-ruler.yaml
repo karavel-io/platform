@@ -1,0 +1,6 @@
+alertmanagers:
+  - static_configs:
+      - alertmanager-operated:9093
+    scheme: http
+    timeout: 10s
+    api_version: v2
