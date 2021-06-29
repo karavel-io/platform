@@ -23,6 +23,10 @@ spec:
     spec:
       priorityClassName: system-cluster-critical
       serviceAccountName: {{ include "cert-manager.name" . }}-webhook
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
       containers:
         - name: {{ include "cert-manager.name" . }}
           image: "quay.io/jetstack/cert-manager-webhook:v{{ .Chart.AppVersion }}"
