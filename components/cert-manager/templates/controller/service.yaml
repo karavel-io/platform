@@ -11,9 +11,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - protocol: TCP
+    - name: metrics
       port: 9402
-      targetPort: 9402
+      targetPort: metrics
+      protocol: TCP
   selector:
     app.kubernetes.io/name: {{ include "cert-manager.name" . }}
     {{ include "cert-manager.selectorLabels" . | nindent 4 }}

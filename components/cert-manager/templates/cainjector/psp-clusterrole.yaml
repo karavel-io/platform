@@ -12,4 +12,4 @@ rules:
   resources: ['podsecuritypolicies']
   verbs:     ['use']
   resourceNames:
-  - cert-manager-cainjector
+  - {{ include "cert-manager.name" . }}-cainjector

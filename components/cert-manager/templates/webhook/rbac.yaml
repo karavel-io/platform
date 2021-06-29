@@ -1,4 +1,3 @@
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -43,7 +42,39 @@ roleRef:
   kind: Role
   name: {{ include "cert-manager.name" . }}-webhook-dynamic-serving
 subjects:
-- apiGroup: ""
-  kind: ServiceAccount
-  name: {{ include "cert-manager.name" . }}-webhook
-  namespace: {{ .Release.Namespace }}
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: {{ include "cert-manager.name" . }}-webhook
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "cert-manager.name" . }}-subjectaccessreviews
+  labels:
+    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-subjectaccessreviews
+    {{- include "cert-manager.labels" . | nindent 4 }}
+    app.kubernetes.io/component: webhook
+rules:
+  - apiGroups: ["authorization.k8s.io"]
+    resources: ["subjectaccessreviews"]
+    verbs: ["create"]
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "cert-manager.name" . }}-subjectaccessreviews
+  labels:
+    app.kubernetes.io/name: {{ include "cert-manager.name" . }}-subjectaccessreviews
+    {{- include "cert-manager.labels" . | nindent 4 }}
+    app.kubernetes.io/component: webhook
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "cert-manager.name" . }}-subjectaccessreviews
+subjects:
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: {{ include "cert-manager.name" . }}-webhook
+    namespace: {{ .Release.Namespace }}

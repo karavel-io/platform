@@ -1,4 +1,3 @@
----
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -20,7 +19,7 @@ webhooks:
       - key: "name"
         operator: "NotIn"
         values:
-        - cert-manager
+          - {{ .Release.Namespace }}
     rules:
       - apiGroups:
           - "cert-manager.io"

@@ -6,9 +6,10 @@ metadata:
     app.kubernetes.io/name: letsencrypt-staging
     {{- include "cert-manager.labels" . | nindent 4 }}
 spec:
+  {{- with .Values.letsencrypt }}
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    {{- with .Values.letsencrypt.email }}
+    {{- with .email }}
     email: {{ . }}
     {{- end }}
     privateKeySecretRef:
@@ -17,14 +18,24 @@ spec:
       - http01:
           ingress:
             class: nginx
-      {{- if .Values.letsencrypt.cloudflare.enable }}
+      {{- if .route53.enable }}
+      - dns01:
+          route53:
+            region: {{ .route53.region }}
+            hostedZoneID: {{ .route53.zoneId }}
+        selector:
+          dnsZones:
+      {{- toYaml .route53.domains | nindent 12 }}
+      {{- end }}
+      {{- if .cloudflare.enable }}
       - dns01:
           cloudflare:
-            email: {{ .Values.letsencrypt.cloudflare.email }}
+            email: {{ .cloudflare.email }}
             apiTokenSecretRef:
               name: {{ include "cert-manager.name" . }}-cloudflare-secret
               key: cf-api-token
         selector:
-          matchLabels:
-            "use-cloudflare-solver": "true"
-      {{- end }}
+          dnsZones:
+      {{- toYaml .cloudflare.domains | nindent 12 }}
+  {{- end }}
+  {{- end }}

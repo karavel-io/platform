@@ -27,7 +27,11 @@ spec:
     {{- end}}
     spec:
       priorityClassName: system-cluster-critical
-      serviceAccountName: cert-manager
+      serviceAccountName: {{ include "cert-manager.name" . }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
       containers:
         - name: {{ include "cert-manager.name" . }}
           image: "quay.io/jetstack/cert-manager-controller:v{{ .Chart.AppVersion }}"
@@ -35,16 +39,15 @@ spec:
           args:
           - --v=2
           - --cluster-resource-namespace=$(POD_NAMESPACE)
-          - --leader-election-namespace=cert-manager
-          - --cluster-resource-namespace=cert-manager
+          - --leader-election-namespace=$(POD_NAMESPACE)
+          - --cluster-resource-namespace=$(POD_NAMESPACE)
           - --enable-certificate-owner-ref=true
           ports:
-          - containerPort: 9402
+          - name: metrics
+            containerPort: 9402
             protocol: TCP
           env:
           - name: POD_NAMESPACE
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          resources:
-            {}

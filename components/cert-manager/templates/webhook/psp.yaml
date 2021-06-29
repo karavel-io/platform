@@ -28,17 +28,17 @@ spec:
   runAsUser:
     rule: 'MustRunAs'
     ranges:
-    - min: 1000
-      max: 1000
+      - min: 1000
+        max: 1000
   seLinux:
     rule: 'RunAsAny'
   supplementalGroups:
     rule: 'MustRunAs'
     ranges:
-    - min: 1000
-      max: 1000
+      - min: 1000
+        max: 1000
   fsGroup:
     rule: 'MustRunAs'
     ranges:
-    - min: 1000
-      max: 1000
+      - min: 1000
+        max: 1000
