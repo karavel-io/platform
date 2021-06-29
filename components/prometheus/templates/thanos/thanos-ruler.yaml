@@ -17,6 +17,6 @@ spec:
       role: alert-rules
   alertmanagersConfig:
     name: thanos-ruler-config
-    key: config.yml
+    key: alerts.yml
   queryEndpoints:
     - dnssrv+_http._tcp.thanos-query.{{ .Release.Namespace }}.svc.cluster.local
