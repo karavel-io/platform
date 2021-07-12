@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+set -e
+
+default_url="https://platform.karavel.io"
+
+function die {
+  echo "$1"
+  exit 1
+}
+
+OPTS=$(getopt -o '' -a --longoptions 'url:,version:,dry-run' -n "$0" -- "$@")
+set -- $OPTS
+
+while true; do
+  case "$1" in
+    --url )
+        registry_url="${2:1:-1}" # remove ''
+        shift 2
+        ;;
+    --version )
+        version="${2:1:-1}"      # remove ''
+        release="${version::-2}" # remove .z from xxxx.y.z TODO handle -RC.Z
+        shift 2
+        ;;
+    --dry-run )
+        DRY_RUN_CMD="echo"
+        shift 1
+        ;;
+    --)
+        shift
+        break
+        ;;
+    *)
+        echo ""
+        echo "Error in given Parameters. Undefined: "
+        echo $*
+        echo ""
+        echo "Usage: $0 --version XXXX.Y.Z [--url REGISTRY_URL (default $default_url) ] [--dry-run]"
+        exit 1
+  esac
+done
+
+[[ -z "$registry_url" ]] && registry_url="$default_url"
+[[ -z "$version" ]] && die "--version must be provided"
+
+current_head=$(git rev-parse --abbrev-ref HEAD)
+index="$(cat releases/$release/index.yaml)"
+
+$DRY_RUN_CMD git checkout gh-pages
+$DRY_RUN_CMD mkdir -p "$version"
+for component in $(echo "$index" | yq eval '.components | keys | .[]' -)
+do
+  tag="$(echo "$index" | yq eval ".components[\"$component\"]" -)"
+  echo "Downloading component '$component' version $tag"
+  $DRY_RUN_CMD fetch --repo="https://github.com/projectkaravel/platform-component-$component" \
+  --tag="$tag" \
+  --release-asset="$component-$tag.tgz" \
+  "$version"
+done
+
+$DRY_RUN_CMD helm repo index "$version" --url "$registry_url/$version"
+
+$DRY_RUN_CMD git add .
+$DRY_RUN_CMD git commit -m "Releasing platform $release version $version"
+$DRY_RUN_CMD git checkout "$current_head"

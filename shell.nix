@@ -1,6 +1,8 @@
 let
   pkgs = import <nixpkgs> { };
   addlicense = pkgs.callPackage ./.nix/addlicense.nix { };
+  fetch = pkgs.callPackage ./.nix/fetch.nix { };
+  yq = pkgs.callPackage ./.nix/yq.nix { };
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
@@ -13,5 +15,7 @@ pkgs.mkShell {
     addlicense
     pkgs.unstable.velero
     bats
+    fetch
+    yq
   ];
 }
