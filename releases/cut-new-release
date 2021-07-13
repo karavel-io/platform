@@ -43,7 +43,6 @@ done
 [[ -z "$registry_url" ]] && registry_url="$default_url"
 [[ -z "$version" ]] && die "--version must be provided"
 
-current_head=$(git rev-parse --abbrev-ref HEAD)
 index="$(cat releases/$release/index.yaml)"
 
 $DRY_RUN_CMD git checkout gh-pages
@@ -62,4 +61,3 @@ $DRY_RUN_CMD helm repo index "$version" --url "$registry_url/$version"
 
 $DRY_RUN_CMD git add .
 $DRY_RUN_CMD git commit -m "Releasing platform $release version $version"
-$DRY_RUN_CMD git checkout "$current_head"
