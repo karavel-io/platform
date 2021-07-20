@@ -18,4 +18,3 @@ vault:
 
 prometheus:
   enable: true
-
