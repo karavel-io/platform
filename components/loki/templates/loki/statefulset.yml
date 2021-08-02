@@ -38,7 +38,7 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/loki/loki.yaml"
-          {{- if .Values.tracing.enable }}
+          {{- if and .Values.tracing.enable .Values.tracing.sendTraces }}
             - "-tracing.enabled=true"
           {{- with .Values.tracing }}
           env:

@@ -17,4 +17,4 @@ annotations:
   karavel.io/dependencies: cert-manager, external-secrets
   prometheus.enable: prometheus
   monitoring.enable: grafana, prometheus
-#  tracing.enable: tempo
+  tracing.enable: tempo
