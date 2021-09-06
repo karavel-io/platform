@@ -11,7 +11,7 @@ maintainers:
 home: https://github.com/bloomberg/goldpinger
 sources:
   - https://github.com/bloomberg/goldpinger
-  - https://github.com/projectkaravel/platform
+  - https://github.com/karavel-io/platform
 
 annotations:
   grafana.enable: grafana

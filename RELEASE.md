@@ -13,7 +13,7 @@ For example, the `2021.2.1` is the first patch of the second release of the year
 
 ## Pre-work
 
-When the moment comes to prepare a new release, [a tracking issue should be created](https://github.com/projectkaravel/platform/issues/new?labels=release).
+When the moment comes to prepare a new release, [a tracking issue should be created](https://github.com/karavel-io/platform/issues/new?labels=release).
 The issue will track the release process and will host discussions and comments regarding the release.
 
 A member of the Release Team (@projectkaravel/platform-release) will be assigned to the issue. They will be called the
@@ -49,7 +49,7 @@ The Pull Request will be reviewed and approved by one or more other members of t
 
 ## Publishing a release
 
-Once it is done, [a new GitHub release](https://github.com/projectkaravel/platform/releases/new) should be created with
+Once it is done, [a new GitHub release](https://github.com/karavel-io/platform/releases/new) should be created with
 the corresponding tag called `yyyy.x.0` (notice the Patch component is now present and set a 0).
 The description should be filled by copying the corresponding CHANGELOG.md section.
 
@@ -64,7 +64,7 @@ corresponding [releases](releases) folder:
 - new CHANGELOG.md section with the `Z` version component incremented by 1, and appropriate entries describing what has been
 changed and/or fixed.
   
-The corresponding release will then be created on [GitHub](https://github.com/projectkaravel/platform/releases/new) alongside
+The corresponding release will then be created on [GitHub](https://github.com/karavel-io/platform/releases/new) alongside
 the corresponding `YYYY.X.Z` tag.
 The description should be filled by copying the corresponding CHANGELOG.md section.
 

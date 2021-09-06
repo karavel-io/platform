@@ -51,7 +51,7 @@ for component in $(echo "$index" | yq eval '.components | keys | .[]' -)
 do
   tag="$(echo "$index" | yq eval ".components[\"$component\"]" -)"
   echo "Downloading component '$component' version $tag"
-  $DRY_RUN_CMD fetch --repo="https://github.com/projectkaravel/platform-component-$component" \
+  $DRY_RUN_CMD fetch --repo="https://github.com/karavel-io/platform-component-$component" \
   --tag="$tag" \
   --release-asset="$component-$tag.tgz" \
   "$version"

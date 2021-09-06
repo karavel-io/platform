@@ -1,0 +1,39 @@
+[submodule "submodules/argocd"]
+	path = submodules/argocd
+	url = git@github.com:karavel-io/platform-component-argocd
+[submodule "submodules/cert-manager"]
+	path = submodules/cert-manager
+	url = git@github.com:karavel-io/platform-component-cert-manager
+[submodule "submodules/dex"]
+	path = submodules/dex
+	url = git@github.com:karavel-io/platform-component-dex
+[submodule "submodules/external-dns"]
+	path = submodules/external-dns
+	url = git@github.com:karavel-io/platform-component-external-dns
+[submodule "submodules/external-secrets"]
+	path = submodules/external-secrets
+	url = git@github.com:karavel-io/platform-component-external-secrets
+[submodule "submodules/goldpinger"]
+	path = submodules/goldpinger
+	url = git@github.com:karavel-io/platform-component-goldpinger
+[submodule "submodules/grafana"]
+	path = submodules/grafana
+	url = git@github.com:karavel-io/platform-component-grafana
+[submodule "submodules/ingress-nginx"]
+	path = submodules/ingress-nginx
+	url = git@github.com:karavel-io/platform-component-ingress-nginx
+[submodule "submodules/loki"]
+	path = submodules/loki
+	url = git@github.com:karavel-io/platform-component-loki
+[submodule "submodules/olm"]
+	path = submodules/olm
+	url = git@github.com:karavel-io/platform-component-olm
+[submodule "submodules/prometheus"]
+	path = submodules/prometheus
+	url = git@github.com:karavel-io/platform-component-prometheus
+[submodule "submodules/tempo"]
+	path = submodules/tempo
+	url = git@github.com:karavel-io/platform-component-tempo
+[submodule "submodules/velero"]
+	path = submodules/velero
+	url = git@github.com:karavel-io/platform-component-velero

@@ -11,7 +11,7 @@ maintainers:
 home: https://grafana.com
 sources:
   - https://github.com/integr8ly/grafana-operator
-  - https://github.com/projectkaravel/platform
+  - https://github.com/karavel-io/platform
 
 annotations:
   karavel.io/dependencies: cert-manager, external-secrets

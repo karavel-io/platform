@@ -10,4 +10,4 @@ and this project adheres to [Calendar Versioning](https://calver.org/) with Full
 ### Removed
 ### Fixed
 
-[YYYY.X.0]: https://github.com/projectkaravel/platform/releases/tag/YYYY.X.0
+[YYYY.X.0]: https://github.com/karavel-io/platform/releases/tag/YYYY.X.0

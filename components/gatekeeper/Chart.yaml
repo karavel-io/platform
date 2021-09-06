@@ -11,7 +11,7 @@ maintainers:
 home: https://open-policy-agent.github.io/gatekeeper/website/docs/
 sources:
   - https://github.com/open-policy-agent/gatekeeper
-  - https://github.com/projectkaravel/platform
+  - https://github.com/karavel-io/platform
 
 annotations:
   karavel.io/singleton: "true"

@@ -11,7 +11,7 @@ maintainers:
 home: https://github.com/kubernetes/ingress-nginx
 sources:
 - https://github.com/kubernetes/ingress-nginx
-- https://github.com/projectkaravel/platform
+- https://github.com/karavel-io/platform
 
 annotations:
   prometheus.enable: prometheus

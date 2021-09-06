@@ -11,7 +11,7 @@ maintainers:
 home: https://projectcalico.org
 sources:
   - https://github.com/projectcalico/calico
-  - https://github.com/projectkaravel/platform
+  - https://github.com/karavel-io/platform
 
 annotations:
   karavel.io/singleton: 'true'

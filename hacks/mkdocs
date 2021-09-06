@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+docker run --rm -it -p 8000:8000 -u "$(id -u):$(id -g)" --network host -v "${PWD}":/docs ghcr.io/karavel-io/ci-images/mkdocs:latest "$@"

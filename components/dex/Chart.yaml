@@ -11,7 +11,7 @@ maintainers:
 home: https://dexidp.io
 sources:
   - https://github.com/dexidp/dex
-  - https://github.com/projectkaravel/platform
+  - https://github.com/karavel-io/platform
 
 annotations:
   karavel.io/dependencies: cert-manager, external-secrets
