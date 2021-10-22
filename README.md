@@ -1,4 +1,4 @@
-# Karavel <img align="right" width=384 src="https://karavel.io/images/logo-karavel.svg">
+# Karavel <img align="right" width=384 src="https://karavel.io/images/karavel-logo-white-bg.png">
 
 ## What is Karavel?
 
