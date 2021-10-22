@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    {{- include "argocd.labels" . | nindent 4 }}
-  name: {{ include "argocd.name" . }}-tls-certs-cm
-  namespace: {{ .Release.Namespace | quote }}
