@@ -1,11 +1,11 @@
-# Karavel <img align="right" width=384 src="https://via.placeholder.com/384x200.png?text=Karavel%20Logo%20Here">
+# Karavel <img align="right" width=384 src="https://karavel.io/images/logo-karavel.svg">
 
 ## What is Karavel?
 
 Karavel is a project that provides tools and knowledge around the [Kubernetes]
 stack to deploy and manage [private Containers-as-a-Service platforms] in the Cloud and on premise.
 
-The main output of the Karavel project is the [Karavel Container Platform](#the-karavel-platform), a curated
+The main output of the Karavel project is the [Karavel Container Platform](#the-karavel-container-platform), a curated
 set of components and services based on the best-in-breed open source projects, carefully configured to deliver
 a production-ready platform for enterprises.
 
