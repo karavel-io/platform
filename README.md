@@ -29,12 +29,11 @@ our [quickstart guide] for an introductory view to the Platform.
 
 ## Components
 
-The full list of available components is available [here](https://docs.karavel.io/components/).
+The full list of available components is available [here](https://platform.karavel.io/components/).
 
 These are the most notable components offered by the Karavel Container Platform:
 
 - [ArgoCD]
-- [Calico]
 - [cert-manager]
 - [Dex]
 - [External DNS]
@@ -47,21 +46,21 @@ These are the most notable components offered by the Karavel Container Platform:
 
 ## Quickstart
 
-You can get up and running quickly and efficiently with our [Quickstart Guide].
+You can get up and running quickly and efficiently with our [Quickstart Guide] or by looking at the [e2e repository] that includes samples and instructions to test the platform on all supported platforms.
 
 [Kubernetes]: https://kubernetes.io
 [private Containers-as-a-Service platforms]: https://www.redhat.com/en/topics/cloud-computing/what-is-caas
-[components]: https://docs.karavel.io/components
-[quickstart guide]: https://docs.karavel.io/quickstart
+[components]: https://platform.karavel.io/components
+[quickstart guide]: https://platform.karavel.io/quickstart
 [conformant Kubernetes cluster]: https://www.cncf.io/certification/software-conformance/
-[ArgoCD]: https://docs.karavel.io/components/core/argocd
-[Calico]: https://docs.karavel.io/components/core/calico
-[cert-manager]: https://docs.karavel.io/components/core/cert-manager
-[Dex]: https://docs.karavel.io/components/core/dex
-[External DNS]: https://docs.karavel.io/components/core/external-dns
-[External Secrets]: https://docs.karavel.io/components/core/external-secrets
-[NGINX Ingress Controller]: https://docs.karavel.io/components/core/nginx-ingress-controller
-[Grafana]: https://docs.karavel.io/components/observability/grafana
-[Loki]: https://docs.karavel.io/components/observability/loki
-[Prometheus]: https://docs.karavel.io/components/observability/prometheus
-[Tempo]: https://docs.karavel.io/components/observability/tempo
+[ArgoCD]: https://platform.karavel.io/components/core/argocd
+[cert-manager]: https://platform.karavel.io/components/core/cert-manager
+[Dex]: https://platform.karavel.io/components/core/dex
+[External DNS]: https://platform.karavel.io/components/core/external-dns
+[External Secrets]: https://platform.karavel.io/components/core/external-secrets
+[NGINX Ingress Controller]: https://platform.karavel.io/components/core/nginx-ingress-controller
+[Grafana]: https://platform.karavel.io/components/observability/grafana
+[Loki]: https://platform.karavel.io/components/observability/loki
+[Prometheus]: https://platform.karavel.io/components/observability/prometheus
+[Tempo]: https://platform.karavel.io/components/observability/tempo
+[e2e repository]: https://github.com/karavel-io/platform-e2e
