@@ -97,6 +97,8 @@ kind: Application
 metadata:
   name: ingress-nginx
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
 spec:
   project: infrastructure
   source:
@@ -108,7 +110,9 @@ spec:
 # other fields omitted for brevity
 ```
 
-We need to change the `spec.source.path` field in order to point it to our new folder.
+We need to change the `spec.source.path` field in order to point it to our new folder. We also need to change the annotation
+for the manifest generation path. This helps ArgoCD detect changes faster by pointing it to the directories this applications
+is using. Very useful in monorepo situations like a KCP project, where multiple applications are managed with a single Git repository.
 
 ```diff
 # applications/ingress-nginx.yml
@@ -118,6 +122,9 @@ kind: Application
 metadata:
   name: ingress-nginx
   namespace: argocd
+  annotations:
+-   argocd.argoproj.io/manifest-generate-paths: .
++   argocd.argoproj.io/manifest-generate-paths: .;../vendor/ingress-nginx
 spec:
   project: infrastructure
   source:

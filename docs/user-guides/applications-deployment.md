@@ -1,1 +1,0 @@
-# Deploy applications to Karavel

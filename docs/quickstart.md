@@ -28,7 +28,7 @@ Kubernetes `Secrets` objects to be consumed by pods. This way no changes to the 
 Credentials needed by core Karavel components are provisioned using this same method. This includes Git provider credentials for ArgoCD,
 DNS providers tokens for managing DNS records and OpenID Connect client secrets for authentication.
 
-The exact secrets required by each component are referenced in their specific page in the [Components section](./components).
+The exact secrets required by each component are referenced in their specific page in the [Components section](components.md).
 They need to be provisioned beforehand and External Secrets needs the appropriate permissions to access them, otherwise the platform will not be able
 to run. They can be managed using whatever method is preferred, being it manually or via Infrastructure as Code tools like Terraform or CDK.
 
@@ -54,7 +54,7 @@ you will never need to interact with the charts directly.
 
 Here is a super quick demo of the bootstrap process.
 
-<script id="asciicast-389527" src="https://asciinema.org/a/389527.js" async></script>
+<script id="asciicast-444442" src="https://asciinema.org/a/444442.js" async></script>
 
 The CLI tool uses a simple [HCL] file to describe the required components and their configuration. Components will also automatically
 enable or disable  some optional features based on what other components are available. For example, a component may enable metrics collection if 
@@ -105,19 +105,21 @@ and generate the appropriate directory structure.
 
 ```bash
 $ karavel render
-Rendering new Karavel project with config file /home/user/my-karavel-infra/karavel.hcl
+Rendering new Karavel project with config file /tmp/karavel/karavel.hcl
 
-Rendering component 'goldpinger' 0.1.0 at my-karavel-infra/vendor/goldpinger
-Rendering component 'grafana' 0.1.0 at my-karavel-infra/vendor/grafana
-Rendering component 'tempo' 0.1.0 at my-karavel-infra/vendor/tempo
-Rendering component 'calico' 0.1.0 at my-karavel-infra/vendor/calico
-Rendering component 'external-dns' 0.1.0 at my-karavel-infra/vendor/external-dns
-Rendering component 'argocd' 0.1.0 at my-karavel-infra/vendor/argocd
-Rendering component 'prometheus' 0.1.0 at my-karavel-infra/vendor/prometheus
-Rendering component 'ingress-nginx' 0.1.0 at my-karavel-infra/vendor/ingress-nginx
-Rendering component 'loki' 0.1.0 at my-karavel-infra/vendor/loki
-Rendering component 'cert-manager' 0.1.0 at my-karavel-infra/vendor/cert-manager
-Rendering component 'external-secrets' 0.1.0 at my-karavel-infra/vendor/external-secrets
+Rendering component 'loki' 0.1.0-SNAPSHOT at karavel/vendor/loki
+Rendering component 'velero' 0.1.0-SNAPSHOT at karavel/vendor/velero
+Rendering component 'goldpinger' 0.1.0-SNAPSHOT at karavel/vendor/goldpinger
+Rendering component 'argocd' 0.1.0-SNAPSHOT at karavel/vendor/argocd
+Rendering component 'cert-manager' 0.1.0-SNAPSHOT at karavel/vendor/cert-manager
+Rendering component 'dex' 0.1.0-SNAPSHOT at karavel/vendor/dex
+Rendering component 'external-secrets' 0.1.0-SNAPSHOT at karavel/vendor/external-secrets
+Rendering component 'external-dns' 0.1.0-SNAPSHOT at karavel/vendor/external-dns
+Rendering component 'prometheus' 0.1.0-SNAPSHOT at karavel/vendor/prometheus
+Rendering component 'grafana' 0.1.0-SNAPSHOT at karavel/vendor/grafana
+Rendering component 'tempo' 0.1.0-SNAPSHOT at karavel/vendor/tempo
+Rendering component 'olm' 0.1.0-SNAPSHOT at karavel/vendor/olm
+Rendering component 'ingress-nginx' 0.1.0-SNAPSHOT at karavel/vendor/ingress-nginx
 ```
 
 Here's a view of the generated folders.
@@ -126,9 +128,8 @@ Here's a view of the generated folders.
 .
 ├── applications
 │  ├── argocd.yml
-│  ├── aws-node-termination-handler.yml
-│  ├── calico.yml
 │  ├── cert-manager.yml
+│  ├── dex.yml
 │  ├── external-dns.yml
 │  ├── external-secrets.yml
 │  ├── goldpinger.yml
@@ -136,8 +137,10 @@ Here's a view of the generated folders.
 │  ├── ingress-nginx.yml
 │  ├── kustomization.yml
 │  ├── loki.yml
+│  ├── olm.yml
 │  ├── prometheus.yml
-│  └── tempo.yml
+│  ├── tempo.yml
+│  └── velero.yml
 ├── karavel.hcl
 ├── kustomization.yml
 ├── projects
@@ -145,18 +148,18 @@ Here's a view of the generated folders.
 │  └── kustomization.yml
 └── vendor
    ├── argocd
-   ├── aws-node-termination-handler
-   ├── calico
    ├── cert-manager
+   ├── dex
    ├── external-dns
    ├── external-secrets
    ├── goldpinger
    ├── grafana
    ├── ingress-nginx
    ├── loki
+   ├── olm
    ├── prometheus
-   └── tempo
-
+   ├── tempo
+   └── velero
 ```
 
 The `vendor` folder contains Kubernetes manifests for all Karavel components.

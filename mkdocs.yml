@@ -1,7 +1,7 @@
 site_name: Karavel Container Platform
 site_url: https://docs.karavel.io
-repo_name: projectkaravel/platform-docs
-repo_url: https://github.com/karavel-io/platform-docs
+repo_name: karavel-io/platform-docs
+repo_url: https://github.com/karavel-io/platform
 copyright: © 2021 The Karavel Project | Documentation distributed under CC BY SA 4.0
 strict: false
 theme:
@@ -26,11 +26,11 @@ markdown_extensions:
 nav:
   - Overview: index.md
   - quickstart.md
-  - architecture.md
   - requirements.md
   - CLI: cli.md
   - versioning.md
   - Components:
+      - components.md
       - ArgoCD: '!include ./submodules/argocd/mkdocs.yml'
       - cert-manager: '!include ./submodules/cert-manager/mkdocs.yml'
       - Dex: '!include ./submodules/dex/mkdocs.yml'
@@ -45,9 +45,5 @@ nav:
       - Tempo: '!include ./submodules/tempo/mkdocs.yml'
       - Velero: '!include ./submodules/velero/mkdocs.yml'
   - Operator Guides:
-      - Introduction: operator-guides/index.md
       - operator-guides/customizing.md
-  - User Guides:
-      - Introduction: user-guides/index.md
-      - user-guides/applications-deployment.md
   - FAQ: faq.md

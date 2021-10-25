@@ -1,0 +1,20 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**.md"
+      - "mkdocs.yml"
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/karavel-io/ci-images/mkdocs:latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: mkdocs gh-deploy --force
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

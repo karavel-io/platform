@@ -16,7 +16,7 @@ For example, the `2021.2.1` is the first patch of the second release of the year
 When the moment comes to prepare a new release, [a tracking issue should be created](https://github.com/karavel-io/platform/issues/new?labels=release).
 The issue will track the release process and will host discussions and comments regarding the release.
 
-A member of the Release Team (@projectkaravel/platform-release) will be assigned to the issue. They will be called the
+A member of the Release Team (@karavel-io/platform-release) will be assigned to the issue. They will be called the
 "assigned Release Manager" from now one.
 
 The issue will also be used to collect the version for each component included in the release. Component owners

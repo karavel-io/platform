@@ -7,6 +7,10 @@ The tool is written in Go and packaged as a single static binary that runs on Li
 
 ## karavel init
 
+!!! warning
+    Until **December 2021**, when the first stable release will be cut, this command will **NOT** work as there are no released
+    versions of the platform. If you need some example configuration files, please head over to the [end-to-end testing repository](https://github.com/karavel-io/platform-e2e).
+
 ```
 Initialize a new Karavel project
 
@@ -14,16 +18,15 @@ Usage:
   karavel init [WORKDIR] [flags]
 
 Flags:
-      --checksum-url string   Override the official URL pointing to the Karavel config file checksum to download. Requires setting --config-url too
-      --config-url string     Override the official URL pointing to the Karavel config file to download. Requires setting --checksum-url too
-      --force                 Overwrite the config file even if it already exists
-  -h, --help                  help for init
-  -o, --output-file string    Karavel config file name to create (default "karavel.hcl")
-  -v, --version string        Karavel Container Platform version to initialize (default "latest")
+      --config-url string    Override the official URL pointing to the Karavel config file to download
+      --force                Overwrite the config file even if it already exists
+  -h, --help                 help for init
+  -o, --output-file string   Karavel config file name to create (default "karavel.hcl")
+  -v, --version string       Karavel Container Platform version to initialize (default "latest")
 
 Global Flags:
       --colors   Enable colored logs (default true)
-      --debug    Output debug logs
+  -d, --debug    Output debug logs
   -q, --quiet    Suppress all logs except errors
 ```
 
@@ -41,15 +44,12 @@ $ cd /tmp/karavel
 $ karavel init
 Initializing new Karavel latest project at /tmp/karavel
 
-Fetching bootstrap config from https://github.com/karavel-io/platform/releases/latest/download/karavel.hcl with checksum https://github.com/karavel-io/platform/releases/latest/download/karavel.hcl.sha256
+Fetching starting config from https://github.com/karavel-io/platform/releases/latest/download/karavel.hcl
 
 Downloading file karavel.hcl from https://github.com/karavel-io/platform/releases/latest/download/karavel.hcl
 Download completed in 1.995229ms
 
-Downloading file karavel.hcl.sha256 from https://github.com/karavel-io/platform/releases/latest/download/karavel.hcl.sha256
-Download completed in 991.628µs
-
-Checksum successfully validated. Writing config file to /tmp/karavel/karavel.hcl
+Writing config file to /tmp/karavel/karavel.hcl
 ```
 
 To download a specific version of the Karavel Container Platform instead of the latest one, you can pass the `--version`
@@ -57,18 +57,15 @@ flag to `karavel init` with the desired version.
 
 ```bash
 $ cd /tmp/karavel 
-$ karavel init --version 0.1.0
-Initializing new Karavel v0.1.0 project at /tmp/karavel
+$ karavel init --version 2021.1
+Initializing new Karavel 2021.1 project at /tmp/karavel
 
-Fetching bootstrap config from https://github.com/karavel-io/platform/releases/v0.1.0/download/karavel.hcl with checksum https://github.com/karavel-io/platform/releases/v0.1.0/download/karavel.hcl.sha256
+Fetching starting config from https://github.com/karavel-io/platform/releases/2021.1/download/karavel.hcl
 
-Downloading file karavel.hcl from https://github.com/karavel-io/platform/releases/v0.1.0/download/karavel.hcl
+Downloading file karavel.hcl from https://github.com/karavel-io/platform/releases/2021.1/download/karavel.hcl
 Download completed in 1.995229ms
 
-Downloading file karavel.hcl.sha256 from https://github.com/karavel-io/platform/releases/v0.1.0/download/karavel.hcl.sha256
-Download completed in 991.628µs
-
-Checksum successfully validated. Writing config file to /tmp/karavel/karavel.hcl
+Writing config file to /tmp/karavel/karavel.hcl
 ```
 
 You can now safely edit the `karavel.hcl` file to configure the platform based on your environment. There are a few
@@ -78,7 +75,6 @@ information is provided in the next pages.
 ## karavel render
 
 ```
-
 Render a Karavel project with the given config (defaults to 'karavel.hcl' in the current directory).
 
 This command is idempotent and can be run multiple times without issues. 
@@ -91,10 +87,11 @@ Usage:
 Flags:
   -f, --file string   Specify an alternate config file (default "karavel.hcl")
   -h, --help          help for render
+      --skip-git      Skip the git integration to discover remote repositories for Argo. WARNING: this will render the Argo component inoperable
 
 Global Flags:
       --colors   Enable colored logs (default true)
-      --debug    Output debug logs
+  -d, --debug    Output debug logs
   -q, --quiet    Suppress all logs except errors
 ```
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-default_url="https://platform.karavel.io"
+default_url="https://repository.platform.karavel.io"
 
 function die {
   echo "$1"
