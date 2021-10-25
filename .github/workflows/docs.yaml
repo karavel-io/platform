@@ -5,8 +5,9 @@ on:
     branches:
       - main
     paths:
-      - "docs/**.md"
-      - "mkdocs.yml"
+      - docs/**.md
+      - mkdocs.yml
+      - .github/workflows/docs.yaml
 
 jobs:
   deploy-docs:
