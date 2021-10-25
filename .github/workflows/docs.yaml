@@ -8,6 +8,7 @@ on:
       - docs/**.md
       - mkdocs.yml
       - .github/workflows/docs.yaml
+      - submodules/**
 
 jobs:
   deploy-docs:
