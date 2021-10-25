@@ -1,6 +1,6 @@
 site_name: Karavel Container Platform
 site_url: https://docs.karavel.io
-repo_name: karavel-io/platform-docs
+repo_name: karavel-io/platform
 repo_url: https://github.com/karavel-io/platform
 copyright: © 2021 The Karavel Project | Documentation distributed under CC BY SA 4.0
 strict: false
