@@ -10,6 +10,7 @@ overview the needed infrastructure parts are:
 - a **conformant [Kubernetes] cluster**, of course
 - a **secure secrets store** to store credentials and other passwords, like [Hashicorp Vault] or [AWS Secrets Manager],
 see [components/external-secrets]
+- an **OIDC compliant SSO service** like Google Workspace, Azure AD, Keycloak or any other [OIDC] service, to authenticate web UIs like ArgoCD and Grafana
 - an S3-compatible **object storage server** to store data like metrics, logs and traces
 - a supported DNS provider, see [components/external-dns]
 
@@ -21,5 +22,6 @@ some of the less critical pods.
 [Kubernetes]: https://kubernetes.io
 [Hashicorp Vault]: https://vaultproject.io/
 [AWS Secrets Manager]: https://aws.amazon.com/secrets-manager/
+[OIDC]: https://openid.net/connect/
 [components/external-secrets]: /components/external-secrets
 [components/external-dns]: /components/external-dns
