@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-default_url="https://repository.platform.karavel.io"
-
 function die {
   echo "$1"
   exit 1
@@ -19,7 +17,11 @@ while true; do
         ;;
     --version )
         version="${2:1:-1}"      # remove ''
-        release="${version::-2}" # remove .z from xxxx.y.z TODO handle -RC.Z
+        if [[ "$version" == *"RC"* ]]; then
+          release="$version"
+        else
+          release="${version::-2}" # remove .z from xxxx.y.z TODO handle -RC.Z
+        fi
         shift 2
         ;;
     --dry-run )
@@ -33,31 +35,36 @@ while true; do
     *)
         echo ""
         echo "Error in given Parameters. Undefined: "
-        echo $*
+        echo "$*"
         echo ""
-        echo "Usage: $0 --version XXXX.Y.Z [--url REGISTRY_URL (default $default_url) ] [--dry-run]"
+        echo "Usage: $0 --version XXXX.Y.Z [--dry-run]"
         exit 1
   esac
 done
 
-[[ -z "$registry_url" ]] && registry_url="$default_url"
 [[ -z "$version" ]] && die "--version must be provided"
 
 index="$(cat releases/$release/index.yaml)"
 
-$DRY_RUN_CMD git checkout gh-pages
-$DRY_RUN_CMD mkdir -p "$version"
+$DRY_RUN_CMD helm plugin install https://github.com/hypnoglow/helm-s3.git --version v0.10.0 &1> /dev/null || true
+set +e
+
+if $DRY_RUN_CMD helm repo add "$version" "s3://$HELM_BUCKET_NAME/$version"; then
+  $DRY_RUN_CMD helm s3 init "s3://$HELM_BUCKET_NAME/$version"
+fi
+set -e
+
+$DRY_RUN_CMD rm -rf dist
+$DRY_RUN_CMD mkdir -p dist
+$DRY_RUN_CMD cd dist
 for component in $(echo "$index" | yq eval '.components | keys | .[]' -)
 do
   tag="$(echo "$index" | yq eval ".components[\"$component\"]" -)"
   echo "Downloading component '$component' version $tag"
+  chart="$component-$tag.tgz"
   $DRY_RUN_CMD fetch --repo="https://github.com/karavel-io/platform-component-$component" \
   --tag="$tag" \
-  --release-asset="$component-$tag.tgz" \
-  "$version"
+  --release-asset="$chart" \
+  .
+  $DRY_RUN_CMD helm s3 push "./$chart" "$version" --relative
 done
-
-$DRY_RUN_CMD helm repo index "$version" --url "$registry_url/$version"
-
-$DRY_RUN_CMD git add .
-$DRY_RUN_CMD git commit -m "Releasing platform $release version $version"

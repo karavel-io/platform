@@ -38,3 +38,7 @@ jobs:
         env:
           KCP_VERSION: ${{ github.event.release.tag_name }}
           GITHUB_OAUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.PLATFORM_COMPONENTS_AWS_ACCESS_KEY_ID  }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PLATFORM_COMPONENTS_AWS_SECRET_ACCESS_KEY  }}
+          AWS_DEFAULT_REGION: eu-west-1
+          HELM_BUCKET_NAME: ${{ secrets.PLATFORM_COMPONENTS_BUCKET_NAME }}
