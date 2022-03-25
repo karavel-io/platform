@@ -42,12 +42,7 @@ done
 
 index="$(cat releases/$release/index.yaml)"
 
-set +e
-
-if $DRY_RUN_CMD helm repo add "$version" "s3://$HELM_BUCKET_NAME/$version"; then
-  $DRY_RUN_CMD helm s3 init "s3://$HELM_BUCKET_NAME/$version"
-fi
-set -e
+$DRY_RUN_CMD helm repo add "$version" "s3://$HELM_BUCKET_NAME/$version" || $DRY_RUN_CMD helm s3 init "s3://$HELM_BUCKET_NAME/$version"
 
 $DRY_RUN_CMD rm -rf dist
 $DRY_RUN_CMD mkdir -p dist
