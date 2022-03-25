@@ -39,7 +39,7 @@ When a Release Candidate is deemed to be ready and stable, the final release wil
 When the full list of component versions has been compiled, the assigned Release Manager will create a branch from the
 `main` branch called `release/yyyy.x` (or `release/yyyy.x-rc.z` for RCs) and open a Pull Request with the following changes:
 
-- create a new folder inside [releases](releases) called `yyyy.x`, copying the content of the [template](releases/template)
+- create a new folder inside [releases](releases) called `yyyy.x` (or `yyyy.x-rc.z` for RCs, `rc` MUST be lowercase), copying the content of the [template](releases/template)
 folder as a starting point.
 - compile a list of components to include in the release. This list is in the format `component-slug: component-version`.
 - compile the CHANGELOG file with the list of components and versions in the `Added` section, linking to each component's
