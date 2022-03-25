@@ -32,6 +32,8 @@ jobs:
         run: go get github.com/mikefarah/yq/v4
         env:
           GO111MODULE: on
+      - name: Install helm-s3
+        run: helm plugin install https://github.com/hypnoglow/helm-s3.git --version v0.10.0
 
       - name: Release platform
         run: releases/cut-new-release --version $KCP_VERSION
