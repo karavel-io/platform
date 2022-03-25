@@ -11,13 +11,9 @@ set -- $OPTS
 
 while true; do
   case "$1" in
-    --url )
-        registry_url="${2:1:-1}" # remove ''
-        shift 2
-        ;;
     --version )
-        version="${2:1:-1}"      # remove ''
-        if [[ "$version" == *"RC"* ]]; then
+        version=$(echo "${2:1:-1}" | tr '[:upper:]' '[:lower:]')      # remove '' and lowercase
+        if [[ "$version" == *"rc"* ]]; then
           release="$version"
         else
           release="${version::-2}" # remove .z from xxxx.y.z TODO handle -RC.Z
