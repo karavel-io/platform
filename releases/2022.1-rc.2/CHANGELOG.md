@@ -9,6 +9,7 @@ and this project adheres to [Calendar Versioning](https://calver.org/) with Full
 ### Changed
 
 - Update to [grafana 1.0.1](https://github.com/karavel-io/platform-component-grafana/releases/tag/1.0.1) 
-- Update to [loki 1.0.1](https://github.com/karavel-io/platform-component-grafana/releases/tag/1.0.1) 
-- Update to [tempo 1.0.1](https://github.com/karavel-io/platform-component-grafana/releases/tag/1.0.1) 
-- Update to [goldpinger 1.0.1](https://github.com/karavel-io/platform-component-grafana/releases/tag/1.0.1) 
+- Update to [loki 1.0.1](https://github.com/karavel-io/platform-component-loki/releases/tag/1.0.1) 
+- Update to [tempo 1.0.1](https://github.com/karavel-io/platform-component-tempo/releases/tag/1.0.1) 
+- Update to [goldpinger 1.0.1](https://github.com/karavel-io/platform-component-goldpinger/releases/tag/1.0.1) 
+- Update to [prometheus 1.0.1](https://github.com/karavel-io/platform-component-prometheus/releases/tag/1.0.1) 

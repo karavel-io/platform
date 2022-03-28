@@ -9,6 +9,6 @@ components:
   ingress-nginx: 1.0.0
   loki: 1.0.1
   olm: 1.0.0
-  prometheus: 1.0.0
+  prometheus: 1.0.1
   tempo: 1.0.1
   velero: 1.0.0
