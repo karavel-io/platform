@@ -1,0 +1,14 @@
+components:
+  argocd: 1.0.0
+  cert-manager: 1.0.0
+  dex: 1.0.0
+  external-dns: 1.0.0
+  external-secrets: 1.0.0
+  goldpinger: 1.0.1
+  grafana: 1.0.1
+  ingress-nginx: 1.0.0
+  loki: 1.0.1
+  olm: 1.0.0
+  prometheus: 1.0.0
+  tempo: 1.0.1
+  velero: 1.0.0
