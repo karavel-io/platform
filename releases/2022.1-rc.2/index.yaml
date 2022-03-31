@@ -1,5 +1,5 @@
 components:
-  argocd: 1.0.0
+  argocd: 1.0.1
   cert-manager: 1.0.0
   dex: 1.0.0
   external-dns: 1.0.0
