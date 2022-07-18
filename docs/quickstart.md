@@ -220,7 +220,7 @@ the updated documentation, then rerun the `karavel render` command. This command
 [karavel]: https://github.com/karavel-io/cli
 [git]: https://git-scm.com/
 [cert-manager]: https://cert-manager.io
-[kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+[kubectl]: https://kubectl.docs.kubernetes.io/installation/kustomize/
 [helm]: https://helm.sh
 [kustomize]: https://kubernetes-sigs.github.io/kustomize/installation/
 [Python]: https://www.python.org/
