@@ -7,19 +7,14 @@ The tool is written in Go and packaged as a single static binary that runs on Li
 
 ## karavel init
 
-!!! warning
-    Until **December 2021**, when the first stable release will be cut, this command will **NOT** work as there are no released
-    versions of the platform. If you need some example configuration files, please head over to the [end-to-end testing repository](https://github.com/karavel-io/platform-e2e).
-
-```
 Initialize a new Karavel project
 
 Usage:
   karavel init [WORKDIR] [flags]
 
 Flags:
-      --config-url string    Override the official URL pointing to the Karavel config file to download
       --force                Overwrite the config file even if it already exists
+      --github-repo string   Override the official GitHub repository containing the tagged Platform releases
   -h, --help                 help for init
   -o, --output-file string   Karavel config file name to create (default "karavel.hcl")
   -v, --version string       Karavel Container Platform version to initialize (default "latest")
@@ -44,10 +39,7 @@ $ cd /tmp/karavel
 $ karavel init
 Initializing new Karavel latest project at /tmp/karavel
 
-Fetching starting config from https://github.com/karavel-io/platform/releases/latest/download/karavel.hcl
-
-Downloading file karavel.hcl from https://github.com/karavel-io/platform/releases/latest/download/karavel.hcl
-Download completed in 1.995229ms
+Fetching latest release version for GitHub repo karavel-io/platform
 
 Writing config file to /tmp/karavel/karavel.hcl
 ```
@@ -60,10 +52,6 @@ $ cd /tmp/karavel
 $ karavel init --version 2021.1
 Initializing new Karavel 2021.1 project at /tmp/karavel
 
-Fetching starting config from https://github.com/karavel-io/platform/releases/2021.1/download/karavel.hcl
-
-Downloading file karavel.hcl from https://github.com/karavel-io/platform/releases/2021.1/download/karavel.hcl
-Download completed in 1.995229ms
 
 Writing config file to /tmp/karavel/karavel.hcl
 ```

@@ -13,9 +13,9 @@ of Git and Kubernetes and know your way around a command shell.
 - admin access to a running Kubernetes cluster. Minikube is fine for a simple, local deployment for testing purposes.
 
 The `karavel` CLI can be downloaded from [GitHub](https://github.com/karavel-io/cli/releases).  
-Alternatively, you can build it from source. You need Golang 1.15+ installed to build it.
+Alternatively, you can build it from source. You need Golang 1.18+ installed to build it.
 
-`go get -u github.com/karavel-io/cli`
+`go install github.com/karavel-io/cli/cmd/karavel@latest`
 
 ### Secrets
 
@@ -197,7 +197,7 @@ Now that the repository is ready we can commit and push it to the upstream remot
 
 ```bash
 git add --all . && git commit -m "Bootstrap new cluster"
-git push origin master
+git push origin main
 ```
 
 Once pushed ArgoCD will automatically pick it up and start syncing the manifests with the cluster state.
@@ -220,7 +220,7 @@ the updated documentation, then rerun the `karavel render` command. This command
 [karavel]: https://github.com/karavel-io/cli
 [git]: https://git-scm.com/
 [cert-manager]: https://cert-manager.io
-[kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+[kubectl]: https://kubectl.docs.kubernetes.io/installation/kustomize/
 [helm]: https://helm.sh
 [kustomize]: https://kubernetes-sigs.github.io/kustomize/installation/
 [Python]: https://www.python.org/
