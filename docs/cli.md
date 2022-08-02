@@ -44,6 +44,7 @@ Or you can import it in another `flake.nix`, e.g. to add it to a [devShell](http
 ```
 
 By appending a refernce at the end of the Flake URL you can select:
+
 - a specific tag/version: `github:karavel-io/cli/v0.4.1`
 - a Git branch: `github:karavel-io/cli/main`
 
