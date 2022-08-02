@@ -73,6 +73,7 @@ Instructions for compiling the tool from source code can be found on [GitHub](ht
 
 ## karavel init
 
+```
 Initialize a new Karavel project
 
 Usage:
