@@ -17,6 +17,8 @@ Alternatively, you can build it from source. You need Golang 1.18+ installed to 
 
 `go install github.com/karavel-io/cli/cmd/karavel@latest`
 
+More instructions for installing the CLI can be found [here](./cli.md).
+
 ### Secrets
 
 Karavel delegates the handling of secrets and credentials to an external service. This approach has been chosen in order
